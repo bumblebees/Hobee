@@ -20,7 +20,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.net.URISyntaxException;
+
+import io.socket.client.Ack;
+import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private CallbackManager callbackManager;
@@ -82,18 +87,53 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             GoogleSignInResult res = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if(res.isSuccess()){
                 //Sign-in success
-                GoogleSignInAccount acc = res.getSignInAccount();
+                final GoogleSignInAccount acc = res.getSignInAccount();
 
-                //TODO: Check if the user exists and decide where to go from there, for now just go to next activity
-               Intent registerIntent = new Intent(this, RegisterUser.class);
-                Bundle userData = new Bundle();
-                userData.putString("first_name", acc.getGivenName());
-                userData.putString("last_name", acc.getFamilyName());
-                userData.putString("username", acc.getDisplayName());
-                userData.putString("email", acc.getEmail());
-                userData.putString("photo", String.valueOf(acc.getPhotoUrl()));
-                registerIntent.putExtra("userData", userData);
-                this.startActivity(registerIntent);
+
+                //Check if the user exists in the DB
+                try {
+                    socket = IO.socket("http://129.16.155.22:3001");
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+
+                socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+                    @Override
+                    public void call(Object... objects) {
+                        socket.emit("user_login", acc.getId(), new Ack() {
+                            @Override
+                            public void call(Object... objects) {
+                                String res = (String)objects[0];
+                                //User exists in the database, move to login screen
+                                if(res.equals("LOGIN")){
+                                    Intent profileIntent = new Intent(LoginActivity.this, UserProfileActivity.class);
+                                    profileIntent.putExtra("user_ID", acc.getId());
+                                    LoginActivity.this.startActivity(profileIntent);
+
+                                }
+                                //User does not exist in the database, start registering
+                                else if(res.equals("REGISTER")){
+                                    Intent registerIntent = new Intent(LoginActivity.this, RegisterUserActivity.class);
+                                    Bundle userData = new Bundle();
+                                    userData.putString("id", acc.getId());
+                                    userData.putString("first_name", acc.getGivenName());
+                                    userData.putString("last_name", acc.getFamilyName());
+                                    userData.putString("username", acc.getDisplayName());
+                                    userData.putString("email", acc.getEmail());
+                                    userData.putString("photo", String.valueOf(acc.getPhotoUrl()));
+                                    registerIntent.putExtra("userData", userData);
+                                    LoginActivity.this.startActivity(registerIntent);
+                                }
+                                else{
+                                    Log.d("socket", "received unknown reply");
+                                }
+                                socket.disconnect();
+                            }
+                        });
+
+                    }
+                });
+                socket.connect();
 
 
             }
@@ -107,7 +147,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void mainActivity(){
-        Intent intent = new Intent(this,MainActivity.class);
+        Intent intent = new Intent(this,UserProfileActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
-public class RegisterUser extends AppCompatActivity {
+public class RegisterUserActivity extends AppCompatActivity {
 
     EditText firstName;
     EditText lastName;
@@ -26,6 +26,7 @@ public class RegisterUser extends AppCompatActivity {
     Button selectPicBtn;
     Button submitBtn;
     Socket socket;
+    Bundle userData;
 
 
     @Override
@@ -34,7 +35,7 @@ public class RegisterUser extends AppCompatActivity {
         setContentView(R.layout.activity_register_user);
 
         Intent intent = getIntent();
-        Bundle userData = intent.getBundleExtra("userData");
+        userData = intent.getBundleExtra("userData");
 
 
         firstName = (EditText) findViewById(R.id.firstName);
@@ -85,6 +86,11 @@ public class RegisterUser extends AppCompatActivity {
 
                 });
                 socket.connect();
+                //TODO: it would probably be a better idea to use a callback here
+                //TODO: also, this should lead to the main screen eventually, not the profile
+                Intent profileIntent = new Intent(RegisterUserActivity.this, UserProfileActivity.class);
+                profileIntent.putExtra("user_ID", userData.getString("id"));
+                RegisterUserActivity.this.startActivity(profileIntent);
             }
         });
     }
@@ -105,6 +111,7 @@ public class RegisterUser extends AppCompatActivity {
         }
         // put everything in final object
         try {
+            object.put("loginID", userData.getString("id"));
             object.put("firstName", firstName.getText().toString());
             object.put("lastName", lastName.getText().toString());
             object.put("username", username.getText().toString());
