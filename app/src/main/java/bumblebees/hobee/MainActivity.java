@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         fbName   = (TextView) findViewById(R.id.userName);
         fbEmail  =  (TextView) findViewById(R.id.userEmail);
         fbGender = (TextView) findViewById(R.id.userGender);
-        fbAge    = (TextView) findViewById(R.id.fbage);
+        fbAge    = (TextView) findViewById(R.id.userAge);
         fbImage  = (ImageView) findViewById(R.id.fbImage);
         if (AccessToken.getCurrentAccessToken() == null){
             loginActivity();
