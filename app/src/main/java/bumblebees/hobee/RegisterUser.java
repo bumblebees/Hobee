@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
-public class TestUser extends AppCompatActivity {
+public class RegisterUser extends AppCompatActivity {
 
     EditText firstName;
     EditText lastName;
@@ -31,10 +31,11 @@ public class TestUser extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test_user);
+        setContentView(R.layout.activity_register_user);
 
         Intent intent = getIntent();
-        String value = intent.getStringExtra("key");
+        Bundle userData = intent.getBundleExtra("userData");
+
 
         firstName = (EditText) findViewById(R.id.firstName);
         lastName = (EditText) findViewById(R.id.lastName);
@@ -46,8 +47,15 @@ public class TestUser extends AppCompatActivity {
         pic = (ImageView) findViewById(R.id.pic);
         selectPicBtn = (Button) findViewById(R.id.selectPicBtn);
         submitBtn = (Button) findViewById(R.id.submitBtn);
-        // set username value from previous activity
-        username.setText(value);
+
+
+        // set fields that were received from the login
+        firstName.setText(userData.getString("first_name"));
+        lastName.setText(userData.getString("last_name"));
+        email.setText(userData.getString("email"));
+        username.setText(userData.getString("username"));
+
+
         // set options for dropdown menu
         ArrayAdapter<String> genders = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, new String[]{"male", "female"});
         gender.setAdapter(genders);

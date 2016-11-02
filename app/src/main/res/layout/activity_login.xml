@@ -22,4 +22,13 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/google_login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="26dp"
+        android:layout_above="@+id/login_button"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

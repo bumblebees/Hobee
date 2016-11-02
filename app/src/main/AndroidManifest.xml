@@ -15,16 +15,17 @@
                 android:name="com.facebook.sdk.ApplicationId"
                 android:value="@string/facebook_app_id"/>
 
-        <activity android:name=".LoginActivity"/>
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".TestUser"/>
-        <activity android:name=".TestLogin">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
+            </activity>
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".RegisterUser"/>
+
+
     </application>
 
 </manifest>
