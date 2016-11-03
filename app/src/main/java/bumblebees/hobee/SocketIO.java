@@ -6,9 +6,9 @@ import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
-import java.util.concurrent.TimeUnit;
 
 public class SocketIO {
 
@@ -25,7 +25,7 @@ public class SocketIO {
         }
     }
 
-    static void checkIfExists(final String username, final Context packageContext) {
+    static void checkIfExists(final String username, final Context packageContext, final String extras) {
 
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
@@ -33,13 +33,36 @@ public class SocketIO {
                 socket.emit("user_login", username, new Ack() {
                     @Override
                     public void call(Object... objects) {
-                        Intent intent = new Intent(packageContext, TestActivity.class);
-                        packageContext.startActivity(intent);
+                        String res = (String)objects[0];
+                        if (res.equals("REGISTER")) {
+                            Intent intent = new Intent(packageContext, RegisterUserActivity.class);
+                            intent.putExtra("login", extras);
+                            packageContext.startActivity(intent);
+                        }
+                        else {
+                            Intent intent = new Intent(packageContext, HomeActivity.class);
+                            intent.putExtra("login", extras);
+                            packageContext.startActivity(intent);
+                        }
+                        socket.disconnect();
                     }
                 });
-                //socket.disconnect();
             }
         });
         socket.connect();
+    }
+
+    static void register(final JSONObject jsonObject, final Context packageContext){
+
+        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                socket.emit("test", jsonObject);
+                socket.disconnect();
+            }
+        });
+        socket.connect();
+        Intent intent = new Intent(packageContext, HomeActivity.class);
+        packageContext.startActivity(intent);
     }
 }

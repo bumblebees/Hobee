@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -20,7 +22,6 @@ public class RegisterUserActivity extends AppCompatActivity {
     EditText lastName;
     EditText birthdate;
     EditText email;
-    EditText location;
     Spinner gender;
     EditText info;
     ImageView pic;
@@ -38,15 +39,17 @@ public class RegisterUserActivity extends AppCompatActivity {
         Intent intent = getIntent();
         userData = intent.getBundleExtra("userData");
 
+        // set options for dropdown menu
+        ArrayAdapter<String> genders = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, new String[]{"male", "female"});
 
         firstName = (EditText) findViewById(R.id.firstName);
         lastName = (EditText) findViewById(R.id.lastName);
 
         //TODO: turn this into a DatePicker, probably
         birthdate = (EditText) findViewById(R.id.birthdate);
-        location = (EditText) findViewById(R.id.location);
         email = (EditText) findViewById(R.id.email);
         gender = (Spinner) findViewById(R.id.gender);
+        gender.setAdapter(genders);
         info = (EditText) findViewById(R.id.info);
         pic = (ImageView) findViewById(R.id.pic);
         selectPicBtn = (Button) findViewById(R.id.selectPicBtn);
@@ -54,51 +57,38 @@ public class RegisterUserActivity extends AppCompatActivity {
 
 
         // set fields that were received from the login
-        firstName.setText(userData.getString("first_name"));
-        lastName.setText(userData.getString("last_name"));
-        email.setText(userData.getString("email"));
+        if (getIntent().getStringExtra("login").equals("google")) {
+            firstName.setText(userData.getString("first_name"));
+            lastName.setText(userData.getString("last_name"));
+            email.setText(userData.getString("email"));
+        }
+        else {
+            GraphRequest request = GraphRequest.newMeRequest(LoginActivity.facebookToken, new GraphRequest.GraphJSONObjectCallback() {
+                @Override
+                public void onCompleted(JSONObject object, GraphResponse response) {
+                    try {
+                        firstName.setText(object.getString("first_name"));
+                        lastName.setText(object.getString("last_name"));
+                        birthdate.setText(object.getString("birthday"));
+                        email.setText(object.getString("email"));
 
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "id,first_name,last_name,gender,birthday,email");
+            request.setParameters(parameters);
+            request.executeAsync();
+        }
 
-        // set options for dropdown menu
-        ArrayAdapter<String> genders = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, new String[]{"male", "female"});
-        gender.setAdapter(genders);
-        // set image on click - totally useless
-        selectPicBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pic.setImageResource(R.drawable.sample);
-            }
-        });
         // submit button does magic?
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    socket = IO.socket("http://129.16.155.22:3001");
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-                socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
 
-                    @Override
-                    public void call(Object... args) {
-                        socket.emit("test", createJSON());
-                        socket.disconnect();
-                    }
-
-                });
-                socket.connect();
-                //TODO: it would probably be a better idea to use a callback here
-                //TODO: now this goes to the hobby screen, decide when everything is added to the DB
-                //Intent profileIntent = new Intent(RegisterUserActivity.this, UserProfileActivity.class);
-                //profileIntent.putExtra("user_ID", userData.getString("id"));
-                //RegisterUserActivity.this.startActivity(profileIntent);
-
-                Intent hobbyIntent = new Intent(RegisterUserActivity.this, HobbyActivity.class);
-                hobbyIntent.putExtra("user_ID", userData.getString("id"));
-                RegisterUserActivity.this.startActivity(hobbyIntent);
-
-
+                SocketIO.register(createJSON(), RegisterUserActivity.this);
             }
         });
     }
@@ -119,10 +109,14 @@ public class RegisterUserActivity extends AppCompatActivity {
         }
         // put everything in final object
         try {
-            object.put("loginID", userData.getString("id"));
+            if (getIntent().getStringExtra("login").equals("google")) {
+                object.put("loginID", userData.getString("id"));
+            }
+            else{
+                object.put("loginID", LoginActivity.facebookToken.getUserId());
+            }
             object.put("firstName", firstName.getText().toString());
             object.put("lastName", lastName.getText().toString());
-            object.put("location", location.getText().toString());
             object.put("birthday", birthdate.getText().toString());
             object.put("email", email.getText().toString());
             object.put("gender", gender.getSelectedItem().toString());
