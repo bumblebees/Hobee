@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 
 import com.facebook.*;
 import com.facebook.login.LoginResult;
@@ -38,11 +39,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         //FACEBOOK SIGN IN
         FacebookSdk.sdkInitialize(getApplicationContext());
+
         setContentView(R.layout.activity_login);
+
         accessTokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
@@ -130,7 +131,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     userData.putString("id", acc.getId());
                                     userData.putString("first_name", acc.getGivenName());
                                     userData.putString("last_name", acc.getFamilyName());
-                                    userData.putString("username", acc.getDisplayName());
                                     userData.putString("email", acc.getEmail());
                                     userData.putString("photo", String.valueOf(acc.getPhotoUrl()));
                                     registerIntent.putExtra("userData", userData);

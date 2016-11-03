@@ -3,6 +3,7 @@ package bumblebees.hobee;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import io.socket.client.IO;
@@ -17,9 +18,9 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     EditText firstName;
     EditText lastName;
-    EditText username;
     EditText birthdate;
     EditText email;
+    EditText location;
     Spinner gender;
     EditText info;
     ImageView pic;
@@ -40,10 +41,10 @@ public class RegisterUserActivity extends AppCompatActivity {
 
         firstName = (EditText) findViewById(R.id.firstName);
         lastName = (EditText) findViewById(R.id.lastName);
-        username = (EditText) findViewById(R.id.username);
 
         //TODO: turn this into a DatePicker, probably
         birthdate = (EditText) findViewById(R.id.birthdate);
+        location = (EditText) findViewById(R.id.location);
         email = (EditText) findViewById(R.id.email);
         gender = (Spinner) findViewById(R.id.gender);
         info = (EditText) findViewById(R.id.info);
@@ -56,7 +57,6 @@ public class RegisterUserActivity extends AppCompatActivity {
         firstName.setText(userData.getString("first_name"));
         lastName.setText(userData.getString("last_name"));
         email.setText(userData.getString("email"));
-        username.setText(userData.getString("username"));
 
 
         // set options for dropdown menu
@@ -122,7 +122,7 @@ public class RegisterUserActivity extends AppCompatActivity {
             object.put("loginID", userData.getString("id"));
             object.put("firstName", firstName.getText().toString());
             object.put("lastName", lastName.getText().toString());
-            object.put("username", username.getText().toString());
+            object.put("location", location.getText().toString());
             object.put("birthday", birthdate.getText().toString());
             object.put("email", email.getText().toString());
             object.put("gender", gender.getSelectedItem().toString());

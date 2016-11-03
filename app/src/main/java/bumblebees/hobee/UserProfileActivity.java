@@ -29,12 +29,13 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView fbGender;
     private TextView fbAge;
     private ImageView fbImage;
+    private TextView location;
     JSONObject profileData;
     Socket socket;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_user_profile);
 
         //TODO: rename variables
         fbName   = (TextView) findViewById(R.id.userName);
@@ -42,7 +43,7 @@ public class UserProfileActivity extends AppCompatActivity {
         fbGender = (TextView) findViewById(R.id.userGender);
         fbAge    = (TextView) findViewById(R.id.userAge);
         fbImage  = (ImageView) findViewById(R.id.fbImage);
-
+        location = (TextView) findViewById(R.id.location);
 
         Intent intent = this.getIntent();
         final String userID = intent.getExtras().getString("user_ID");
@@ -68,10 +69,11 @@ public class UserProfileActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 try {
-                                    fbName.setText(profileData.getString("username"));
+                                    fbName.setText(profileData.getString("firstName")+" "+profileData.getString("lastName"));
                                     fbEmail.setText(profileData.getString("email"));
                                     fbGender.setText(profileData.getString("gender"));
                                     fbAge.setText(profileData.getString("birthday"));
+                                    location.setText(profileData.getString("location"));
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
