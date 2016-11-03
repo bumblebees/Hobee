@@ -7,9 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
+import com.facebook.*;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
@@ -28,35 +26,48 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
-    private CallbackManager callbackManager;
-    private LoginButton loginButton;
-    private SignInButton googleLoginButton;
+
+    CallbackManager callbackManager;
+    LoginButton loginButton;
+    AccessTokenTracker accessTokenTracker;
+    SignInButton googleLoginButton;
     Socket socket;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
+        //FACEBOOK SIGN IN
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
+        accessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
+                updateWithToken(newAccessToken);
+            }
+        };
+        // Check if already signed in
+        updateWithToken(AccessToken.getCurrentAccessToken());
+
         callbackManager = CallbackManager.Factory.create();
-
-        loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email");
-
+        loginButton = (LoginButton)findViewById(R.id.login_button);
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                mainActivity();
+                Intent facebookIntent = new Intent(LoginActivity.this, HomeActivity.class);
+                startActivity(facebookIntent);
             }
-
             @Override
-            public void onCancel() {
-                // App code
-            }
-
+            public void onCancel() { }
             @Override
-            public void onError(FacebookException exception) {
-                // App code
-            }
+            public void onError(FacebookException error) { }
         });
+
+
+
 
         //GOOGLE SIGN IN
         //Request default and email
@@ -88,7 +99,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             if(res.isSuccess()){
                 //Sign-in success
                 final GoogleSignInAccount acc = res.getSignInAccount();
-
 
                 //Check if the user exists in the DB
                 try {
@@ -150,6 +160,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         Intent intent = new Intent(this,UserProfileActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    private void updateWithToken(AccessToken currentAccessToken) {
+        if (currentAccessToken != null) {
+            Intent facebookIntent = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(facebookIntent);
+        }
+        else {
+            // take a chill pill
+        }
     }
 
 
