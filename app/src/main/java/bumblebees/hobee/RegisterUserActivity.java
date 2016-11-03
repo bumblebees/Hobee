@@ -24,7 +24,7 @@ public class RegisterUserActivity extends AppCompatActivity {
     EditText info;
     ImageView pic;
     Button selectPicBtn;
-    Button submitBtn;
+    ImageButton submitBtn;
     Socket socket;
     Bundle userData;
 
@@ -41,13 +41,15 @@ public class RegisterUserActivity extends AppCompatActivity {
         firstName = (EditText) findViewById(R.id.firstName);
         lastName = (EditText) findViewById(R.id.lastName);
         username = (EditText) findViewById(R.id.username);
+
+        //TODO: turn this into a DatePicker, probably
         birthdate = (EditText) findViewById(R.id.birthdate);
         email = (EditText) findViewById(R.id.email);
         gender = (Spinner) findViewById(R.id.gender);
         info = (EditText) findViewById(R.id.info);
         pic = (ImageView) findViewById(R.id.pic);
         selectPicBtn = (Button) findViewById(R.id.selectPicBtn);
-        submitBtn = (Button) findViewById(R.id.submitBtn);
+        submitBtn = (ImageButton) findViewById(R.id.submitBtn);
 
 
         // set fields that were received from the login
@@ -87,10 +89,16 @@ public class RegisterUserActivity extends AppCompatActivity {
                 });
                 socket.connect();
                 //TODO: it would probably be a better idea to use a callback here
-                //TODO: also, this should lead to the main screen eventually, not the profile
-                Intent profileIntent = new Intent(RegisterUserActivity.this, UserProfileActivity.class);
-                profileIntent.putExtra("user_ID", userData.getString("id"));
-                RegisterUserActivity.this.startActivity(profileIntent);
+                //TODO: now this goes to the hobby screen, decide when everything is added to the DB
+                //Intent profileIntent = new Intent(RegisterUserActivity.this, UserProfileActivity.class);
+                //profileIntent.putExtra("user_ID", userData.getString("id"));
+                //RegisterUserActivity.this.startActivity(profileIntent);
+
+                Intent hobbyIntent = new Intent(RegisterUserActivity.this, HobbyActivity.class);
+                hobbyIntent.putExtra("user_ID", userData.getString("id"));
+                RegisterUserActivity.this.startActivity(hobbyIntent);
+
+
             }
         });
     }

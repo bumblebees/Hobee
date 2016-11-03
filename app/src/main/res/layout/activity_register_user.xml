@@ -10,6 +10,8 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:background="#ffe36b"
+        tools:context="bumblebees.hobee.RegisterUserActivity">
+
 
 
     <EditText
@@ -19,18 +21,6 @@
             android:ems="10"
             android:id="@+id/lastName" android:hint="Last name" android:layout_below="@+id/firstName"
             android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/pic"
-        android:layout_toStartOf="@+id/pic" />
-
-    <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-        android:id="@+id/username" android:hint="username"
-        android:layout_below="@+id/lastName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_toLeftOf="@+id/pic"
         android:layout_toStartOf="@+id/pic" />
 
@@ -51,7 +41,7 @@
             android:layout_height="wrap_content"
             android:inputType="date"
             android:ems="10"
-            android:id="@+id/birthdate" android:hint="birthdate yyyy/mm/dd"
+            android:id="@+id/birthdate" android:hint="Birthdate yyyy/mm/dd"
         android:layout_below="@+id/username"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -63,7 +53,7 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:ems="10"
-        android:id="@+id/email" android:hint="e-mail"
+        android:id="@+id/email" android:hint="E-mail"
         android:layout_below="@+id/birthdate"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -96,7 +86,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
-        android:id="@+id/info" android:hint="about yourself"
+        android:id="@+id/info" android:hint="Tell us about yourself..."
         android:layout_marginTop="23dp"
         android:layout_below="@+id/selectPicBtn"
         android:layout_alignParentLeft="true"
@@ -124,5 +114,15 @@
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+        android:id="@+id/username" android:hint="Username"
+        android:layout_below="@+id/lastName"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

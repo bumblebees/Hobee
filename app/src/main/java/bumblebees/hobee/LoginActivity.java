@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         updateWithToken(AccessToken.getCurrentAccessToken());
 
         callbackManager = CallbackManager.Factory.create();
-        loginButton = (LoginButton)findViewById(R.id.login_button);
+        loginButton = (LoginButton)findViewById(R.id.fb_login_button);
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -71,6 +71,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         //GOOGLE SIGN IN
         //Request default and email
+
+        //TODO: also request gender and birthday
         GoogleSignInOptions googleSignIn = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail().build();
 
