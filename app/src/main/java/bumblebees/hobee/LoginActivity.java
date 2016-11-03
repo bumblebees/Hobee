@@ -92,6 +92,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .build();
 
         googleLoginButton = (SignInButton) findViewById(R.id.google_login_button);
+        googleLoginButton.setSize(SignInButton.SIZE_WIDE);
         googleLoginButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -188,6 +189,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Log.d("acc", connectionResult.toString());
     }
 }
