@@ -20,11 +20,13 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -34,14 +36,19 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     SignInButton googleLoginButton;
     Socket socket;
 
+    static AccessToken facebookToken;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        SocketIO.start();
+
         //FACEBOOK SIGN IN
         FacebookSdk.sdkInitialize(getApplicationContext());
 
+        callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_login);
 
         accessTokenTracker = new AccessTokenTracker() {
@@ -50,16 +57,18 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 updateWithToken(newAccessToken);
             }
         };
+        facebookToken = AccessToken.getCurrentAccessToken();
+
         // Check if already signed in
         updateWithToken(AccessToken.getCurrentAccessToken());
 
         callbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton)findViewById(R.id.fb_login_button);
+        loginButton.setReadPermissions(Arrays.asList("user_birthday","user_photos","email","user_friends"));
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Intent facebookIntent = new Intent(LoginActivity.this, HomeActivity.class);
-                startActivity(facebookIntent);
+                SocketIO.checkIfExists(LoginActivity.facebookToken.getUserId(), LoginActivity.this, "facebook");
             }
             @Override
             public void onCancel() { }
@@ -83,6 +92,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .build();
 
         googleLoginButton = (SignInButton) findViewById(R.id.google_login_button);
+        googleLoginButton.setSize(SignInButton.SIZE_WIDE);
         googleLoginButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -133,6 +143,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     userData.putString("last_name", acc.getFamilyName());
                                     userData.putString("email", acc.getEmail());
                                     userData.putString("photo", String.valueOf(acc.getPhotoUrl()));
+                                    registerIntent.putExtra("login", "google");
                                     registerIntent.putExtra("userData", userData);
                                     LoginActivity.this.startActivity(registerIntent);
                                 }
@@ -167,6 +178,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void updateWithToken(AccessToken currentAccessToken) {
         if (currentAccessToken != null) {
             Intent facebookIntent = new Intent(LoginActivity.this, HomeActivity.class);
+            facebookIntent.putExtra("login", "facebook");
             startActivity(facebookIntent);
         }
         else {
@@ -177,6 +189,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Log.d("acc", connectionResult.toString());
     }
 }
