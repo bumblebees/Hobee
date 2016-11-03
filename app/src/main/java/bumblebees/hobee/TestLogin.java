@@ -18,7 +18,7 @@ public class TestLogin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_login);
 
-        username = (EditText) findViewById(R.id.username);
+       // username = (EditText) findViewById(R.id.username);
 
         loginButton = (Button) findViewById(R.id.loginBtn);
         loginButton.setOnClickListener(new View.OnClickListener() {

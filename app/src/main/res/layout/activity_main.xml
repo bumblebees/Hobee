@@ -20,18 +20,6 @@
         android:layout_alignParentTop="true" />
 
     <TextView
-        android:text="Email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/userEmail"
-        android:layout_marginTop="27dp"
-        android:layout_below="@+id/userName"
-        android:layout_alignRight="@+id/userName"
-        android:layout_alignEnd="@+id/userName"
-        android:layout_alignLeft="@+id/userName"
-        android:layout_alignStart="@+id/userName" />
-
-    <TextView
         android:text="Age Range"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,15 +37,25 @@
         android:layout_below="@+id/userEmail"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:text="Email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userEmail"
+        android:layout_marginTop="27dp"
+        android:layout_below="@+id/userName"
+        android:layout_alignLeft="@+id/userName"
+        android:layout_alignStart="@+id/userName" />
+
     <ImageView
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:id="@+id/fbImage"
         app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
         android:adjustViewBounds="true"
-        android:layout_marginBottom="34dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="43dp" />
 
 
 </RelativeLayout>
