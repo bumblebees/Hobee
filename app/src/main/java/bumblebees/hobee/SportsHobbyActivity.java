@@ -36,12 +36,14 @@ public class SportsHobbyActivity extends AppCompatActivity {
     CheckBox sprt3;
     CheckBox sprt4;
 
+    String userID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sportshobby);
 
-        final String userID = this.getIntent().getStringExtra("user_ID");
+        userID = this.getIntent().getStringExtra("user_ID");
 
         backToHobbies = (Button) findViewById(R.id.button);
 
@@ -49,6 +51,8 @@ public class SportsHobbyActivity extends AppCompatActivity {
         sprt2 = (CheckBox) findViewById(R.id.sport2);
         sprt3 = (CheckBox) findViewById(R.id.sport3);
         sprt4 = (CheckBox) findViewById(R.id.sport4);
+
+        sprt4.isActivated()
 
         backToHobbies.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +96,8 @@ public class SportsHobbyActivity extends AppCompatActivity {
     public JSONObject createJsonObject(){
         JSONObject jsonObject = new JSONObject();
         try {
+
+            jsonObject.put("userID", userID);
             jsonObject.put("hobby1", sprt1.getText().toString());
             jsonObject.put("hobby2", sprt2.getText().toString());
             jsonObject.put("hobby3", sprt3.getText().toString());
