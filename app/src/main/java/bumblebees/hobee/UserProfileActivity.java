@@ -43,7 +43,7 @@ public class UserProfileActivity extends AppCompatActivity {
         fbGender = (TextView) findViewById(R.id.userGender);
         fbAge    = (TextView) findViewById(R.id.userAge);
         fbImage  = (ImageView) findViewById(R.id.fbImage);
-        location = (TextView) findViewById(R.id.location);
+
 
         Intent intent = this.getIntent();
         final String userID = intent.getExtras().getString("user_ID");
@@ -73,7 +73,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                     fbEmail.setText(profileData.getString("email"));
                                     fbGender.setText(profileData.getString("gender"));
                                     fbAge.setText(profileData.getString("birthday"));
-                                    location.setText(profileData.getString("location"));
+
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();

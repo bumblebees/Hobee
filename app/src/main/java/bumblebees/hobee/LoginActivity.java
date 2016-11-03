@@ -129,9 +129,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 String res = (String)objects[0];
                                 //User exists in the database, move to login screen
                                 if(res.equals("LOGIN")){
-                                    Intent profileIntent = new Intent(LoginActivity.this, UserProfileActivity.class);
-                                    profileIntent.putExtra("user_ID", acc.getId());
-                                    LoginActivity.this.startActivity(profileIntent);
+                                    Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
+                                    homeIntent.putExtra("user_ID", acc.getId());
+                                    LoginActivity.this.startActivity(homeIntent);
 
                                 }
                                 //User does not exist in the database, start registering

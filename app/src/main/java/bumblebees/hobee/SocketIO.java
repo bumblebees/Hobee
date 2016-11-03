@@ -6,6 +6,8 @@ import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
@@ -62,7 +64,12 @@ public class SocketIO {
             }
         });
         socket.connect();
-        Intent intent = new Intent(packageContext, HomeActivity.class);
+        Intent intent = new Intent(packageContext, HobbyActivity.class);
+        try {
+            intent.putExtra("user_ID", jsonObject.getString("user_ID"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         packageContext.startActivity(intent);
     }
 }

@@ -23,9 +23,9 @@ public class HobbyActivity extends AppCompatActivity {
         showProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent profileIntent = new Intent(HobbyActivity.this, UserProfileActivity.class);
-                profileIntent.putExtra("user_ID", userID);
-                HobbyActivity.this.startActivity(profileIntent);
+                Intent homeIntent = new Intent(HobbyActivity.this, HomeActivity.class);
+                homeIntent.putExtra("user_ID", userID);
+                HobbyActivity.this.startActivity(homeIntent);
             }
         });
     }

@@ -34,62 +34,6 @@
         android:layout_marginTop="19dp" />
 
     <TextView
-        android:text="Gender"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/userGender"
-        android:layout_alignBottom="@+id/imageView3"
-        android:layout_alignRight="@+id/userEmail"
-        android:layout_alignEnd="@+id/userEmail" />
-
-    <TextView
-        android:text="Age"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/userAge"
-        android:textSize="24sp"
-        android:layout_alignBaseline="@+id/userName"
-        android:layout_alignBottom="@+id/userName"
-        android:layout_toRightOf="@+id/userName"
-        android:layout_toEndOf="@+id/userName"
-        android:layout_marginLeft="19dp"
-        android:layout_marginStart="19dp" />
-
-    <TextView
-        android:text="Email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/userEmail"
-        android:layout_marginBottom="24dp"
-        android:layout_alignBottom="@+id/userGender"
-        android:layout_alignRight="@+id/location"
-        android:layout_alignEnd="@+id/location" />
-
-    <ImageView
-
-        app:srcCompat="@drawable/proficons"
-        android:id="@+id/imageView3"
-        android:layout_width="30dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="42dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp"
-        android:layout_below="@+id/userName"
-        android:layout_alignLeft="@+id/pic"
-        android:layout_alignStart="@+id/pic" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/userName"
-        android:text="Name,"
-        android:layout_marginTop="17dp"
-        android:textSize="24sp"
-        android:layout_below="@+id/imageView"
-        android:layout_alignLeft="@+id/imageView3"
-        android:layout_alignStart="@+id/imageView3" />
-
-    <TextView
         android:text="My hobbies:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -116,14 +60,74 @@
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp" />
 
+    <ImageView
+
+        app:srcCompat="@drawable/proficons"
+        android:id="@+id/imageView3"
+        android:layout_width="30dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="41dp"
+        android:layout_below="@+id/userName"
+        android:layout_toLeftOf="@+id/imageView"
+        android:layout_toStartOf="@+id/imageView" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/location"
-        android:text="Location"
-        android:layout_above="@+id/userEmail"
-        android:layout_toRightOf="@+id/userName"
-        android:layout_toEndOf="@+id/userName" />
+        android:id="@+id/userName"
+        android:text="Name"
+        android:layout_marginTop="16dp"
+        android:textSize="24sp"
+        android:layout_below="@+id/imageView"
+        android:layout_alignRight="@+id/listhobbies"
+        android:layout_alignEnd="@+id/listhobbies"
+        android:layout_alignLeft="@+id/imageView"
+        android:layout_alignStart="@+id/imageView" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="11dp"
+        android:layout_marginStart="11dp"
+        android:layout_alignTop="@+id/imageView3"
+        android:layout_toRightOf="@+id/imageView3"
+        android:layout_toEndOf="@+id/imageView3">
+
+        <TextView
+            android:text="Age"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/userAge"
+            android:textSize="14sp"
+            android:layout_above="@+id/userEmail"
+            android:layout_alignLeft="@+id/listhobbies"
+            android:layout_alignStart="@+id/listhobbies"
+            android:layout_margin="3dp"
+            android:padding="3dp" />
+
+        <TextView
+            android:text="Email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/userEmail"
+            android:layout_above="@+id/userGender"
+            android:layout_alignLeft="@+id/userAge"
+            android:layout_alignStart="@+id/userAge"
+            android:layout_margin="3dp"
+            android:padding="3dp" />
+
+        <TextView
+            android:text="Gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/userGender"
+            android:layout_alignBottom="@+id/imageView3"
+            android:layout_alignRight="@+id/userEmail"
+            android:layout_alignEnd="@+id/userEmail"
+            android:layout_margin="3dp"
+            android:padding="3dp" />
+    </LinearLayout>
 
 
 </RelativeLayout>
