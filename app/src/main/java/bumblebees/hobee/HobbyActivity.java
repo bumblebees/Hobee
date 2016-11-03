@@ -7,9 +7,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+/**
+ * Class to represent the "head" hobby page, with categories
+ */
 public class HobbyActivity extends AppCompatActivity {
 
     ImageButton showProfile;
+    ImageButton showSports;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +26,7 @@ public class HobbyActivity extends AppCompatActivity {
         final String userID = this.getIntent().getStringExtra("user_ID");
 
         showProfile = (ImageButton)findViewById(R.id.showProfile);
+        showSports = (ImageButton)findViewById(R.id.hobby5);
 
         showProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,5 +36,18 @@ public class HobbyActivity extends AppCompatActivity {
                 HobbyActivity.this.startActivity(homeIntent);
             }
         });
+
+        // for demo: Only sports can be selected!
+        showSports.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent profileIntent = new Intent(HobbyActivity.this, SportsHobbyActivity.class);
+                profileIntent.putExtra("user_ID", userID);
+                HobbyActivity.this.startActivity(profileIntent);
+            }
+        });
     }
+
+
+
 }
