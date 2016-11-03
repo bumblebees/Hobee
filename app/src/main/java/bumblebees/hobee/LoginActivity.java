@@ -179,6 +179,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if (currentAccessToken != null) {
             Intent facebookIntent = new Intent(LoginActivity.this, HomeActivity.class);
             facebookIntent.putExtra("login", "facebook");
+            facebookIntent.putExtra("user_ID", currentAccessToken.getUserId());
             startActivity(facebookIntent);
         }
         else {

@@ -13,6 +13,7 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,7 +31,8 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView fbGender;
     private TextView fbAge;
     private ImageView fbImage;
-    private TextView location;
+    private TextView hobbiesList;
+    private TextView profileBio;
     JSONObject profileData;
     Socket socket;
     @Override
@@ -44,6 +46,8 @@ public class UserProfileActivity extends AppCompatActivity {
         fbGender = (TextView) findViewById(R.id.userGender);
         fbAge    = (TextView) findViewById(R.id.userAge);
         fbImage  = (ImageView) findViewById(R.id.fbImage);
+        hobbiesList = (TextView) findViewById(R.id.listhobbies);
+        profileBio = (TextView) findViewById(R.id.profileBio);
 
 
         Intent intent = this.getIntent();
@@ -74,6 +78,13 @@ public class UserProfileActivity extends AppCompatActivity {
                                     fbEmail.setText(profileData.getString("email"));
                                     fbGender.setText(profileData.getString("gender"));
                                     fbAge.setText(profileData.getString("birthday"));
+                                    profileBio.setText(profileData.getString("bio"));
+                                    JSONArray arr = profileData.getJSONArray("hobbies");
+                                    String hobbies="";
+                                    for (int i=0; i<arr.length(); i++){
+                                        hobbies+=arr.get(i)+" ";
+                                    }
+                                    hobbiesList.setText(hobbies);
 
 
                                 } catch (JSONException e) {

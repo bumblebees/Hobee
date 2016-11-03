@@ -66,7 +66,7 @@ public class SocketIO {
         socket.connect();
         Intent intent = new Intent(packageContext, HobbyActivity.class);
         try {
-            intent.putExtra("user_ID", jsonObject.getString("user_ID"));
+            intent.putExtra("user_ID", jsonObject.getString("loginID"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

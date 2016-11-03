@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -11,6 +12,7 @@ import android.widget.Button;
 
 import android.widget.ImageButton;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -66,7 +68,7 @@ public class SportsHobbyActivity extends AppCompatActivity {
 
                     @Override
                     public void call(Object... args) {
-                        socket.emit("test", createJsonObject());
+                        socket.emit("update_hobbies", createJsonObject());
                         socket.disconnect();
                     }
 
@@ -75,7 +77,7 @@ public class SportsHobbyActivity extends AppCompatActivity {
 
                 Intent hobbyIntent = new Intent(SportsHobbyActivity.this, HobbyActivity.class);
               // Not sure if we need to send it back to HobbyActivity again? Will it remember it anyway?
-             //   hobbyIntent.putExtra("userID", userID);
+                hobbyIntent.putExtra("user_ID", userID);
                 SportsHobbyActivity.this.startActivity(hobbyIntent);
             }
         });
@@ -87,18 +89,21 @@ public class SportsHobbyActivity extends AppCompatActivity {
         try {
             jsonObject.put("userID", userID);
 
-            if (sprt1.isActivated()) {
-                jsonObject.put("hobby1", sprt1.getText().toString());
+            JSONArray jsonArray = new JSONArray();
+
+            if (sprt1.isChecked()) {
+                jsonArray.put(sprt1.getText().toString());
             }
-            if (sprt2.isActivated()) {
-                jsonObject.put("hobby2", sprt2.getText().toString());
+            if (sprt2.isChecked()) {
+                jsonArray.put(sprt2.getText().toString());
             }
-            if (sprt3.isActivated()) {
-                jsonObject.put("hobby3", sprt3.getText().toString());
+            if (sprt3.isChecked()) {
+                jsonArray.put(sprt3.getText().toString());
             }
-            if (sprt4.isActivated()) {
-                jsonObject.put("hobby4", sprt4.getText().toString());
+            if (sprt4.isChecked()) {
+                jsonArray.put(sprt4.getText().toString());
             }
+            jsonObject.put("hobbies", jsonArray);
 
         } catch (JSONException e) {
             e.printStackTrace();
