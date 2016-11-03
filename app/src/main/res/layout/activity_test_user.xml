@@ -50,18 +50,6 @@
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="date"
-            android:ems="10"
-            android:id="@+id/birthdate" android:hint="birthdate yyyy/mm/dd"
-        android:layout_below="@+id/username"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/pic"
-        android:layout_toStartOf="@+id/pic" />
-
-    <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:ems="10"
         android:id="@+id/email" android:hint="e-mail"
@@ -81,37 +69,39 @@
         android:layout_alignRight="@+id/email"
         android:layout_alignEnd="@+id/email" />
 
-    <ImageView
-        app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
-            android:id="@+id/pic"
-        android:maxWidth="70dp"
-        android:maxHeight="70dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-        android:id="@+id/info" android:hint="about yourself"
-        android:layout_marginTop="23dp"
-        android:layout_below="@+id/selectPicBtn"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <ImageButton
         app:srcCompat="@drawable/letsgetstarted"
         android:layout_below="@+id/info"
         android:id="@+id/submitBtn"
+        android:background="#0000"
         android:layout_width="200dp"
         android:layout_height="100dp"
         android:scaleType="fitCenter"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp" />
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:ems="10"
+            android:id="@+id/birthdate" android:hint="birthdate yyyy/mm/dd"
+        android:layout_below="@+id/lastName"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="34dp" />
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/fbImage"
+        app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
+        android:adjustViewBounds="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/submitBtn"
+        android:layout_alignStart="@+id/submitBtn"
+        android:layout_marginLeft="133dp"
+        android:layout_marginStart="133dp" />
 
     <Button
             android:text="Set photo"
@@ -122,8 +112,20 @@
         android:textColor="@android:color/black"
 
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/fbImage"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="12dp" />
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+        android:id="@+id/info" android:hint="about yourself"
+        android:layout_below="@+id/gender"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="11dp" />
 
 </RelativeLayout>

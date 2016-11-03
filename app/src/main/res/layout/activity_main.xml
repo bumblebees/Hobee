@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
+    android:background="#ffe36b"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -11,41 +12,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="bumblebees.hobee.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/userName"
-        android:layout_centerHorizontal="true"
-        android:text="Name"
-        android:layout_alignParentTop="true" />
+    <ImageView
 
-    <TextView
-        android:text="Age Range"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="21dp"
-        android:id="@+id/userAge"
-        android:layout_below="@+id/userGender"
+        app:srcCompat="@android:drawable/screen_background_dark_transparent"
+        android:id="@+id/imageView"
+        android:layout_width="200dp"
+        android:layout_height="190dp"
+        android:scaleType="fitCenter"
+        android:layout_weight="0.12"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:text="Gender"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:id="@+id/userGender"
-        android:layout_below="@+id/userEmail"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:text="Email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/userEmail"
-        android:layout_marginTop="27dp"
-        android:layout_below="@+id/userName"
-        android:layout_alignLeft="@+id/userName"
-        android:layout_alignStart="@+id/userName" />
 
     <ImageView
         android:layout_width="150dp"
@@ -53,9 +29,102 @@
         android:id="@+id/fbImage"
         app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
         android:adjustViewBounds="true"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="43dp" />
+        android:layout_marginTop="19dp" />
+
+    <TextView
+        android:text="Gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userGender"
+        android:layout_alignBottom="@+id/imageView3"
+        android:layout_alignRight="@+id/userEmail"
+        android:layout_alignEnd="@+id/userEmail" />
+
+    <TextView
+        android:text="Age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userAge"
+        android:textSize="24sp"
+        android:layout_alignBaseline="@+id/userName"
+        android:layout_alignBottom="@+id/userName"
+        android:layout_toRightOf="@+id/userName"
+        android:layout_toEndOf="@+id/userName"
+        android:layout_marginLeft="19dp"
+        android:layout_marginStart="19dp" />
+
+    <TextView
+        android:text="Email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userEmail"
+        android:layout_marginBottom="24dp"
+        android:layout_alignBottom="@+id/userGender"
+        android:layout_alignRight="@+id/location"
+        android:layout_alignEnd="@+id/location" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/location"
+        android:layout_marginBottom="10dp"
+        android:text="Location"
+        android:layout_above="@+id/userEmail"
+        android:layout_toRightOf="@+id/userName"
+        android:layout_toEndOf="@+id/userName" />
+
+    <ImageView
+
+        app:srcCompat="@drawable/proficons"
+        android:id="@+id/imageView3"
+        android:layout_width="30dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_below="@+id/userName"
+        android:layout_alignLeft="@+id/fbImage"
+        android:layout_alignStart="@+id/fbImage" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userName"
+        android:text="Name,"
+        android:layout_marginTop="17dp"
+        android:textSize="24sp"
+        android:layout_below="@+id/imageView"
+        android:layout_alignLeft="@+id/imageView3"
+        android:layout_alignStart="@+id/imageView3" />
+
+    <TextView
+        android:text="My hobbies:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:id="@+id/textView2"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_below="@+id/imageView3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="text|textPersonName"
+        android:text="hobbies"
+        android:ems="10"
+        android:id="@+id/listhobbies"
+        android:textSize="14sp"
+        android:layout_alignBaseline="@+id/textView2"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_toRightOf="@+id/textView2"
+        android:layout_toEndOf="@+id/textView2"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp" />
 
 
 </RelativeLayout>

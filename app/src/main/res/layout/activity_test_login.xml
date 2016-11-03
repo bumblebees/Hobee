@@ -47,7 +47,9 @@
         android:layout_marginBottom="51dp"
         android:layout_alignBottom="@+id/loginButton"
         android:layout_alignRight="@+id/imageView4"
-        android:layout_alignEnd="@+id/imageView4" />
+        android:layout_alignEnd="@+id/imageView4"
+        android:layout_toRightOf="@+id/imageView4"
+        android:layout_toEndOf="@+id/imageView4" />
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/loginButton"
