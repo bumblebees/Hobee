@@ -10,6 +10,9 @@ import android.widget.ImageButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Class to represent the "head" hobby page, with categories
+ */
 public class HobbyActivity extends AppCompatActivity {
 
     ImageButton showProfile;
@@ -34,6 +37,7 @@ public class HobbyActivity extends AppCompatActivity {
             }
         });
 
+        // for demo: Only sports can be selected!
         showSports.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

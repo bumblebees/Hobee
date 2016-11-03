@@ -21,13 +21,14 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 /**
+ * Class to represent a selected hobby category's specific hobbies
+ * TODO: Create superclass for all specific hobby activities
  * Created by amandahoffstrom on 2016-11-03.
  */
 
 public class SportsHobbyActivity extends AppCompatActivity {
 
     Button backToHobbies;
-    ImageButton button;
 
     Socket socket;
 
@@ -52,19 +53,8 @@ public class SportsHobbyActivity extends AppCompatActivity {
         sprt3 = (CheckBox) findViewById(R.id.sport3);
         sprt4 = (CheckBox) findViewById(R.id.sport4);
 
-        sprt4.isActivated()
-
-        backToHobbies.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent profileIntent = new Intent(SportsHobbyActivity.this, HobbyActivity.class);
-                profileIntent.putExtra("user_ID", userID);
-                SportsHobbyActivity.this.startActivity(profileIntent);
-            }
-        });
-
         // When "Back" button is selected, connection with socket is established and data is sent through JSON to server
-        button.setOnClickListener(new View.OnClickListener() {
+        backToHobbies.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -84,10 +74,9 @@ public class SportsHobbyActivity extends AppCompatActivity {
                 socket.connect();
 
                 Intent hobbyIntent = new Intent(SportsHobbyActivity.this, HobbyActivity.class);
-             //   hobbyIntent.putExtra("user_ID", userData.getString("id"));
+              // Not sure if we need to send it back to HobbyActivity again? Will it remember it anyway?
+             //   hobbyIntent.putExtra("userID", userID);
                 SportsHobbyActivity.this.startActivity(hobbyIntent);
-
-
             }
         });
 
@@ -96,12 +85,21 @@ public class SportsHobbyActivity extends AppCompatActivity {
     public JSONObject createJsonObject(){
         JSONObject jsonObject = new JSONObject();
         try {
-
             jsonObject.put("userID", userID);
-            jsonObject.put("hobby1", sprt1.getText().toString());
-            jsonObject.put("hobby2", sprt2.getText().toString());
-            jsonObject.put("hobby3", sprt3.getText().toString());
-            jsonObject.put("hobby4", sprt4.getText().toString());
+
+            if (sprt1.isActivated()) {
+                jsonObject.put("hobby1", sprt1.getText().toString());
+            }
+            if (sprt2.isActivated()) {
+                jsonObject.put("hobby2", sprt2.getText().toString());
+            }
+            if (sprt3.isActivated()) {
+                jsonObject.put("hobby3", sprt3.getText().toString());
+            }
+            if (sprt4.isActivated()) {
+                jsonObject.put("hobby4", sprt4.getText().toString());
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
