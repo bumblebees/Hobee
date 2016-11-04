@@ -77,6 +77,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                     fbName.setText(profileData.getString("firstName")+" "+profileData.getString("lastName"));
                                     fbEmail.setText(profileData.getString("email"));
                                     fbGender.setText(profileData.getString("gender"));
+                                    //TODO: receive this as an UNIX date and calculate the age instead of the birthday
                                     fbAge.setText(profileData.getString("birthday"));
                                     profileBio.setText(profileData.getString("bio"));
                                     JSONArray arr = profileData.getJSONArray("hobbies");
