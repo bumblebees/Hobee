@@ -68,6 +68,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                facebookToken = AccessToken.getCurrentAccessToken();
                 SocketIO.checkIfExists(LoginActivity.facebookToken.getUserId(), LoginActivity.this, "facebook");
             }
             @Override
@@ -169,11 +170,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
-    private void mainActivity(){
-        Intent intent = new Intent(this,UserProfileActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
+
 
     private void updateWithToken(AccessToken currentAccessToken) {
         if (currentAccessToken != null) {
