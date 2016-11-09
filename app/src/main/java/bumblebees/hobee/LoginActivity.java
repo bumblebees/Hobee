@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 
 import com.facebook.*;
 import com.facebook.login.LoginResult;
@@ -32,44 +31,36 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     CallbackManager callbackManager;
     LoginButton loginButton;
-    AccessTokenTracker accessTokenTracker;
     SignInButton googleLoginButton;
     Socket socket;
-
-    static AccessToken facebookToken;
+    SessionManager session;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //TODO: remove after testing
+        String s = getApplicationContext().getSharedPreferences("HobeeSessionPreferences", 0).getString("id", null);
+        Log.d("SHARED_PREF", s);
+
+
         SocketIO.start();
+        session = new SessionManager(getApplicationContext());
+        //session.checkLogin();
 
-        //FACEBOOK SIGN IN
+        /*
+            FACEBOOK SIGN IN
+         */
         FacebookSdk.sdkInitialize(getApplicationContext());
-
-        callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_login);
-
-        accessTokenTracker = new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
-                updateWithToken(newAccessToken);
-            }
-        };
-        facebookToken = AccessToken.getCurrentAccessToken();
-
-        // Check if already signed in
-        updateWithToken(AccessToken.getCurrentAccessToken());
-
         callbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton)findViewById(R.id.fb_login_button);
         loginButton.setReadPermissions(Arrays.asList("user_birthday","user_photos","email","user_friends"));
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                facebookToken = AccessToken.getCurrentAccessToken();
-                SocketIO.checkIfExists(LoginActivity.facebookToken.getUserId(), LoginActivity.this, "facebook");
+                SocketIO.checkIfExists(AccessToken.getCurrentAccessToken(), LoginActivity.this);
             }
             @Override
             public void onCancel() { }
@@ -80,12 +71,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
 
-        //GOOGLE SIGN IN
-        //Request default and email
-
+        /*
+            GOOGLE SIGN IN
+            Request default and email
+        */
         //TODO: also request gender and birthday
+
+
         GoogleSignInOptions googleSignIn = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail().build();
+                .requestEmail()
+                .build();
 
         final GoogleApiClient googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
@@ -167,20 +162,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
         else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-
-
-    private void updateWithToken(AccessToken currentAccessToken) {
-        if (currentAccessToken != null) {
-            Intent facebookIntent = new Intent(LoginActivity.this, HomeActivity.class);
-            facebookIntent.putExtra("login", "facebook");
-            facebookIntent.putExtra("user_ID", currentAccessToken.getUserId());
-            startActivity(facebookIntent);
-        }
-        else {
-            // take a chill pill
         }
     }
 

@@ -22,7 +22,8 @@ public class RegisterUserActivity extends AppCompatActivity {
     EditText lastName;
     EditText birthdate;
     EditText email;
-    Spinner gender;
+    RadioGroup gender;
+    RadioButton selectedGender;
     EditText info;
     ImageView pic;
     Button selectPicBtn;
@@ -30,11 +31,15 @@ public class RegisterUserActivity extends AppCompatActivity {
     Socket socket;
     Bundle userData;
 
+    SessionManager session;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
+
+        session = new SessionManager(getApplicationContext());
 
         Intent intent = getIntent();
         userData = intent.getBundleExtra("userData");
@@ -48,46 +53,25 @@ public class RegisterUserActivity extends AppCompatActivity {
         //TODO: turn this into a DatePicker, probably
         birthdate = (EditText) findViewById(R.id.birthdate);
         email = (EditText) findViewById(R.id.email);
-        gender = (Spinner) findViewById(R.id.gender);
-        gender.setAdapter(genders);
+        gender = (RadioGroup) findViewById(R.id.gender);
+        //gender.setAdapter(genders);
         info = (EditText) findViewById(R.id.info);
         pic = (ImageView) findViewById(R.id.pic);
         selectPicBtn = (Button) findViewById(R.id.selectPicBtn);
         submitBtn = (ImageButton) findViewById(R.id.submitBtn);
 
 
-        // set fields that were received from the login
-        if (getIntent().getStringExtra("login").equals("google")) {
-            firstName.setText(userData.getString("first_name"));
-            lastName.setText(userData.getString("last_name"));
-            email.setText(userData.getString("email"));
-        }
-        else {
-            GraphRequest request = GraphRequest.newMeRequest(LoginActivity.facebookToken, new GraphRequest.GraphJSONObjectCallback() {
-                @Override
-                public void onCompleted(JSONObject object, GraphResponse response) {
-                    try {
-                        firstName.setText(object.getString("first_name"));
-                        lastName.setText(object.getString("last_name"));
-                        birthdate.setText(object.getString("birthday"));
-                        email.setText(object.getString("email"));
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            Bundle parameters = new Bundle();
-            parameters.putString("fields", "id,first_name,last_name,gender,birthday,email");
-            request.setParameters(parameters);
-            request.executeAsync();
-        }
+        // Set fields with extracted user data
+        firstName.setText(userData.getString("firstName"));
+        lastName.setText(userData.getString("lastName"));
+        birthdate.setText(userData.getString("birthday"));
+        email.setText(userData.getString("email"));
 
         // submit button does magic?
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                session.createSession(userData.getString("loginId"), userData.getString("origin"));
                 SocketIO.register(createJSON(), RegisterUserActivity.this);
             }
         });
@@ -95,33 +79,15 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     public JSONObject createJSON() {
         JSONObject object = new JSONObject();
-        JSONObject picture = new JSONObject();
-        // put pic in picture object (to be nested)
+        selectedGender = (RadioButton) findViewById(gender.getCheckedRadioButtonId());
         try {
-            picture.put("profile", "lets say it's a pic");
-            picture.put("photo1", "lets say it's a pic");
-            picture.put("photo2", "lets say it's a pic");
-            picture.put("photo3", "lets say it's a pic");
-            picture.put("photo4", "lets say no pic");
-            picture.put("photo5", "lets say no pic");
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-        // put everything in final object
-        try {
-            if (getIntent().getStringExtra("login").equals("google")) {
-                object.put("loginID", userData.getString("id"));
-            }
-            else{
-                object.put("loginID", LoginActivity.facebookToken.getUserId());
-            }
+            object.put("loginId", userData.getString("loginId"));
             object.put("firstName", firstName.getText().toString());
             object.put("lastName", lastName.getText().toString());
             object.put("birthday", birthdate.getText().toString());
             object.put("email", email.getText().toString());
-            object.put("gender", gender.getSelectedItem().toString());
+            object.put("gender", selectedGender.getText().toString());
             object.put("bio", info.getText().toString());
-            object.put("picture", picture);
         } catch (JSONException e) {
             e.printStackTrace();
         }
