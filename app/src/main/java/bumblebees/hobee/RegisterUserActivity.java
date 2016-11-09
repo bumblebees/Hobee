@@ -82,6 +82,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         selectedGender = (RadioButton) findViewById(gender.getCheckedRadioButtonId());
         try {
             object.put("loginId", userData.getString("loginId"));
+            object.put("origin", userData.get("origin"));
             object.put("firstName", firstName.getText().toString());
             object.put("lastName", lastName.getText().toString());
             object.put("birthday", birthdate.getText().toString());

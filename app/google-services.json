@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "593077926008",
-    "project_id": "hobee-android-app"
+    "project_number": "762985120957",
+    "project_id": "hobee-149016"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:593077926008:android:d563cb9ce3a103f5",
+        "mobilesdk_app_id": "1:762985120957:android:d563cb9ce3a103f5",
         "android_client_info": {
           "package_name": "bumblebees.hobee"
         }
       },
       "oauth_client": [
         {
-          "client_id": "593077926008-f8dp4uraah2c45r9oih25ffs3jk91d33.apps.googleusercontent.com",
+          "client_id": "762985120957-dtqtpuv7lofnjri83ud2j0lc1jj515p4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "bumblebees.hobee",
-            "certificate_hash": "7BDE0AA5FC70D37E0A2493CCF839894568C59A64"
+            "certificate_hash": "A8106821518F6D98DE2EFBF7BF8A51A7960FA82A"
           }
         },
         {
-          "client_id": "593077926008-5p88pi3v7tqhmcgotmn391e1r63k0732.apps.googleusercontent.com",
+          "client_id": "762985120957-cjkdms9c6it706vq2bhr3hjagtrg3e4t.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCKqbs9Mgxmph2Tw8FQEJW6ZOWEJN199h4"
+          "current_key": "AIzaSyCdK3fCJEhh6cCzYn9OcjcpYHpA5hl_jC8"
         }
       ],
       "services": {

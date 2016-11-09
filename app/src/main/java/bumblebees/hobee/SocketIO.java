@@ -2,10 +2,12 @@ package bumblebees.hobee;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -16,16 +18,15 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
-public class SocketIO {
+class SocketIO {
 
     static private Socket socket;
-    static private String url = "http://129.16.155.22:3001";
 
     static private Bundle userData;
 
     static void start(){
         try {
-            socket = IO.socket(url);
+            socket = IO.socket("http://129.16.155.22:3001");
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -69,6 +70,52 @@ public class SocketIO {
                             request.executeAsync();
                         }
                         else {
+                            SessionManager session = new SessionManager(context);
+                            session.createSession(accessToken.getUserId(), "facebook");
+                            Intent intent = new Intent(context, HomeActivity.class);
+                            context.startActivity(intent);
+                        }
+                        socket.disconnect();
+                    }
+                });
+            }
+        });
+        socket.connect();
+    }
+
+    static void checkIfExists(final GoogleSignInAccount account, final Context context){
+        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                socket.emit("user_exists", account.getId(), new Ack() {
+                    @Override
+                    public void call(Object... objects) {
+                        if (!(Boolean)objects[0]) {
+
+                            userData = new Bundle();
+                            userData.putString("loginId", account.getId());
+                            userData.putString("origin", "google");
+                            userData.putString("firstName", account.getGivenName());
+                            userData.putString("lastName", account.getFamilyName());
+                            userData.putString("birthday", "");
+                            userData.putString("email", account.getEmail());
+                            userData.putString("gender", "");
+                            Uri uri = account.getPhotoUrl();
+                            if (uri != null) {
+                                userData.putString("pic", uri.toString());
+                            }
+                            else {
+                                userData.putString("pic", "");
+                            }
+
+                            Intent intent = new Intent(context, RegisterUserActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("userData", userData);
+                            context.startActivity(intent);
+                        }
+                        else {
+                            SessionManager session = new SessionManager(context);
+                            session.createSession(account.getId(), "google");
                             Intent intent = new Intent(context, HomeActivity.class);
                             context.startActivity(intent);
                         }

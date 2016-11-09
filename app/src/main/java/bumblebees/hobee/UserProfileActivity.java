@@ -50,8 +50,7 @@ public class UserProfileActivity extends AppCompatActivity {
         profileBio = (TextView) findViewById(R.id.profileBio);
 
 
-        Intent intent = this.getIntent();
-        final String userID = intent.getExtras().getString("user_ID");
+        final SessionManager session = new SessionManager(getApplicationContext());
 
 
         try {
@@ -64,7 +63,7 @@ public class UserProfileActivity extends AppCompatActivity {
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... objects) {
-                socket.emit("get_user", userID, new Ack() {
+                socket.emit("get_user", session.getId(), new Ack() {
                     @Override
                     public void call(Object... objects) {
                         profileData = (JSONObject) objects[0];
