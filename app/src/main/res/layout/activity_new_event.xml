@@ -44,6 +44,14 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/inputEventNumber"
+                android:hint="Number of people needed" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:ems="10"
                 android:id="@+id/inputEventLocation"
                 android:inputType="textPostalAddress"
@@ -74,7 +82,6 @@
                 android:hint="Select minimum age" />
 
 
-
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -85,13 +92,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/textView13"
-                    android:layout_margin="5dp"
                     android:textSize="18sp" />
 
                 <Spinner
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/inputEventGender" />
+                    android:id="@+id/inputEventGender"
+                    android:padding="10dp"
+                    android:theme="@style/Widget.AppCompat.DropDownItem.Spinner"
+                    android:spinnerMode="dialog" />
 
             </TableRow>
 
@@ -112,13 +121,22 @@
                 android:id="@+id/textView14"
                 android:textSize="18sp" />
 
-            <TextView
-                android:text="Placeholder text"
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView15"
-                android:textSize="20sp"
-                android:padding="20dp" />
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:text="Category:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewEventCategory"
+                    android:textSize="18sp" />
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/eventHobbyChoice" />
+            </TableRow>
 
             <Button
                 android:text="Add new event"
