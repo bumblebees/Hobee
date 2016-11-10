@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -37,6 +39,8 @@ public class NewEventActivity extends AppCompatActivity {
     static TextView inputEventTime;
     Spinner inputEventGender;
     Spinner eventHobbyChoice;
+    TextView inputEventNumber;
+    MultiSlider ageRangeSlider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +54,13 @@ public class NewEventActivity extends AppCompatActivity {
         inputEventDate = (TextView) findViewById(R.id.inputEventDate);
         inputEventTime = (TextView) findViewById(R.id.inputEventTime);
         inputEventGender= (Spinner) findViewById(R.id.inputEventGender);
+        inputEventNumber = (TextView) findViewById(R.id.inputEventNumber);
         ageRangeSlider = (MultiSlider) findViewById(R.id.age_range_slider);
         maxAge = (TextView) findViewById(R.id.maxAge);
         minAge = (TextView) findViewById(R.id.minAge);
         minAge.setText(String.valueOf(ageRangeSlider.getThumb(0).getValue()));
         maxAge.setText(String.valueOf(ageRangeSlider.getThumb(1).getValue()));
+        eventHobbyChoice = (Spinner) findViewById(R.id.eventHobbyChoice);
 
 
         //set gender spinner options

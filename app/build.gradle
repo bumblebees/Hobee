@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'com.google.gms.google-services'
-
 android {
 
     compileSdkVersion 25
@@ -68,9 +66,7 @@ dependencies {
     compile('org.eclipse.paho:org.eclipse.paho.android.service:1.0.2') {
         exclude module: 'support-v4'
     }
-        exclude module: 'support-v4'
 
-    }
     compile 'io.apptik.widget:multislider:1.2'
 
     compile 'com.android.support:appcompat-v7:25.0.0'
