@@ -18,6 +18,7 @@ public class HomeActivity extends AppCompatActivity {
 
     Button btnProfile;
     Button btnLogout;
+    Button btnNewEvent;
     SharedPreferences preferences;
     String origin;
     TextView textView;
@@ -33,6 +34,16 @@ public class HomeActivity extends AppCompatActivity {
         // for testing
         textView = (TextView) findViewById(R.id.textView);
         textView.setText(session.getId() + " " + session.getOrigin());
+
+        btnNewEvent = (Button) findViewById(R.id.btnCreateEvent);
+
+        btnNewEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent newEventIntent = new Intent(HomeActivity.this, NewEventActivity.class);
+                HomeActivity.this.startActivity(newEventIntent);
+            }
+        });
 
         btnProfile = (Button) findViewById(R.id.btnProfile);
         btnProfile.setOnClickListener(new View.OnClickListener() {

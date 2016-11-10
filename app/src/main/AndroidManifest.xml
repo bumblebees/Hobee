@@ -19,7 +19,11 @@
 
         <service android:name="org.eclipse.paho.android.service.MqttService"></service>
         <activity android:name=".LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".UserProfileActivity" />
         <activity android:name=".RegisterUserActivity" />
@@ -28,11 +32,7 @@
         <activity android:name=".SportsHobbyActivity" />
 
         <activity android:name=".NewEventActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

@@ -3,6 +3,8 @@ package bumblebees.hobee;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
@@ -41,6 +44,8 @@ public class NewEventActivity extends AppCompatActivity {
     Spinner eventHobbyChoice;
     TextView inputEventNumber;
     MultiSlider ageRangeSlider;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,9 +198,11 @@ public class NewEventActivity extends AppCompatActivity {
      * Creates the JSON that will be sent over MQTT using the completed fields in the form.
      */
     public void addNewEvent(){
+        final SessionManager session = new SessionManager(this.getApplicationContext());
+
         long timeCreated = Calendar.getInstance().getTimeInMillis() / 1000L;
         String eventCategory = eventHobbyChoice.getSelectedItem().toString();
-        String hostID = "121431535165141"; //temporary value
+        String hostID = session.getId();
         String hash = generateHash(hostID, timeCreated);
 
         JSONObject event = new JSONObject();
@@ -204,7 +211,7 @@ public class NewEventActivity extends AppCompatActivity {
         JSONObject hobbyDetails = new JSONObject();
         try {
             //TODO: retrieve this data from somewhere
-            host.put("id", "host_id_here");
+            host.put("id", hostID);
             host.put("name", "host_name");
 
             eventDetails.put("name", inputEventName.getText());
@@ -232,6 +239,16 @@ public class NewEventActivity extends AppCompatActivity {
         String topic = "hobby/event/"+eventCategory+"/"+hash;
         Log.d("mqtt", topic);
         MQTT.getInstance().publishMessage(topic, msg);
+
+        Context context = getApplicationContext();
+        CharSequence text = "Event created!";
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+
+        Intent homeIntent = new Intent(NewEventActivity.this, HomeActivity.class);
+        NewEventActivity.this.startActivity(homeIntent);
 
     }
 

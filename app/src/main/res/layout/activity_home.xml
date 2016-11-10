@@ -32,4 +32,13 @@
             android:layout_height="wrap_content" android:layout_below="@+id/btnProfile"
             android:layout_alignLeft="@+id/btnProfile" android:layout_alignStart="@+id/btnProfile"
             android:id="@+id/btnLogout" android:layout_alignParentRight="true" android:layout_alignParentEnd="true"/>
+
+    <Button
+        android:text="Create Event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnCreateEvent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>
