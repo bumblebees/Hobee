@@ -57,7 +57,7 @@
                 android:inputType="textPostalAddress"
                 android:hint="Location" />
 
-            <EditText
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -65,7 +65,7 @@
                 android:inputType="date"
                 android:hint="Press to select date" />
 
-            <EditText
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="time"
@@ -73,14 +73,55 @@
                 android:id="@+id/inputEventTime"
                 android:hint="Press to select time" />
 
-            <EditText
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:ems="10"
-                android:id="@+id/inputEventAge"
                 android:hint="Select minimum age" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Age Range:"/>
+                    <TextView
+                        android:id="@+id/minAge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min"
+                        android:paddingLeft="10dp"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" - "/>
+                    <TextView
+                        android:id="@+id/maxAge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="max" />
+                </LinearLayout>
+
+                <io.apptik.widget.MultiSlider
+                    android:id="@+id/age_range_slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    app:range1="@drawable/multislider_scrubber_track_holo_light"
+
+                    />
+
+            </LinearLayout>
 
             <TableRow
                 android:layout_width="match_parent"
@@ -143,6 +184,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/eventAddNew" />
+
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
