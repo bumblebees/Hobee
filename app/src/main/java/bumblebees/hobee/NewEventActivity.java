@@ -131,6 +131,7 @@ public class NewEventActivity extends AppCompatActivity {
         }
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            NewEventActivity.inputEventTime.setText(hourOfDay + ":" + minute);
             if (hourOfDay < 10 && minute < 10)
                 NewEventActivity.inputEventTime.setText("0" + hourOfDay + ":0" + minute);
             else {
@@ -159,15 +160,16 @@ public class NewEventActivity extends AppCompatActivity {
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
+            month = month +1;
+            NewEventActivity.inputEventDate.setText(year + "-" + month + "-" + day);
             if (month < 10 && day <10)
                 NewEventActivity.inputEventDate.setText(year + "-0" + month + "-0" + day);
-            else {
-                if (month < 10)
-                    NewEventActivity.inputEventDate.setText(year + "-0" + month + "-" + day);
-                if (day < 10)
-                    NewEventActivity.inputEventDate.setText(year + "-" + month + "-0" + day);
+            else{
+            if (month < 10)
+                NewEventActivity.inputEventDate.setText(year + "-0" + month + "-" + day);
+            if (day < 10)
+                NewEventActivity.inputEventDate.setText(year + "-" + month + "-0" + day);
             }
-
         }
     }
 
