@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import bumblebees.hobee.utilities.SessionManager;
+import bumblebees.hobee.utilities.SocketIO;
 import com.facebook.*;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -16,11 +18,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 
 import java.util.Arrays;
-
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -29,14 +28,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     SignInButton googleLoginButton;
     SessionManager session;
     GoogleSignInOptions googleSignIn;
-    GoogleApiClient googleApiClient;
+    static GoogleApiClient googleApiClient;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SocketIO.start();
+        SocketIO.getInstance().start();
         session = new SessionManager(getApplicationContext());
         session.checkLogin();
 
@@ -51,7 +50,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                SocketIO.checkIfExists(AccessToken.getCurrentAccessToken(), LoginActivity.this);
+                SocketIO.getInstance().checkIfExists(AccessToken.getCurrentAccessToken(), LoginActivity.this);
             }
 
             @Override
@@ -93,15 +92,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("REQ_CODE", Integer.toString(requestCode));
-        Log.d("RES_CODE", Integer.toString(resultCode));
 
         if (requestCode == 9001) {
             GoogleSignInResult res = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
 
             if (res.isSuccess()) {
                 GoogleSignInAccount acc = res.getSignInAccount();
-                SocketIO.checkIfExists(acc, getApplicationContext());
+                SocketIO.getInstance().checkIfExists(acc, getApplicationContext());
             }
             else {
                 Log.d("acc", "sign-in failed");
