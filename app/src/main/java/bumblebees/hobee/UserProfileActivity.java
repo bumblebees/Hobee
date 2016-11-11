@@ -42,9 +42,9 @@ public class UserProfileActivity extends AppCompatActivity {
 
         //TODO: rename variables
         fbName   = (TextView) findViewById(R.id.userName);
-        fbEmail  =  (TextView) findViewById(R.id.userEmail);
-        fbGender = (TextView) findViewById(R.id.userGender);
-        fbAge    = (TextView) findViewById(R.id.userAge);
+       // fbEmail  =  (TextView) findViewById(R.id.userEmail);
+      //  fbGender = (TextView) findViewById(R.id.userGender);
+      //  fbAge    = (TextView) findViewById(R.id.userAge);
         fbImage  = (ImageView) findViewById(R.id.fbImage);
         hobbiesList = (TextView) findViewById(R.id.listhobbies);
         profileBio = (TextView) findViewById(R.id.profileBio);

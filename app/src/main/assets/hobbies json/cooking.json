@@ -1,0 +1,21 @@
+{
+        "id": 4.2,
+        "name":"Cooking",
+        "properties":
+        {
+                "difficultyLevel": ["beginner", "intermediate", "expert"],
+
+                "preferences":
+                {
+                    "day":["mon", "tues", "wed", "thurs", "fri"],
+                        "required":true
+                    },
+                    "time":
+                    {
+                        "type": "string",
+                        "required":true
+                    }
+                }
+
+        }
+}

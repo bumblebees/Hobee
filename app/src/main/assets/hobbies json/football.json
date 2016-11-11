@@ -1,0 +1,32 @@
+{
+        "id": 2,
+        "name":"Football",
+        "properties":
+        {
+                "difficultyLevel": ["beginner", "intermediate", "semi-pro", "pro"],
+
+                 "position":
+                {
+                    "ofense":["quarterback", "center", "running back", "fullback", "wide receiver", "tight end", "left guard", "right guard", "left tackle", "right tackle",],
+                        "required":true
+                    },
+                    "defense":["defensive tackle", "defensive end", "linebacker", "safety", "corner back"],
+                        "required":true
+                },
+
+                "height": "number",
+
+                "preferences":
+                {
+                    "day":["mon", "tues", "wed", "thurs", "fri"],
+                        "required":true
+                    },
+                    "time":
+                    {
+                        "type": "string",
+                        "required":true
+                    }
+                }
+
+        }
+}

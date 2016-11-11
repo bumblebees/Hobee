@@ -1,0 +1,19 @@
+{
+        "id": 4.1,
+        "name":"Museum tour",
+        "properties":
+        {
+                "preferences":
+                {
+                    "day":["mon", "tues", "wed", "thurs", "fri"],
+                        "required":true
+                    },
+                    "time":
+                    {
+                        "type": "string",
+                        "required":true
+                    }
+                }
+
+        }
+}

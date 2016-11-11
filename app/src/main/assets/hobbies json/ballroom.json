@@ -1,0 +1,21 @@
+{
+        "id": 3.1,
+        "name":"Ballroom dancing",
+        "properties":
+        {
+                "difficultyLevel": ["beginner", "intermediate", "pro"],
+
+                "preferences":
+                {
+                    "day":["mon", "tues", "wed", "thurs", "fri"],
+                        "required":true
+                    },
+                    "time":
+                    {
+                        "type": "string",
+                        "required":true
+                    }
+                }
+
+        }
+}
