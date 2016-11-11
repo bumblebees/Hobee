@@ -1,11 +1,12 @@
-package bumblebees.hobee;
+package bumblebees.hobee.utilities;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-
+import bumblebees.hobee.HobbyActivity;
+import bumblebees.hobee.HomeActivity;
+import bumblebees.hobee.RegisterUserActivity;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -21,21 +22,56 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
-class SocketIO {
+public class SocketIO {
 
-    static private Socket socket;
+    static private SocketIO instance;
 
-    static private Bundle userData;
+    private Socket socket;
+    private Bundle userData;
 
-    static void start(){
-        try {
-            socket = IO.socket("http://129.16.155.22:3001");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+
+    public static SocketIO getInstance(){
+        if (instance == null){
+            synchronized (SocketIO.class){
+                if(instance == null){
+                    instance = new SocketIO();
+                }
+            }
         }
+        return instance;
     }
 
-    static void checkIfExists(final AccessToken accessToken, final Context context) {
+
+    /**
+     *  Empty constructor
+     */
+    private SocketIO(){
+
+    }
+
+
+    /**
+     *  Setup socket connection
+     */
+    public void start(){
+        if (socket == null){
+            try {
+                socket = IO.socket("http://129.16.155.22:3001");
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    /**
+     *  Check with database if user exists, if not, retrieve user data from facebook account
+     *  and pass it to user registration activity.
+     *  If exists, get user data, save it to shared preferences and go to home screen
+     * @param accessToken user data from facebook API
+     * @param context context from which method is called
+     */
+    public void checkIfExists(final AccessToken accessToken, final Context context) {
 
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
@@ -73,9 +109,9 @@ class SocketIO {
                             request.executeAsync();
                         }
                         else {
-                            SessionManager session = new SessionManager(context);
-                            session.createSession(accessToken.getUserId(), "facebook");
+                            SocketIO.getInstance().getUser(accessToken.getUserId());
                             Intent intent = new Intent(context, HomeActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent);
                         }
                         socket.disconnect();
@@ -86,7 +122,14 @@ class SocketIO {
         socket.connect();
     }
 
-    static void checkIfExists(final GoogleSignInAccount account, final Context context){
+    /**
+     *  Check with database if user exists, if not, retrieve user data from google account
+     *  and pass it to user registration activity.
+     *  If exists, get user data, save it to shared preferences and go to home screen
+     * @param account user data from google API
+     * @param context context from which method is called
+     */
+    public void checkIfExists(final GoogleSignInAccount account, final Context context){
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -117,9 +160,9 @@ class SocketIO {
                             context.startActivity(intent);
                         }
                         else {
-                            SessionManager session = new SessionManager(context);
-                            session.createSession(account.getId(), "google");
+                            SocketIO.getInstance().getUser(account.getId());
                             Intent intent = new Intent(context, HomeActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent);
                         }
                         socket.disconnect();
@@ -130,7 +173,12 @@ class SocketIO {
         socket.connect();
     }
 
-    static void register(final JSONObject jsonObject, final Context packageContext){
+    /**
+     *  Send user data to server to be saved in database and go to HobbyActivity
+     * @param jsonObject contains user data
+     * @param packageContext context from which method is called
+     */
+    public void register(final JSONObject jsonObject, final Context packageContext){
 
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
@@ -169,4 +217,28 @@ class SocketIO {
     static public void disconnect(){
         socket.disconnect();
     }
+
+
+    /**
+     *  Get user data from database and save it to shared preferences
+     * @param loginId google or fb login
+     */
+    private void getUser(final String loginId){
+
+        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) {
+                socket.emit("get_user", loginId, new Ack() {
+                    @Override
+                    public void call(Object... objects) {
+                        JSONObject userJSON = (JSONObject) objects[0];
+                        SessionManager session = new SessionManager(null);
+                        session.createSession(userJSON);
+                    }
+                });
+                socket.disconnect();
+            }
+        });
+    }
+
 }

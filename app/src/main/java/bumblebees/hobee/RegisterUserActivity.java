@@ -3,18 +3,13 @@ package bumblebees.hobee;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.*;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import io.socket.client.IO;
+import bumblebees.hobee.utilities.SessionManager;
+import bumblebees.hobee.utilities.SocketIO;
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.URISyntaxException;
 
 public class RegisterUserActivity extends AppCompatActivity {
 
@@ -71,8 +66,9 @@ public class RegisterUserActivity extends AppCompatActivity {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                session.createSession(userData.getString("loginId"), userData.getString("origin"));
-                SocketIO.register(createJSON(), RegisterUserActivity.this);
+                JSONObject userJSON = createJSON();
+                session.createSession(userJSON);
+                SocketIO.getInstance().register(userJSON, RegisterUserActivity.this);
             }
         });
     }
