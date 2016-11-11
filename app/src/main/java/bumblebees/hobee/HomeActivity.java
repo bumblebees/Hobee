@@ -9,9 +9,18 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import bumblebees.hobee.utilities.SessionManager;
 import com.facebook.login.LoginManager;
 
@@ -27,6 +36,7 @@ import java.util.ArrayList;
 
 import bumblebees.hobee.utilities.MQTT;
 import bumblebees.hobee.utilities.MQTTMessageReceiver;
+import bumblebees.hobee.utilities.SocketIO;
 import io.socket.client.Ack;
 
 public class HomeActivity extends AppCompatActivity {
@@ -41,6 +51,7 @@ public class HomeActivity extends AppCompatActivity {
     DrawerListAdapter adapter;
     TextView user;
     ArrayList<NavItem> navItems = new ArrayList<>();
+    ListView drawerList;
 
 
     @Override
@@ -63,6 +74,17 @@ public class HomeActivity extends AppCompatActivity {
                 HomeActivity.this.startActivity(newEventIntent);
             }
         });
+
+
+        btnGetEvents = (Button) findViewById(R.id.btnGetEvents);
+        btnGetEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                subscribeTopics();
+            }
+        });
+
+        eventList = (LinearLayout) findViewById(R.id.listParticipatingEvents);
 
 
         // Add options to the menu (empty strings can be replaced with some additional info)
@@ -171,7 +193,7 @@ public class HomeActivity extends AppCompatActivity {
 
     class DrawerListAdapter extends BaseAdapter {
 
-        eventList = (LinearLayout) findViewById(R.id.listParticipatingEvents);
+        Context context;
         ArrayList<NavItem> navItems;
 
         public DrawerListAdapter(Context context, ArrayList<NavItem> navItems) {
@@ -183,25 +205,11 @@ public class HomeActivity extends AppCompatActivity {
         public int getCount() {
             return navItems.size();
         }
-                JSONArray array = (JSONArray) objects[0];
-                for (int i=0; i<array.length(); i++){
 
-                    try {
-                        JSONObject data = array.getJSONObject(i);
-                        JSONObject event = data.getJSONObject("event");
-                        final Button btn = new Button(HomeActivity.this);
-                        btn.setText(event.getString("name"));
-                        btn.setTag(data.getString("eventID"));
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                eventList.addView(btn);
-                            }
-                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+        @Override
+        public Object getItem(int position) {
+            return navItems.get(position);
+        }
 
         @Override
         public long getItemId(int position) {
@@ -227,13 +235,9 @@ public class HomeActivity extends AppCompatActivity {
 
             return view;
         }
-                }
-                SocketIO.disconnect();
-            }
-        });
-
-         */
     }
+
+
 
 
     public void subscribeTopics(){

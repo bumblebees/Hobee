@@ -16,7 +16,6 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -190,32 +189,6 @@ public class SocketIO {
         socket.connect();
         Intent intent = new Intent(packageContext, HobbyActivity.class);
         packageContext.startActivity(intent);
-    }
-
-    /**
-     * Get all the events that the user is involved in.
-     * @param userID - ID that is being searched for
-     * @param option - "host" or "joined" or "pending"
-     */
-    static void getEvents(final String userID, final String option, final Ack callback){
-        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                JSONObject data = new JSONObject();
-                try {
-                    data.put("userID", userID);
-                    data.put("option", option);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                socket.emit("get_events", data, callback);
-            }
-        });
-        socket.connect();
-    }
-
-    static public void disconnect(){
-        socket.disconnect();
     }
 
 
