@@ -15,8 +15,9 @@
     <TextView
             android:text="Homepage"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" android:id="@+id/textView"/>
+            android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:layout_below="@+id/btnLogout" />
 
     <Button
             android:text="View Profile"
@@ -41,4 +42,30 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/listParticipatingEvents" />
+    </ScrollView>
+
+    <Button
+        android:text="Get events"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/btnGetEvents"
+        android:layout_alignRight="@+id/btnCreateEvent"
+        android:layout_alignEnd="@+id/btnCreateEvent" />
+
 </RelativeLayout>

@@ -21,12 +21,18 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URISyntaxException;
 import java.util.Calendar;
 import bumblebees.hobee.utilities.MQTT;
 import io.apptik.widget.MultiSlider;
+import io.socket.client.Ack;
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 
 public class NewEventActivity extends AppCompatActivity {
@@ -46,19 +52,18 @@ public class NewEventActivity extends AppCompatActivity {
     MultiSlider ageRangeSlider;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
-        MQTT.getInstance().connect(this.getApplicationContext());
+
 
         inputEventName = (TextView) findViewById(R.id.inputEventName);
         inputEventDescription = (TextView) findViewById(R.id.inputEventDescription);
         inputEventLocation = (TextView) findViewById(R.id.inputEventLocation);
         inputEventDate = (TextView) findViewById(R.id.inputEventDate);
         inputEventTime = (TextView) findViewById(R.id.inputEventTime);
-        inputEventGender= (Spinner) findViewById(R.id.inputEventGender);
+        inputEventGender = (Spinner) findViewById(R.id.inputEventGender);
         inputEventNumber = (TextView) findViewById(R.id.inputEventNumber);
         ageRangeSlider = (MultiSlider) findViewById(R.id.age_range_slider);
         maxAge = (TextView) findViewById(R.id.maxAge);
@@ -72,8 +77,23 @@ public class NewEventActivity extends AppCompatActivity {
         ArrayAdapter<String> genderChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{"any gender", "male", "female"});
         inputEventGender.setAdapter(genderChoice);
 
+
+
         //TODO: get these from your currently available hobbies
+
         String[] hobbyChoices = {"basketball", "football", "fishing", "cooking"};
+//        String[] hobbyChoices = new String[0];
+//        JSONArray hobbies;
+//        try {
+//            hobbies = userData.getJSONArray("hobbies");
+//            hobbyChoices = new String[hobbies.length()];
+//            for(int i=0; i<hobbies.length(); i++){
+//                hobbyChoices[i]=hobbies.getString(i);
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+        
         ArrayAdapter<String> hobbyChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, hobbyChoices);
 
         eventHobbyChoice.setAdapter(hobbyChoice);
@@ -90,7 +110,7 @@ public class NewEventActivity extends AppCompatActivity {
         inputEventTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            //TODO: open time picker
+                //TODO: open time picker
                 DialogFragment newFragment = new TimePickerFragment();
                 newFragment.show(getSupportFragmentManager(), "timePicker");
 
@@ -105,16 +125,15 @@ public class NewEventActivity extends AppCompatActivity {
             }
         });
 /**
-        ageRangeSlider.setOnThumbValueChangeListener(new MultiSlider.SimpleChangeListener() {
-            @Override
-            public void onValueChanged(MultiSlider multiSlider, MultiSlider.Thumb thumb, int thumbIndex, int value) {
-                if (thumbIndex == 0) {
-                    minAge.setText(String.valueOf(value));
-                } else {
-                    maxAge.setText(String.valueOf(value));
-                }
-            }
-        });
+ ageRangeSlider.setOnThumbValueChangeListener(new MultiSlider.SimpleChangeListener() {
+@Override public void onValueChanged(MultiSlider multiSlider, MultiSlider.Thumb thumb, int thumbIndex, int value) {
+if (thumbIndex == 0) {
+minAge.setText(String.valueOf(value));
+} else {
+maxAge.setText(String.valueOf(value));
+}
+}
+});
  **/
 
 
@@ -141,9 +160,9 @@ public class NewEventActivity extends AppCompatActivity {
                 NewEventActivity.inputEventTime.setText("0" + hourOfDay + ":0" + minute);
             else {
                 if (hourOfDay < 10)
-                NewEventActivity.inputEventTime.setText("0" + hourOfDay + ":" + minute);
+                    NewEventActivity.inputEventTime.setText("0" + hourOfDay + ":" + minute);
                 if (minute < 10)
-                NewEventActivity.inputEventTime.setText(hourOfDay + ":0" + minute);
+                    NewEventActivity.inputEventTime.setText(hourOfDay + ":0" + minute);
             }
 
         }
@@ -165,15 +184,15 @@ public class NewEventActivity extends AppCompatActivity {
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            month = month +1;
+            month = month + 1;
             NewEventActivity.inputEventDate.setText(year + "-" + month + "-" + day);
-            if (month < 10 && day <10)
+            if (month < 10 && day < 10)
                 NewEventActivity.inputEventDate.setText(year + "-0" + month + "-0" + day);
-            else{
-            if (month < 10)
-                NewEventActivity.inputEventDate.setText(year + "-0" + month + "-" + day);
-            if (day < 10)
-                NewEventActivity.inputEventDate.setText(year + "-" + month + "-0" + day);
+            else {
+                if (month < 10)
+                    NewEventActivity.inputEventDate.setText(year + "-0" + month + "-" + day);
+                if (day < 10)
+                    NewEventActivity.inputEventDate.setText(year + "-" + month + "-0" + day);
             }
         }
     }
@@ -181,15 +200,16 @@ public class NewEventActivity extends AppCompatActivity {
     /**
      * Generates a hash to be used as ID for MQTT topics.
      * Current implementation hashes a  string combination of useID+timestamp
-     * @param id name of the event
+     *
+     * @param id   name of the event
      * @param time UNIX timestamp when the event was created
      * @return hash
      */
     //TODO:figure out a better way to implement this so that it is for sure unique and easy to generate
-    public String generateHash(String id, long time){
+    public String generateHash(String id, long time) {
         String hash;
-        String toBeHashed = id+time;
-        hash = Base64.encodeToString(String.valueOf(toBeHashed.hashCode()).getBytes(), Base64.URL_SAFE);
+        String toBeHashed = id + time;
+        hash = Base64.encodeToString(String.valueOf(toBeHashed.hashCode()).getBytes(), Base64.URL_SAFE | Base64.NO_PADDING);
         return hash;
     }
 
@@ -197,7 +217,7 @@ public class NewEventActivity extends AppCompatActivity {
     /**
      * Creates the JSON that will be sent over MQTT using the completed fields in the form.
      */
-    public void addNewEvent(){
+    public void addNewEvent() {
         final SessionManager session = new SessionManager(this.getApplicationContext());
 
         long timeCreated = Calendar.getInstance().getTimeInMillis() / 1000L;
@@ -219,7 +239,7 @@ public class NewEventActivity extends AppCompatActivity {
             eventDetails.put("time", inputEventTime.getText());
             eventDetails.put("date", inputEventDate.getText());
             eventDetails.put("gender", inputEventGender.getSelectedItem().toString());
-            eventDetails.put("description", inputEventName.getText());
+            eventDetails.put("description", inputEventDescription.getText());
             eventDetails.put("maximum_people", inputEventNumber.getText());
 
             event.put("host", host);
@@ -229,14 +249,14 @@ public class NewEventActivity extends AppCompatActivity {
             event.put("eventID", hash);
 
 
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
         MqttMessage msg = new MqttMessage(event.toString().getBytes());
-        String topic = "hobby/event/"+eventCategory+"/"+hash;
+        msg.setRetained(true);
+        String topic = "hobby/event/" + eventCategory + "/" + hash;
         Log.d("mqtt", topic);
         MQTT.getInstance().publishMessage(topic, msg);
 
@@ -250,8 +270,10 @@ public class NewEventActivity extends AppCompatActivity {
         Intent homeIntent = new Intent(NewEventActivity.this, HomeActivity.class);
         NewEventActivity.this.startActivity(homeIntent);
 
-    }
 
+
+
+    }
 }
 
 
