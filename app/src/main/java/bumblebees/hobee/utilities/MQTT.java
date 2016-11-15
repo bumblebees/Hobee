@@ -158,11 +158,15 @@ public class MQTT implements MqttCallback {
             ArrayList<MQTTMessageReceiver> list = callbackList.get(subTopic);
             for(int i=0; i<list.size(); i++){
                 //send the message to the callback function(s)
-                Log.d("mqtt", list.get(i).toString());
+                //Log.d("mqtt", list.get(i).toString());
                 list.get(i).onMessageReceive(message);
             }
         }
 
+        ArrayList<MQTTMessageReceiver> list = callbackList.get(topic);
+        for(int i=0; i<list.size(); i++){
+            list.get(i).onMessageReceive(message);
+        }
 
         switch(topic){
             case "hobee/test2":
