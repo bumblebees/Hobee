@@ -108,10 +108,7 @@ public class SocketIO {
                             request.executeAsync();
                         }
                         else {
-                            SocketIO.getInstance().getUser(accessToken.getUserId());
-                            Intent intent = new Intent(context, HomeActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intent);
+                            SocketIO.getInstance().getUser(accessToken.getUserId(), context);
                         }
                         socket.disconnect();
                     }
@@ -159,10 +156,7 @@ public class SocketIO {
                             context.startActivity(intent);
                         }
                         else {
-                            SocketIO.getInstance().getUser(account.getId());
-                            Intent intent = new Intent(context, HomeActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intent);
+                            SocketIO.getInstance().getUser(account.getId(), context);
                         }
                         socket.disconnect();
                     }
@@ -193,10 +187,10 @@ public class SocketIO {
 
 
     /**
-     *  Get user data from database and save it to shared preferences
+     *  Get user data from database and save it to user class
      * @param loginId google or fb login
      */
-    private void getUser(final String loginId){
+    public void getUser(final String loginId, final Context context){
 
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
@@ -205,13 +199,16 @@ public class SocketIO {
                     @Override
                     public void call(Object... objects) {
                         JSONObject userJSON = (JSONObject) objects[0];
-                        SessionManager session = new SessionManager(null);
-                        session.createSession(userJSON);
+                        User.getInstance().setUser(userJSON);
+                        Intent intent = new Intent(context, HomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                        socket.disconnect();
                     }
                 });
-                socket.disconnect();
             }
         });
+        socket.connect();
     }
 
 }

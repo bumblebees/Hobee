@@ -21,7 +21,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import bumblebees.hobee.utilities.SessionManager;
+import bumblebees.hobee.utilities.*;
 import com.facebook.login.LoginManager;
 
 
@@ -34,9 +34,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import bumblebees.hobee.utilities.MQTT;
-import bumblebees.hobee.utilities.MQTTMessageReceiver;
-import bumblebees.hobee.utilities.SocketIO;
 import io.socket.client.Ack;
 
 public class HomeActivity extends AppCompatActivity {
@@ -96,7 +93,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // Display user name in menu
         user = (TextView) findViewById(R.id.firstName_lastName);
-        user.setText(session.getfirstName() + " " + session.getLastName());
+        user.setText(User.getInstance().getFirstName() + " " + User.getInstance().getLastName());
 
         // Populate the Navigation Drawer with options
         drawerPane = (RelativeLayout) findViewById(R.id.drawerPane);

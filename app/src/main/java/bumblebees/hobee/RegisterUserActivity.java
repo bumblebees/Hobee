@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.*;
 import bumblebees.hobee.utilities.SessionManager;
 import bumblebees.hobee.utilities.SocketIO;
+import bumblebees.hobee.utilities.User;
 import io.socket.client.Socket;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,7 +68,11 @@ public class RegisterUserActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 JSONObject userJSON = createJSON();
-                session.createSession(userJSON);
+                // Set shared preferences
+                session.setPreferences(userData.getString("loginId"), userData.getString("origin"));
+                // Set user instance
+                User.getInstance().setUser(userJSON);
+                // Save user in database
                 SocketIO.getInstance().register(userJSON, RegisterUserActivity.this);
             }
         });

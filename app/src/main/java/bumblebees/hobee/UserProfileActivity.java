@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
 import bumblebees.hobee.utilities.SessionManager;
+import bumblebees.hobee.utilities.User;
 
 import java.util.GregorianCalendar;
 
@@ -70,12 +71,12 @@ public class UserProfileActivity extends AppCompatActivity {
 
         SessionManager session = new SessionManager(getApplicationContext());
 
-        fbName.setText(session.getfirstName() + " " + session.getLastName());
-        fbEmail.setText(session.getEmail());
-        fbGender.setText(session.getGender());
+        fbName.setText(User.getInstance().getFirstName() + " " + User.getInstance().getLastName());
+        fbEmail.setText(User.getInstance().getEmail());
+        fbGender.setText(User.getInstance().getGender());
         //TODO: receive this as an UNIX date and calculate the age instead of the birthday
-        fbAge.setText(Integer.toString(calculateAgeFromDates(session.getBirthday())));
-        profileBio.setText(session.getBio());
+        fbAge.setText(Integer.toString(calculateAgeFromDates(User.getInstance().getBirthday())));
+        profileBio.setText(User.getInstance().getBio());
 
     }
 

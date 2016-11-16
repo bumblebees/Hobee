@@ -37,7 +37,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         SocketIO.getInstance().start();
         session = new SessionManager(getApplicationContext());
-        session.checkLogin();
+
+        // If user has already logged in, just get his data from the server and go to homepage
+        if (session.getId() != null){
+            SocketIO.getInstance().getUser(session.getId(), getApplicationContext());
+        }
+
 
         /*
             FACEBOOK SIGN IN
