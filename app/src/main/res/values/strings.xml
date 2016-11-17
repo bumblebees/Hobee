@@ -3,4 +3,5 @@
     <string name="facebook_app_id">1176322032414631</string>
     <string name="male">male</string>
     <string name="female">female</string>
+    <string name="set">Set</string>
 </resources>

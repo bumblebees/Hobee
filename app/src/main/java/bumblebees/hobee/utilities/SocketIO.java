@@ -139,9 +139,9 @@ public class SocketIO {
                             userData.putString("origin", "google");
                             userData.putString("firstName", account.getGivenName());
                             userData.putString("lastName", account.getFamilyName());
-                            userData.putString("birthday", "");
+                            userData.putString("birthday", null);
                             userData.putString("email", account.getEmail());
-                            userData.putString("gender", "");
+                            userData.putString("gender", null);
                             Uri uri = account.getPhotoUrl();
                             if (uri != null) {
                                 userData.putString("pic", uri.toString());
@@ -182,6 +182,7 @@ public class SocketIO {
         });
         socket.connect();
         Intent intent = new Intent(packageContext, HobbyActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);
     }
 

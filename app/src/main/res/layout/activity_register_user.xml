@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_test_user"
+    android:id="@+id/activity_register_user"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -13,32 +13,20 @@
     tools:context="bumblebees.hobee.RegisterUserActivity">
 
 
-    <ImageView
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/fbImage"
-        app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
-        android:adjustViewBounds="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/submitBtn"
-        android:layout_alignStart="@+id/submitBtn"
-        android:layout_marginLeft="133dp"
-        android:layout_marginStart="133dp" />
-
-    <Button
-        android:text="Set photo"
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/selectPicBtn"
-        android:background="@android:color/darker_gray"
-        android:textColor="@android:color/black"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_below="@+id/fbImage"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="19dp"
-        android:visibility="gone"/>
-
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/firstName" android:hint="First name"
+        android:background="#60FFFFFF"
+        android:padding="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" />
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,33 +39,74 @@
         android:padding="10dp"
         android:layout_marginLeft="1dp"
         android:layout_margin="10dp" />
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/userImage"
+        app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
+        android:adjustViewBounds="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/submitBtn"
+        android:layout_alignStart="@+id/submitBtn"
+        android:layout_marginLeft="133dp"
+        android:layout_marginStart="133dp" />
 
-    <ImageButton
-        app:srcCompat="@drawable/letsgetstarted"
-        android:id="@+id/submitBtn"
-        android:background="#0000"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:scaleType="fitCenter"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+    <RadioGroup
+            android:id="@+id/gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" android:layout_below="@+id/userImage"
+            android:layout_alignLeft="@+id/lastName" android:layout_alignStart="@+id/lastName">
+
+        <RadioButton
+            android:id="@+id/radioMale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/male"
+            android:checked="false" />
+        <RadioButton
+                android:id="@+id/radioFemale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/female" android:checked="false"/>
+    </RadioGroup>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:ems="10"
+            android:id="@+id/birthday"
+            android:background="#60FFFFFF"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:padding="10dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_toStartOf="@+id/setBirthdayBtn"
+            android:layout_toLeftOf="@+id/setBirthdayBtn" android:text="birthday"/>
+    <Button
+            android:text="@string/set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_centerVertical="true"
+            android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
+            android:id="@+id/setBirthdayBtn"/>
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="date"
+        android:inputType="textEmailAddress"
         android:ems="10"
-        android:id="@+id/birthdate" android:hint="Birthdate yyyy/mm/dd"
+        android:id="@+id/email" android:hint="E-mail"
         android:background="#60FFFFFF"
-        android:layout_centerVertical="true"
+        android:padding="10dp"
+        android:layout_above="@+id/info"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:padding="10dp"
         android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp" />
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -95,55 +124,14 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="4dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:id="@+id/email" android:hint="E-mail"
-        android:background="#60FFFFFF"
-        android:padding="10dp"
-        android:layout_above="@+id/info"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/firstName" android:hint="First name"
-        android:background="#60FFFFFF"
-        android:padding="10dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp" />
-    <RadioGroup
-            android:id="@+id/gender"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" android:layout_below="@+id/fbImage"
-            android:layout_alignLeft="@+id/lastName" android:layout_alignStart="@+id/lastName">
-
-        <RadioButton
-            android:id="@+id/radioMale"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/male"
-            android:checked="true" />
-        <RadioButton
-            android:id="@+id/radioFemale"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/female" />
-    </RadioGroup>
+    <ImageButton
+        app:srcCompat="@drawable/letsgetstarted"
+        android:id="@+id/submitBtn"
+        android:background="#0000"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:scaleType="fitCenter"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
