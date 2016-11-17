@@ -150,6 +150,42 @@ public class MQTT implements MqttCallback {
     public void messageArrived(String topic, MqttMessage message) throws Exception {
 
         Log.d("mqtt", "message from: "+topic);
+
+        if(topic.startsWith("hobby/event/")){
+            Log.d("mqtt", "pattern match");
+            //TODO: make it work for other things than fishing
+            Log.d("mqtt", String.valueOf(callbackList.containsKey(topic)));
+            ArrayList<MQTTMessageReceiver> list = callbackList.get(topic);
+            for(int i=0; i<list.size(); i++){
+                //send the message to the callback function(s)
+                //Log.d("mqtt", list.get(i).toString());
+                list.get(i).onMessageReceive(message);
+            }
+        }
+        ArrayList<MQTTMessageReceiver> list  = callbackList.get(topic);
+        for(int i=0; i<list.size(); i++){
+            list.get(i).onMessageReceive(message);
+        }
+
+        switch(topic){
+            case "hobee/test2":
+                //do something here
+                Log.d("msg", message.getPayload().toString());
+                break;
+
+
+
+            default:
+                //do something else here
+        }
+
+    }
+
+/**
+    @Override
+    public void messageArrived(String topic, MqttMessage message) throws Exception {
+
+        Log.d("mqtt", "message from: "+topic);
         if(topic.startsWith("hobby/event/")){
             Log.d("mqtt", "pattern match");
             //TODO: make it work for other things than fishing
@@ -181,7 +217,7 @@ public class MQTT implements MqttCallback {
         }
 
     }
-
+*/
     @Override
     public void deliveryComplete(IMqttDeliveryToken token) {
 
