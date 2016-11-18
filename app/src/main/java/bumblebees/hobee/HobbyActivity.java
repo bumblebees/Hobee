@@ -1,14 +1,10 @@
 package bumblebees.hobee;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Class to represent the "head" hobby page, with categories
@@ -31,9 +27,12 @@ public class HobbyActivity extends AppCompatActivity {
         showProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // this way the stack of activities is cleared and if you resume the app from closing it on homepage
+                // it will resume at homepage not here
                 Intent homeIntent = new Intent(HobbyActivity.this, HomeActivity.class);
-                homeIntent.putExtra("user_ID", userID);
+                homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 HobbyActivity.this.startActivity(homeIntent);
+                finish();
             }
         });
 
@@ -42,7 +41,6 @@ public class HobbyActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent profileIntent = new Intent(HobbyActivity.this, SportsHobbyActivity.class);
-                profileIntent.putExtra("user_ID", userID);
                 HobbyActivity.this.startActivity(profileIntent);
             }
         });

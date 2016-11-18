@@ -1,115 +1,77 @@
 package bumblebees.hobee;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
+import bumblebees.hobee.utilities.User;
 
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.URISyntaxException;
-
-import io.socket.client.Ack;
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 
 public class UserProfileActivity extends AppCompatActivity {
-    private TextView fbName;
-    private TextView fbEmail;
-    private TextView fbGender;
-    private TextView fbAge;
-    private ImageView fbImage;
-    private TextView hobbiesList;
-    private TextView profileBio;
-    JSONObject profileData;
-    Socket socket;
+
+    TextView userName;
+    TextView userEmail;
+    TextView userGender;
+    TextView userAge;
+    ImageView userImage;
+    TextView hobbiesList;
+    TextView userBio;
+    int age = 0;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-
-        //TODO: rename variables
-        fbName   = (TextView) findViewById(R.id.userName);
-       // fbEmail  =  (TextView) findViewById(R.id.userEmail);
-      //  fbGender = (TextView) findViewById(R.id.userGender);
-      //  fbAge    = (TextView) findViewById(R.id.userAge);
-        fbImage  = (ImageView) findViewById(R.id.fbImage);
+        userName = (TextView) findViewById(R.id.userName);
+        userEmail = (TextView) findViewById(R.id.userEmail);
+        userGender = (TextView) findViewById(R.id.userGender);
+        userAge = (TextView) findViewById(R.id.userAge);
+        userImage = (ImageView) findViewById(R.id.userImage);
         hobbiesList = (TextView) findViewById(R.id.listhobbies);
-        profileBio = (TextView) findViewById(R.id.profileBio);
+        userBio = (TextView) findViewById(R.id.userBio);
 
-
-        Intent intent = this.getIntent();
-        final String userID = intent.getExtras().getString("user_ID");
-
-
-        try {
-            socket = IO.socket("http://129.16.155.22:3001");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        //Retrieve user data from server
-        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-            @Override
-            public void call(Object... objects) {
-                socket.emit("get_user", userID, new Ack() {
-                    @Override
-                    public void call(Object... objects) {
-                        profileData = (JSONObject) objects[0];
-                        //Add data to fields
-                        //updating the UI has to happen on the main UI thread, otherwise it throws an exception
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    fbName.setText(profileData.getString("firstName")+" "+profileData.getString("lastName"));
-                                    fbEmail.setText(profileData.getString("email"));
-                                    fbGender.setText(profileData.getString("gender"));
-                                    //TODO: receive this as an UNIX date and calculate the age instead of the birthday
-                                    fbAge.setText(profileData.getString("birthday"));
-                                    profileBio.setText(profileData.getString("bio"));
-                                    JSONArray arr = profileData.getJSONArray("hobbies");
-                                    String hobbies="";
-                                    for (int i=0; i<arr.length(); i++){
-                                        hobbies+=arr.get(i)+" ";
-                                    }
-                                    hobbiesList.setText(hobbies);
-
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-
-
-
-                        socket.disconnect();
-
-                    }
-                });
-
-            }
-        });
-        socket.connect();
-
+        userName.setText(User.getInstance().getFirstName() + " " + User.getInstance().getLastName());
+        userEmail.setText(User.getInstance().getEmail());
+        userGender.setText(User.getInstance().getGender());
+        userAge.setText(Integer.toString(calculateAgeFromDates(User.getInstance().getBirthday())));
+        userBio.setText(User.getInstance().getBio());
 
     }
 
+    /**
+     * This method calculates the age of the user given the user's birthday as a String
+     * in the format of dd/MM/yyyy.
+     *
+     * @param dateText String
+     */
+    private int calculateAgeFromDates(String dateText) {
+        try {
+            Calendar birthday = new GregorianCalendar();
+            Calendar today = new GregorianCalendar();
+            int factor = 0; //to correctly calculate age when birthday has not been celebrated this year
+            Date birthDate = new SimpleDateFormat("yyyy/MM/dd").parse(dateText);
+            Date currentDate = new Date(); //today
 
+            birthday.setTime(birthDate);
+            today.setTime(currentDate);
 
+            // check if birthday has been celebrated this year
+            if (today.get(Calendar.DAY_OF_YEAR) < birthday.get(Calendar.DAY_OF_YEAR)) {
+                factor = -1; //birthday not celebrated
+            }
+            age = today.get(Calendar.YEAR) - birthday.get(Calendar.YEAR) + factor;
+        } catch (ParseException e) {
+            System.out.println("Given date not in expected format dd/MM/yyyy");
+        }
+        return age;
+    }
 
 
 }

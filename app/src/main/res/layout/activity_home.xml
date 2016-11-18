@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- The main content view -->
+
+    <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/activity_home"
@@ -12,18 +20,100 @@
         android:background="#ffe36b"
         tools:context="bumblebees.hobee.HomeActivity">
 
-    <TextView
+        <TextView
             android:text="Homepage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" android:id="@+id/textView"/>
 
-    <Button
-        android:text="View Profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnProfile"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-</RelativeLayout>
+        <Button
+            android:text="Create Event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnCreateEvent"
+            android:layout_alignParentTop="true" android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+
+        <Button
+            android:text="Get events"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnGetEvents"
+            android:layout_below="@+id/btnCreateEvent"
+            android:layout_alignLeft="@+id/btnCreateEvent"
+            android:layout_alignStart="@+id/btnCreateEvent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/listParticipatingEvents" />
+        </ScrollView>
+    </RelativeLayout>
+
+    <!-- The navigation drawer -->
+
+    <RelativeLayout
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:id="@+id/drawerPane"
+        android:layout_gravity="start">
+
+        <!-- Profile Box -->
+
+        <RelativeLayout
+            android:id="@+id/profileBox"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@color/material_blue_grey_800"
+            android:padding="8dp" >
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/sample"
+                android:layout_marginTop="15dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="42dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@+id/avatar"
+                android:orientation="vertical"
+                android:id="@+id/linearLayout2">
+
+                <TextView
+                    android:id="@+id/firstName_lastName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="#fff"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!-- List of Actions (pages) -->
+        <ListView
+            android:id="@+id/navList"
+            android:layout_width="280dp"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/profileBox"
+            android:choiceMode="singleChoice"
+            android:background="#ffffffff" />
+
+    </RelativeLayout>
+
+</android.support.v4.widget.DrawerLayout>
