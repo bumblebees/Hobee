@@ -200,7 +200,7 @@ public class SocketIO {
                     @Override
                     public void call(Object... objects) {
                         JSONObject userJSON = (JSONObject) objects[0];
-                        User.getInstance().setUser(userJSON);
+                        Profile.getInstance().setUser(userJSON);
                         Intent intent = new Intent(context, HomeActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);

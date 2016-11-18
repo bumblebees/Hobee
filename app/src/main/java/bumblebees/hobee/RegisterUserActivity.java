@@ -11,7 +11,8 @@ import android.view.View;
 import android.widget.*;
 import bumblebees.hobee.utilities.SessionManager;
 import bumblebees.hobee.utilities.SocketIO;
-import bumblebees.hobee.utilities.User;
+import bumblebees.hobee.utilities.Profile;
+import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,7 +50,6 @@ public class RegisterUserActivity extends AppCompatActivity {
         session = new SessionManager(getApplicationContext());
 
         Intent intent = getIntent();
-
         userData = intent.getBundleExtra("userData");
 
         try {
@@ -72,7 +72,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         genderMale = (RadioButton) findViewById(R.id.radioMale);
         genderFemale = (RadioButton) findViewById(R.id.radioFemale);
         bio = (EditText) findViewById(R.id.info);
-        pic = (ImageView) findViewById(R.id.pic);
+        pic = (ImageView) findViewById(R.id.userImage);
         submitBtn = (ImageButton) findViewById(R.id.submitBtn);
         setBirthdayBtn = (Button) findViewById(R.id.setBirthdayBtn);
 
@@ -95,6 +95,13 @@ public class RegisterUserActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        if (userData.getString("origin").equals("facebook")) {
+            Picasso.with(this)
+                    .load("https://graph.facebook.com/" + userData.getString("loginId") + "/picture?width=200&height=200")
+                    .into(pic);
+        }
+        //TODO: get pic from google
+
 
         // submit button does magic?
         submitBtn.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +111,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                 // Set shared preferences
                 session.setPreferences(userData.getString("loginId"), userData.getString("origin"));
                 // Set user instance
-                User.getInstance().setUser(userJSON);
+                Profile.getInstance().setUser(userJSON);
                 // Save user in database
                 SocketIO.getInstance().register(userJSON, RegisterUserActivity.this);
             }
