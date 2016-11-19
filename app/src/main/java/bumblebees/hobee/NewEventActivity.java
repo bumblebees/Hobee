@@ -20,6 +20,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import bumblebees.hobee.objects.Event;
+import bumblebees.hobee.objects.EventDetails;
+import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.utilities.SessionManager;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONArray;
@@ -27,7 +32,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
 import bumblebees.hobee.utilities.MQTT;
 import io.apptik.widget.MultiSlider;
 import io.socket.client.Ack;
@@ -83,18 +95,7 @@ public class NewEventActivity extends AppCompatActivity {
         //TODO: get these from your currently available hobbies
 
         String[] hobbyChoices = {"basketball", "football", "fishing", "cooking"};
-//        String[] hobbyChoices = new String[0];
-//        JSONArray hobbies;
-//        try {
-//            hobbies = userData.getJSONArray("hobbies");
-//            hobbyChoices = new String[hobbies.length()];
-//            for(int i=0; i<hobbies.length(); i++){
-//                hobbyChoices[i]=hobbies.getString(i);
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-        
+
         ArrayAdapter<String> hobbyChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, hobbyChoices);
 
         eventHobbyChoice.setAdapter(hobbyChoice);
@@ -198,22 +199,6 @@ maxAge.setText(String.valueOf(value));
         }
     }
 
-    /**
-     * Generates a hash to be used as ID for MQTT topics.
-     * Current implementation hashes a  string combination of useID+timestamp
-     *
-     * @param id   name of the event
-     * @param time UNIX timestamp when the event was created
-     * @return hash
-     */
-    //TODO:figure out a better way to implement this so that it is for sure unique and easy to generate
-    public String generateHash(String id, long time) {
-        String hash;
-        String toBeHashed = id + time;
-        hash = Base64.encodeToString(String.valueOf(toBeHashed.hashCode()).getBytes(), Base64.URL_SAFE | Base64.NO_PADDING);
-        return hash;
-    }
-
 
     /**
      * Creates the JSON that will be sent over MQTT using the completed fields in the form.
@@ -224,40 +209,34 @@ maxAge.setText(String.valueOf(value));
         long timeCreated = Calendar.getInstance().getTimeInMillis() / 1000L;
         String eventCategory = eventHobbyChoice.getSelectedItem().toString();
         String hostID = session.getId();
-        String hash = generateHash(hostID, timeCreated);
 
-        JSONObject event = new JSONObject();
-        JSONObject host = new JSONObject();
-        JSONObject eventDetails = new JSONObject();
-        JSONObject hobbyDetails = new JSONObject();
+        UUID uuid = UUID.randomUUID();
+
+        //TODO: find a way to make this easier to parse?
+        String timestamp = "0";
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
         try {
-            //TODO: retrieve this data from somewhere
-            host.put("id", hostID);
-            host.put("name", "host_name");
-
-            eventDetails.put("name", inputEventName.getText());
-            eventDetails.put("location", inputEventLocation.getText());
-            eventDetails.put("time", inputEventTime.getText());
-            eventDetails.put("date", inputEventDate.getText());
-            eventDetails.put("gender", inputEventGender.getSelectedItem().toString());
-            eventDetails.put("description", inputEventDescription.getText());
-            eventDetails.put("maximum_people", inputEventNumber.getText());
-
-            event.put("host", host);
-            event.put("category", eventHobbyChoice.getSelectedItem().toString());
-            event.put("event", eventDetails);
-            event.put("createdTime", timeCreated);
-            event.put("eventID", hash);
-
-
-        } catch (JSONException e) {
+            Date date = sdf.parse(inputEventDate.getText().toString()+" "+inputEventTime.getText().toString());
+            cal.setTime(date);
+            timestamp = String.valueOf(cal.getTimeInMillis() / 1000L);
+        } catch (ParseException e) {
             e.printStackTrace();
         }
 
+        Hobby hobby = new Hobby();
+        EventDetails eventDetails = new EventDetails(inputEventName.getText().toString(), hostID, session.getfirstName()+" "+session.getLastName(),
+                Integer.parseInt(minAge.getText().toString()), Integer.parseInt(maxAge.getText().toString()), inputEventGender.getSelectedItem().toString(),
+                timestamp, Integer.parseInt(inputEventNumber.getText().toString()), inputEventLocation.getText().toString(), inputEventDescription.getText().toString(),
+                new ArrayList<String>(), new ArrayList<String>(), hobby);
 
-        MqttMessage msg = new MqttMessage(event.toString().getBytes());
+        Event event = new Event(uuid, eventCategory, String.valueOf(timeCreated), eventDetails);
+
+        Gson g = new Gson();
+
+        MqttMessage msg = new MqttMessage(g.toJson(event, Event.class).getBytes());
         msg.setRetained(true);
-        String topic = "hobby/event/" + eventCategory + "/" + hash;
+        String topic = "hobby/event/" + eventCategory + "/" + uuid.toString();
         Log.d("mqtt", topic);
         MQTT.getInstance().publishMessage(topic, msg);
 

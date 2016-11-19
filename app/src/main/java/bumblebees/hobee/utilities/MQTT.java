@@ -154,11 +154,12 @@ public class MQTT implements MqttCallback {
         if(topic.startsWith("hobby/event/")){
             Log.d("mqtt", "pattern match");
             //TODO: make it work for other things than fishing
-            Log.d("mqtt", String.valueOf(callbackList.containsKey(topic)));
-            ArrayList<MQTTMessageReceiver> list = callbackList.get(topic);
+            String subTopic = "hobby/event/football/#";
+           // Log.d("mqtt", String.valueOf(callbackList.containsKey(topic)));
+            ArrayList<MQTTMessageReceiver> list = callbackList.get(subTopic);
             for(int i=0; i<list.size(); i++){
                 //send the message to the callback function(s)
-                //Log.d("mqtt", list.get(i).toString());
+                Log.d("mqtt", list.get(i).toString());
                 list.get(i).onMessageReceive(message);
             }
         }
@@ -166,19 +167,6 @@ public class MQTT implements MqttCallback {
         for(int i=0; i<list.size(); i++){
             list.get(i).onMessageReceive(message);
         }
-
-        switch(topic){
-            case "hobee/test2":
-                //do something here
-                Log.d("msg", message.getPayload().toString());
-                break;
-
-
-
-            default:
-                //do something else here
-        }
-
     }
 
 /**

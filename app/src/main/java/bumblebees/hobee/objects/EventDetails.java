@@ -12,7 +12,7 @@ public class EventDetails {
     }
 
     private String event_name;
-    private UUID host_id;
+    private String host_id;
     private String host_name;
     private int age_min;
     private int age_max;
@@ -25,6 +25,24 @@ public class EventDetails {
     private List<String> users_accepted;
 
     private Hobby hobby;
+
+    public EventDetails(String event_name, String host_id, String host_name, int age_min, int age_max,
+                        String gender, String timestamp, int maximum_people, String location, String description,
+                        List<String> users_pending, List<String> users_accepted, Hobby hobby) {
+        this.event_name = event_name;
+        this.host_id = host_id;
+        this.host_name = host_name;
+        this.age_min = age_min;
+        this.age_max = age_max;
+        this.gender = gender;
+        this.timestamp = timestamp;
+        this.maximum_people = maximum_people;
+        this.location = location;
+        this.description = description;
+        this.users_pending = users_pending;
+        this.users_accepted = users_accepted;
+        this.hobby = hobby;
+    }
 
     public String toString(){
         return "Event name: " + event_name + " Host ID " + host_id + " Host name: " + host_name +
@@ -78,7 +96,7 @@ public class EventDetails {
         return event_name;
     }
 
-    public UUID getHost_id() {
+    public String getHost_id() {
         return host_id;
     }
 

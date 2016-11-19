@@ -15,6 +15,13 @@ public class Event {
 
     }
 
+    public Event(UUID eventID, String type, String timestamp, EventDetails event_details) {
+        this.eventID = eventID;
+        this.type = type;
+        this.timestamp = timestamp;
+        this.event_details = event_details;
+    }
+
     public String getType(){
         return type;
     }

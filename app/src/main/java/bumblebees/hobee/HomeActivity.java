@@ -240,45 +240,46 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void subscribeTopics(){
-        String topic = "hobby/event/football/51d5446d-a27b-44bb-a6eb-fccb70176914";
-        MQTT.getInstance().subscribe(topic, 1, new MQTTMessageReceiver() {
-            @Override
-            public void onMessageReceive(MqttMessage message) {
-                Log.d("mqtt", "received message");
-                try {
-                    final Gson g = new Gson();
-                    final Event event = g.fromJson(message.toString(),Event.class);
-                    final Button btn = new Button(HomeActivity.this);
-                    btn.setText(event.getType()+": "+ event.getEvent_details().getEvent_name());
-                    //btn.setTag(data.getString("eventID"));
+        //String topic = "hobby/event/football/51d5446d-a27b-44bb-a6eb-fccb70176914";
+        //TODO: get the hobbies from the user preferences
+        //we pretend these are the hobbies for now
+        String[] hobbies = {"basketball", "football", "fishing", "cooking"};
+        for (int i = 0; i < hobbies.length; i++) {
+            String topic = "hobby/event/" + hobbies[i] + "/#";
+            MQTT.getInstance().subscribe(topic, 1, new MQTTMessageReceiver() {
+                @Override
+                public void onMessageReceive(MqttMessage message) {
+                    Log.d("mqtt", "received message");
+                    try {
+                        final Gson g = new Gson();
+                        final Event event = g.fromJson(message.toString(), Event.class);
+                        final Button btn = new Button(HomeActivity.this);
+                        btn.setText(event.getType() + ": " + event.getEvent_details().getEvent_name());
 
-                    btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                            try {
-                                Intent viewEventIntent = new Intent(HomeActivity.this, EventViewActivity.class);
-                                //viewEventIntent.putExtra("eventID", event.getEventID().toString());
-                                //viewEventIntent.putExtra("category", event.getType());
-                                viewEventIntent.putExtra("event", g.toJson(event));
-                                HomeActivity.this.startActivity(viewEventIntent);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                        btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                try {
+                                    Intent viewEventIntent = new Intent(HomeActivity.this, EventViewActivity.class);
+                                    viewEventIntent.putExtra("event", g.toJson(event));
+                                    HomeActivity.this.startActivity(viewEventIntent);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        }
-                    });
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            eventList.addView(btn);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
+                        });
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                eventList.addView(btn);
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
 
