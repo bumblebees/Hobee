@@ -5,8 +5,15 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.view.View;
 import android.widget.*;
 import bumblebees.hobee.utilities.SessionManager;
@@ -16,6 +23,8 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,12 +43,15 @@ public class RegisterUserActivity extends AppCompatActivity {
     RadioButton genderFemale;
     RadioButton selectedGender;
     EditText bio;
-    ImageView pic;
+    ImageView userImage;
     ImageButton submitBtn;
     Button setBirthdayBtn;
+    Button chooseImageBtn;
     Bundle userData;
 
     SessionManager session;
+
+    private static final int SELECT_IMAGE = 1;
 
 
     @Override
@@ -72,16 +84,19 @@ public class RegisterUserActivity extends AppCompatActivity {
         genderMale = (RadioButton) findViewById(R.id.radioMale);
         genderFemale = (RadioButton) findViewById(R.id.radioFemale);
         bio = (EditText) findViewById(R.id.info);
-        pic = (ImageView) findViewById(R.id.userImage);
+        userImage = (ImageView) findViewById(R.id.userImage);
         submitBtn = (ImageButton) findViewById(R.id.submitBtn);
         setBirthdayBtn = (Button) findViewById(R.id.setBirthdayBtn);
+        chooseImageBtn = (Button) findViewById(R.id.chooseImageBtn);
 
 
         // Set fields with extracted user data
         firstName.setText(userData.getString("firstName"));
         lastName.setText(userData.getString("lastName"));
         email.setText(userData.getString("email"));
-        if (userGender.equals("male")) {
+        if (userGender == null){
+            // nothing
+        } else if (userGender.equals("male")) {
             genderMale.setChecked(true);
         } else if (userGender.equals("female")) {
             genderFemale.setChecked(true);
@@ -98,9 +113,8 @@ public class RegisterUserActivity extends AppCompatActivity {
         if (userData.getString("origin").equals("facebook")) {
             Picasso.with(this)
                     .load("https://graph.facebook.com/" + userData.getString("loginId") + "/picture?width=200&height=200")
-                    .into(pic);
+                    .into(userImage);
         }
-        //TODO: get pic from google
 
 
         // submit button does magic?
@@ -113,7 +127,10 @@ public class RegisterUserActivity extends AppCompatActivity {
                 // Set user instance
                 Profile.getInstance().setUser(userJSON);
                 // Save user in database
-                SocketIO.getInstance().register(userJSON, RegisterUserActivity.this);
+                SocketIO.getInstance().register(userJSON, userData.getString("loginId"), getImageBase64(), RegisterUserActivity.this);
+//                // Save user image on server
+//                SocketIO.getInstance().sendImage(userData.getString("loginId"), getImageBase64());
+
             }
         });
 
@@ -125,11 +142,19 @@ public class RegisterUserActivity extends AppCompatActivity {
 
             }
         });
+
+        chooseImageBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent gallery = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                startActivityForResult(gallery, SELECT_IMAGE);
+            }
+        });
     }
+
 
     /**
      * Collects data from the screen (modified or not) and put it into JSON object
-     *
      * @return JSON object
      */
     public JSONObject createJSON() {
@@ -171,6 +196,51 @@ public class RegisterUserActivity extends AppCompatActivity {
             TextView birthday = (TextView) getActivity().findViewById(R.id.birthday);
             birthday.setText(new StringBuilder().append(year).append("/").append(month + 1).append("/").append(day));
         }
+    }
+
+    /**
+     *  onActivityResult and getPath are here to handle the users choice of the picture from the phone gallery
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK && requestCode == SELECT_IMAGE){
+            Uri selectedImage = data.getData();
+            String path = getPath(selectedImage);
+
+            Bitmap bitmapImage = BitmapFactory.decodeFile(path);
+            userImage.setImageBitmap(bitmapImage);
+
+        }
+    }
+
+    public String getPath(Uri uri){
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+        int columnIndex = 0;
+        Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+            columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            return cursor.getString(columnIndex);
+        }
+        return null;
+    }
+
+    /**
+     * This method takes the provided or selected picture and prepares it to be sent through socket
+     * @return String base64
+     */
+    public String getImageBase64(){
+        BitmapDrawable bitmapDrawable = ((BitmapDrawable) userImage.getDrawable());
+        Bitmap bitmap = bitmapDrawable.getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] imageInByte = stream.toByteArray();
+
+        return Base64.encodeToString(imageInByte, Base64.NO_WRAP);
+
     }
 
 

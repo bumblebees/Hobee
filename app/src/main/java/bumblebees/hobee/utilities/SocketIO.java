@@ -92,7 +92,6 @@ public class SocketIO {
                                         userData.putString("birthday", object.getString("birthday"));
                                         userData.putString("email", object.getString("email"));
                                         userData.putString("gender", object.getString("gender"));
-                                        //userData.putString("pic", object.getJSONObject("picture").getJSONObject("data").getString("url"));
                                         userData.putString("pic", object.toString());
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -171,12 +170,27 @@ public class SocketIO {
      * @param jsonObject contains user data
      * @param packageContext context from which method is called
      */
-    public void register(final JSONObject jsonObject, final Context packageContext){
+    public void register(final JSONObject jsonObject, String userId, String imageString, final Context packageContext){
+
+        final JSONObject userImage = new JSONObject();
+        try {
+            userImage.put("userId", userId);
+            userImage.put("imageString", imageString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) {
+                socket.emit("save_image", userImage);
+            }
+        });
 
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                socket.emit("test", jsonObject);
+                socket.emit("register_user", jsonObject);
                 socket.disconnect();
             }
         });
@@ -185,6 +199,26 @@ public class SocketIO {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);
     }
+
+//    public void sendImage(String userId, String imageString){
+//
+//        final JSONObject userImage = new JSONObject();
+//        try {
+//            userImage.put("userId", userId);
+//            userImage.put("imageString", imageString);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+//            @Override
+//            public void call(Object... objects) {
+//                socket.emit("save_image", userImage);
+//                socket.disconnect();
+//            }
+//        });
+//        socket.connect();
+//    }
 
 
     /**

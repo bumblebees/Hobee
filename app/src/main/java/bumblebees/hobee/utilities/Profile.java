@@ -114,10 +114,7 @@ public class Profile {
     }
 
     public String getPicUrl(){
-        if (getOrigin().equals("facebook")){
-            return "https://graph.facebook.com/" + getUserId() + "/picture?width=200&height=200";
-        }
-        return null;
+        return "http://gunray.skip.chalmers.se:3003/api/containers/userImages/download/" + getUserId() + ".png";
     }
 
     /**
