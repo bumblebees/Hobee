@@ -122,6 +122,31 @@
                 android:id="@+id/eventGender" />
 
         </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:text="Age:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="Event Age Range"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/eventAge" />
+
+        </TableRow>
     </TableLayout>
+
+    <Button
+        android:text="Join Event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/eventName"
+        android:layout_alignEnd="@+id/eventName"
+        android:id="@+id/btnJoinEvent" />
 
 </RelativeLayout>

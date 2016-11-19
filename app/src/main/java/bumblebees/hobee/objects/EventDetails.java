@@ -41,6 +41,32 @@ public class EventDetails {
         }
     }
 
+    /**
+     * Add a user to the list of pending users of the event.
+     * @param userID - user to be added
+     */
+    //TODO: change this to User
+    public void addUser(String userID){
+        users_pending.add(userID);
+    }
+
+    /**
+     * Check if the User exists in the list of accepted or pending users.
+     * @param userID - id of the user to be checked
+     * @return true if the user exists, false otherwise
+     */
+
+    //TODO: change this to User
+    public boolean checkUser(String userID){
+        if(users_pending.contains(userID)){
+            return true;
+        }
+        if(users_accepted.contains(userID)){
+            return true;
+        }
+        return false;
+    }
+
     public List<String> getUsers_pending(){
         return users_pending;
     }

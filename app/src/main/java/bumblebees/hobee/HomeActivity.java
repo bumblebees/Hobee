@@ -246,7 +246,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onMessageReceive(MqttMessage message) {
                 Log.d("mqtt", "received message");
                 try {
-                    Gson g = new Gson();
+                    final Gson g = new Gson();
                     final Event event = g.fromJson(message.toString(),Event.class);
                     final Button btn = new Button(HomeActivity.this);
                     btn.setText(event.getType()+": "+ event.getEvent_details().getEvent_name());
@@ -258,8 +258,9 @@ public class HomeActivity extends AppCompatActivity {
 
                             try {
                                 Intent viewEventIntent = new Intent(HomeActivity.this, EventViewActivity.class);
-                                viewEventIntent.putExtra("eventID", event.getEventID().toString());
-                                viewEventIntent.putExtra("category", event.getType());
+                                //viewEventIntent.putExtra("eventID", event.getEventID().toString());
+                                //viewEventIntent.putExtra("category", event.getType());
+                                viewEventIntent.putExtra("event", g.toJson(event));
                                 HomeActivity.this.startActivity(viewEventIntent);
                             } catch (Exception e) {
                                 e.printStackTrace();
