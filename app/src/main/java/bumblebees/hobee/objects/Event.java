@@ -42,6 +42,9 @@ public class Event {
         return "Event ID " + eventID.toString() + " Event Type " + type + " Event timestamp " +
                 timestamp + event_details;
     }
+
+
+
 }
 
 
