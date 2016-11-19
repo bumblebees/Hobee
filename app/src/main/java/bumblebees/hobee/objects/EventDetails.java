@@ -1,6 +1,9 @@
 package bumblebees.hobee.objects;
 
+import android.util.Log;
+
 import java.security.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,14 +24,14 @@ public class EventDetails {
     private int maximum_people;
     private String location;
     private String description;
-    private List<String> users_pending;
-    private List<String> users_accepted;
+    private List<SimpleUser> users_pending;
+    private List<SimpleUser> users_accepted;
 
     private Hobby hobby;
 
     public EventDetails(String event_name, String host_id, String host_name, int age_min, int age_max,
                         String gender, String timestamp, int maximum_people, String location, String description,
-                        List<String> users_pending, List<String> users_accepted, Hobby hobby) {
+                        List<SimpleUser> users_pending, List<SimpleUser> users_accepted, Hobby hobby) {
         this.event_name = event_name;
         this.host_id = host_id;
         this.host_name = host_name;
@@ -52,53 +55,50 @@ public class EventDetails {
                 users_accepted;
     }
 
-    public void confirmUser(User user) {
-        if (users_pending.contains(user.getUserID().toString())) {
-            users_accepted.add(user.getUserID().toString());
-            users_pending.remove(user.getUserID().toString());
+    public void confirmUser(SimpleUser user) {
+        if (users_pending.contains(user)) {
+            users_accepted.add(user);
+            users_pending.remove(user);
         }
     }
 
     /**
      * Add a user to the list of pending users of the event.
-     * @param userID - user to be added
+     * @param user - user to be added
      */
-    //TODO: change this to User
-    public void addUser(String userID){
-        users_pending.add(userID);
+    public void addUser(SimpleUser user){
+        users_pending.add(user);
     }
 
     /**
      * Check if the User exists in the list of accepted or pending users.
-     * @param userID - id of the user to be checked
+     * @param user - user to be checked
      * @return true if the user exists, false otherwise
      */
-
-    //TODO: change this to User
-    public boolean checkUser(String userID){
-        if(users_pending.contains(userID)){
+    public boolean checkUser(SimpleUser user){
+         if(users_pending.contains(user)){
             return true;
         }
-        if(users_accepted.contains(userID)){
+        if(users_accepted.contains(user)){
             return true;
         }
         return false;
     }
 
-    public List<String> getUsers_pending(){
+
+
+    public List<SimpleUser> getUsers_pending(){
         return users_pending;
     }
 
-    public List<String> getUsers_accepted(){
+    public List<SimpleUser> getUsers_accepted(){
         return users_accepted;
     }
     public String getEvent_name() {
         return event_name;
     }
 
-    public String getHost_id() {
-        return host_id;
-    }
+    public String getHost_id() {return host_id; }
 
     public String getHost_name() {
         return host_name;

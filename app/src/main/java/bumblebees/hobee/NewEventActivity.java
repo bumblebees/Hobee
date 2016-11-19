@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.EventDetails;
 import bumblebees.hobee.objects.Hobby;
+import bumblebees.hobee.objects.SimpleUser;
 import bumblebees.hobee.utilities.SessionManager;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONArray;
@@ -224,11 +225,15 @@ maxAge.setText(String.valueOf(value));
             e.printStackTrace();
         }
 
+        ArrayList<SimpleUser> acceptedUsers = new ArrayList<>();
+        SimpleUser host = new SimpleUser(session.getId(), session.getfirstName(), session.getLastName());
+        acceptedUsers.add(host);
+
         Hobby hobby = new Hobby();
         EventDetails eventDetails = new EventDetails(inputEventName.getText().toString(), hostID, session.getfirstName()+" "+session.getLastName(),
                 Integer.parseInt(minAge.getText().toString()), Integer.parseInt(maxAge.getText().toString()), inputEventGender.getSelectedItem().toString(),
                 timestamp, Integer.parseInt(inputEventNumber.getText().toString()), inputEventLocation.getText().toString(), inputEventDescription.getText().toString(),
-                new ArrayList<String>(), new ArrayList<String>(), hobby);
+                new ArrayList<SimpleUser>(), acceptedUsers, hobby);
 
         Event event = new Event(uuid, eventCategory, String.valueOf(timeCreated), eventDetails);
 
