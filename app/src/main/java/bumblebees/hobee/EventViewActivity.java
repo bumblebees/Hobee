@@ -68,12 +68,12 @@ public class EventViewActivity extends AppCompatActivity {
 
         btnJoinEvent = (Button) findViewById(R.id.btnJoinEvent);
 
-        SimpleUser currentUser = new SimpleUser(session.getId(), Profile.getInstance().getFirstName(), Profile.getInstance().getLastName());
+        SimpleUser currentUser = new SimpleUser(Profile.getInstance().getUserId(), Profile.getInstance().getFirstName(), Profile.getInstance().getLastName());
 
 
         //check if the user is also the host of the event
         //if so, disable the join button and show the list of pending users
-        if(event.getEvent_details().getHost_id().equals(session.getId())){
+        if(event.getEvent_details().getHost_id().equals(Profile.getInstance().getUserId())){
             btnJoinEvent.setText("Event host");
             btnJoinEvent.setEnabled(false);
 
@@ -181,7 +181,7 @@ public class EventViewActivity extends AppCompatActivity {
 
     public void joinEvent(Event event){
         SessionManager session = new SessionManager(this.getApplicationContext());
-        SimpleUser currentUser = new SimpleUser(session.getId(), Profile.getInstance().getFirstName(), Profile.getInstance().getLastName());
+        SimpleUser currentUser = new SimpleUser(Profile.getInstance().getUserId(), Profile.getInstance().getFirstName(), Profile.getInstance().getLastName());
         event.getEvent_details().addUser(currentUser);
 
         updateEvent(event);

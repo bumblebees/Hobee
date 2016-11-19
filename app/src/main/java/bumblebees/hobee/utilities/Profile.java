@@ -17,7 +17,7 @@ public class Profile {
 
     public static Profile getInstance(){
         if (instance == null){
-            synchronized (SocketIO.class){
+            synchronized (Profile.class){
                 if(instance == null){
                     instance = new Profile();
                 }
