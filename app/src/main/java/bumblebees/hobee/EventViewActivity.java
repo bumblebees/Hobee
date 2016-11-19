@@ -31,6 +31,7 @@ import bumblebees.hobee.objects.SimpleUser;
 import bumblebees.hobee.objects.User;
 import bumblebees.hobee.utilities.MQTT;
 import bumblebees.hobee.utilities.MQTTMessageReceiver;
+import bumblebees.hobee.utilities.Profile;
 import bumblebees.hobee.utilities.SessionManager;
 
 
@@ -67,7 +68,7 @@ public class EventViewActivity extends AppCompatActivity {
 
         btnJoinEvent = (Button) findViewById(R.id.btnJoinEvent);
 
-        SimpleUser currentUser = new SimpleUser(session.getId(),session.getfirstName(), session.getLastName());
+        SimpleUser currentUser = new SimpleUser(session.getId(), Profile.getInstance().getFirstName(), Profile.getInstance().getLastName());
 
 
         //check if the user is also the host of the event
@@ -180,7 +181,7 @@ public class EventViewActivity extends AppCompatActivity {
 
     public void joinEvent(Event event){
         SessionManager session = new SessionManager(this.getApplicationContext());
-        SimpleUser currentUser = new SimpleUser(session.getId(),session.getfirstName(), session.getLastName());
+        SimpleUser currentUser = new SimpleUser(session.getId(), Profile.getInstance().getFirstName(), Profile.getInstance().getLastName());
         event.getEvent_details().addUser(currentUser);
 
         updateEvent(event);

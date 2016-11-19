@@ -22,24 +22,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import bumblebees.hobee.objects.Event;
-import bumblebees.hobee.utilities.SessionManager;
+import bumblebees.hobee.utilities.*;
 import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
 
 
 import java.util.ArrayList;
 
+import com.squareup.picasso.Picasso;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-
-import bumblebees.hobee.utilities.MQTT;
-import bumblebees.hobee.utilities.MQTTMessageReceiver;
-import bumblebees.hobee.utilities.SocketIO;
-import io.socket.client.Ack;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -52,6 +45,7 @@ public class HomeActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     DrawerListAdapter adapter;
     TextView user;
+    ImageView avatar;
     ArrayList<NavItem> navItems = new ArrayList<>();
     ListView drawerList;
 
@@ -98,7 +92,11 @@ public class HomeActivity extends AppCompatActivity {
 
         // Display user name in menu
         user = (TextView) findViewById(R.id.firstName_lastName);
-        user.setText(session.getfirstName() + " " + session.getLastName());
+        user.setText(Profile.getInstance().getFirstName() + " " + Profile.getInstance().getLastName());
+
+        // Display avatar
+        avatar = (ImageView) findViewById(R.id.avatar);
+        Picasso.with(this).load(Profile.getInstance().getPicUrl()).into(avatar);
 
         // Populate the Navigation Drawer with options
         drawerPane = (RelativeLayout) findViewById(R.id.drawerPane);

@@ -1,50 +1,44 @@
 package bumblebees.hobee;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import bumblebees.hobee.utilities.SessionManager;
+import bumblebees.hobee.utilities.Profile;
+import com.squareup.picasso.Picasso;
 
 
 public class UserProfileActivity extends AppCompatActivity {
-    private TextView fbName;
-    private TextView fbEmail;
-    private TextView fbGender;
-    private TextView fbAge;
-    private ImageView fbImage;
-    private TextView hobbiesList;
-    private TextView profileBio;
+
+    TextView userName;
+    TextView userEmail;
+    TextView userGender;
+    TextView userAge;
+    ImageView userImage;
+    TextView hobbiesList;
+    TextView userBio;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        //TODO: rename variables
-        fbName   = (TextView) findViewById(R.id.userName);
-        fbEmail  =  (TextView) findViewById(R.id.userEmail);
-        fbGender = (TextView) findViewById(R.id.userGender);
-        fbAge    = (TextView) findViewById(R.id.userAge);
-        fbImage  = (ImageView) findViewById(R.id.fbImage);
+        userName = (TextView) findViewById(R.id.userName);
+        userEmail = (TextView) findViewById(R.id.userEmail);
+        userGender = (TextView) findViewById(R.id.userGender);
+        userAge = (TextView) findViewById(R.id.userAge);
+        userImage = (ImageView) findViewById(R.id.userImage);
         hobbiesList = (TextView) findViewById(R.id.listhobbies);
-        profileBio = (TextView) findViewById(R.id.profileBio);
+        userBio = (TextView) findViewById(R.id.userBio);
 
-
-        SessionManager session = new SessionManager(getApplicationContext());
-
-        fbName.setText(session.getfirstName() + " " + session.getLastName());
-        fbEmail.setText(session.getEmail());
-        fbGender.setText(session.getGender());
-        //TODO: receive this as an UNIX date and calculate the age instead of the birthday
-        fbAge.setText(session.getBirthday());
-        profileBio.setText(session.getBio());
+        userName.setText(Profile.getInstance().getFirstName() + " " + Profile.getInstance().getLastName());
+        userEmail.setText(Profile.getInstance().getEmail());
+        userGender.setText(Profile.getInstance().getGender());
+        userAge.setText(Integer.toString(Profile.getInstance().getAge()));
+        userBio.setText(Profile.getInstance().getBio());
+        Picasso.with(this).load(Profile.getInstance().getPicUrl()).into(userImage);
 
     }
-
-
-
-
 
 }

@@ -92,7 +92,6 @@ public class SocketIO {
                                         userData.putString("birthday", object.getString("birthday"));
                                         userData.putString("email", object.getString("email"));
                                         userData.putString("gender", object.getString("gender"));
-                                        //userData.putString("pic", object.getJSONObject("picture").getJSONObject("data").getString("url"));
                                         userData.putString("pic", object.toString());
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -108,10 +107,7 @@ public class SocketIO {
                             request.executeAsync();
                         }
                         else {
-                            SocketIO.getInstance().getUser(accessToken.getUserId());
-                            Intent intent = new Intent(context, HomeActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intent);
+                            SocketIO.getInstance().getUser(accessToken.getUserId(), context);
                         }
                         socket.disconnect();
                     }
@@ -142,9 +138,9 @@ public class SocketIO {
                             userData.putString("origin", "google");
                             userData.putString("firstName", account.getGivenName());
                             userData.putString("lastName", account.getFamilyName());
-                            userData.putString("birthday", "");
+                            userData.putString("birthday", null);
                             userData.putString("email", account.getEmail());
-                            userData.putString("gender", "");
+                            userData.putString("gender", null);
                             Uri uri = account.getPhotoUrl();
                             if (uri != null) {
                                 userData.putString("pic", uri.toString());
@@ -159,10 +155,7 @@ public class SocketIO {
                             context.startActivity(intent);
                         }
                         else {
-                            SocketIO.getInstance().getUser(account.getId());
-                            Intent intent = new Intent(context, HomeActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intent);
+                            SocketIO.getInstance().getUser(account.getId(), context);
                         }
                         socket.disconnect();
                     }
@@ -177,26 +170,62 @@ public class SocketIO {
      * @param jsonObject contains user data
      * @param packageContext context from which method is called
      */
-    public void register(final JSONObject jsonObject, final Context packageContext){
+    public void register(final JSONObject jsonObject, String userId, String imageString, final Context packageContext){
+
+        final JSONObject userImage = new JSONObject();
+        try {
+            userImage.put("userId", userId);
+            userImage.put("imageString", imageString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) {
+                socket.emit("save_image", userImage);
+            }
+        });
 
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                socket.emit("test", jsonObject);
+                socket.emit("register_user", jsonObject);
                 socket.disconnect();
             }
         });
         socket.connect();
         Intent intent = new Intent(packageContext, HobbyActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);
     }
 
+//    public void sendImage(String userId, String imageString){
+//
+//        final JSONObject userImage = new JSONObject();
+//        try {
+//            userImage.put("userId", userId);
+//            userImage.put("imageString", imageString);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+//            @Override
+//            public void call(Object... objects) {
+//                socket.emit("save_image", userImage);
+//                socket.disconnect();
+//            }
+//        });
+//        socket.connect();
+//    }
+
 
     /**
-     *  Get user data from database and save it to shared preferences
+     *  Get user data from database and save it to user class
      * @param loginId google or fb login
      */
-    private void getUser(final String loginId){
+    public void getUser(final String loginId, final Context context){
 
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
@@ -205,13 +234,16 @@ public class SocketIO {
                     @Override
                     public void call(Object... objects) {
                         JSONObject userJSON = (JSONObject) objects[0];
-                        SessionManager session = new SessionManager(null);
-                        session.createSession(userJSON);
+                        Profile.getInstance().setUser(userJSON);
+                        Intent intent = new Intent(context, HomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                        socket.disconnect();
                     }
                 });
-                socket.disconnect();
             }
         });
+        socket.connect();
     }
 
 }

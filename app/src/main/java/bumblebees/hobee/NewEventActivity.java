@@ -27,6 +27,7 @@ import bumblebees.hobee.objects.EventDetails;
 import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.SimpleUser;
 import bumblebees.hobee.utilities.DatePickerFragment;
+import bumblebees.hobee.utilities.Profile;
 import bumblebees.hobee.utilities.SessionManager;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONArray;
@@ -189,11 +190,11 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         }
 
         ArrayList<SimpleUser> acceptedUsers = new ArrayList<>();
-        SimpleUser host = new SimpleUser(session.getId(), session.getfirstName(), session.getLastName());
-        acceptedUsers.add(host);
+        SimpleUser currentUser = new SimpleUser(session.getId(), Profile.getInstance().getFirstName(), Profile.getInstance().getLastName());
+        acceptedUsers.add(currentUser);
 
         Hobby hobby = new Hobby();
-        EventDetails eventDetails = new EventDetails(inputEventName.getText().toString(), hostID, session.getfirstName()+" "+session.getLastName(),
+        EventDetails eventDetails = new EventDetails(inputEventName.getText().toString(), hostID, Profile.getInstance().getFirstName()+" "+Profile.getInstance().getLastName(),
                 Integer.parseInt(minAge.getText().toString()), Integer.parseInt(maxAge.getText().toString()), inputEventGender.getSelectedItem().toString(),
                 timestamp, Integer.parseInt(inputEventNumber.getText().toString()), inputEventLocation.getText().toString(), inputEventDescription.getText().toString(),
                 new ArrayList<SimpleUser>(), acceptedUsers, hobby);

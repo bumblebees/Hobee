@@ -1,17 +1,13 @@
 package bumblebees.hobee;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.Button;
 
-import android.widget.ImageButton;
-
+import bumblebees.hobee.utilities.Profile;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,14 +35,11 @@ public class SportsHobbyActivity extends AppCompatActivity {
     CheckBox sprt3;
     CheckBox sprt4;
 
-    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sportshobby);
-
-        userID = this.getIntent().getStringExtra("user_ID");
 
         backToHobbies = (Button) findViewById(R.id.button);
 
@@ -76,8 +69,6 @@ public class SportsHobbyActivity extends AppCompatActivity {
                 socket.connect();
 
                 Intent hobbyIntent = new Intent(SportsHobbyActivity.this, HobbyActivity.class);
-              // Not sure if we need to send it back to HobbyActivity again? Will it remember it anyway?
-                hobbyIntent.putExtra("user_ID", userID);
                 SportsHobbyActivity.this.startActivity(hobbyIntent);
             }
         });
@@ -87,7 +78,7 @@ public class SportsHobbyActivity extends AppCompatActivity {
     public JSONObject createJsonObject(){
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("userID", userID);
+            jsonObject.put("userID", Profile.getInstance().getUserId());
 
             JSONArray jsonArray = new JSONArray();
 
