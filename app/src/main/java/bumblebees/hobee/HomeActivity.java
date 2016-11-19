@@ -282,57 +282,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-
-
-    public void subscribeTopics2(){
-            //we pretend these are the hobbies for now
-            String[] hobbies = {"basketball", "football", "fishing", "cooking"};
-            for (int i = 0; i < hobbies.length; i++) {
-                String topic = "hobby/event/" + hobbies[i] + "/#";
-                MQTT.getInstance().subscribe(topic, 1, new MQTTMessageReceiver() {
-                    @Override
-                    public void onMessageReceive(MqttMessage message) {
-                        Log.d("mqtt", "received message");
-                        try {
-                            final JSONObject data = new JSONObject(message.toString());
-                            JSONObject event = data.getJSONObject("event");
-                            final Button btn = new Button(HomeActivity.this);
-                            btn.setText(data.getString("category")+": "+ event.getString("name"));
-                            //btn.setTag(data.getString("eventID"));
-
-                           btn.setOnClickListener(new View.OnClickListener() {
-                               @Override
-                               public void onClick(View view) {
-
-                                   try {
-                                       Intent viewEventIntent = new Intent(HomeActivity.this, EventViewActivity.class);
-                                       viewEventIntent.putExtra("eventID", data.getString("eventID"));
-                                       viewEventIntent.putExtra("category", data.getString("category"));
-                                       HomeActivity.this.startActivity(viewEventIntent);
-                                   } catch (JSONException e) {
-                                       e.printStackTrace();
-                                   }
-
-
-                               }
-                           });
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    eventList.addView(btn);
-                                }
-                            });
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
-        }
-
-    }
-
     @Override
     public void onResume(){
 
