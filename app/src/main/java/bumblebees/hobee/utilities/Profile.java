@@ -9,10 +9,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class Profile {
+import bumblebees.hobee.objects.User;
+
+public class Profile{
 
     static private Profile instance;
-    private JSONObject user;
+    private User user;
 
 
     public static Profile getInstance(){
@@ -33,88 +35,56 @@ public class Profile {
 
     }
 
-    public void setUser(JSONObject jsonObject){
-        this.user = jsonObject;
+    public void setUser(User user){
+        this.user = user;
     }
 
-    public JSONObject getUser(){
+    public User getUser(){
         return this.user;
     }
 
-    public String getUserId(){
-        try {
-            return user.getString("loginId");
-        } catch (JSONException e) {
-            return null;
-        }
+    public String getUserID(){
+      return user.getUserID();
+    }
+
+    public String getLoginId(){
+        return user.getLoginId();
     }
 
     public String getOrigin(){
-        try {
-            return user.getString("origin");
-        } catch (JSONException e) {
-            return null;
-        }
+       return user.getOrigin();
     }
 
     public String getFirstName(){
-        try {
-            return user.getString("firstName");
-        } catch (JSONException e) {
-            return null;
-        }
+        return user.getFirstName();
     }
 
     public String getLastName(){
-        try {
-            return user.getString("lastName");
-        } catch (JSONException e) {
-            return null;
-        }
+       return user.getLastName();
     }
 
     public String getBirthday(){
-        try {
-            return user.getString("birthday");
-        } catch (JSONException e) {
-            return null;
-        }
+        return user.getBirthday();
     }
 
     public int getAge(){
-        try {
-            return calculateAgeFromDates(user.getString("birthday"));
-        } catch (JSONException e) {
-            return 0;
-        }
+            return calculateAgeFromDates(user.getBirthday());
     }
 
     public String getEmail(){
-        try {
-            return user.getString("email");
-        } catch (JSONException e) {
-            return null;
-        }
+       return user.getEmail();
     }
 
     public String getGender(){
-        try {
-            return user.getString("gender");
-        } catch (JSONException e) {
-            return null;
-        }
+       return user.getGender();
     }
 
     public String getBio(){
-        try {
-            return user.getString("bio");
-        } catch (JSONException e) {
-            return null;
-        }
+        return user.getBio();
     }
 
     public String getPicUrl(){
-        return "http://gunray.skip.chalmers.se:3003/api/containers/userImages/download/" + getUserId() + ".png";
+        return "http://gunray.skip.chalmers.se:3003/api/containers/userImages/download/" + getLoginId() + ".png";
     }
 
     /**

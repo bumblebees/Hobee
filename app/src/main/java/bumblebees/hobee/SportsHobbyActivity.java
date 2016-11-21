@@ -78,7 +78,7 @@ public class SportsHobbyActivity extends AppCompatActivity {
     public JSONObject createJsonObject(){
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("userID", Profile.getInstance().getUserId());
+            jsonObject.put("userID", Profile.getInstance().getUserID());
 
             JSONArray jsonArray = new JSONArray();
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 
 import bumblebees.hobee.HobbyActivity;
 import bumblebees.hobee.HomeActivity;
@@ -14,11 +13,12 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.gson.Gson;
 
+import bumblebees.hobee.objects.User;
 import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +31,7 @@ public class SocketIO {
 
     private Socket socket;
     private Bundle userData;
+    private Gson gson;
 
 
     public static SocketIO getInstance() {
@@ -61,11 +62,11 @@ public class SocketIO {
             try {
                 socket = IO.socket("http://129.16.155.22:3001");
                 socket.connect();
+                gson = new Gson();
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
         }
-
     }
 
     /**
@@ -77,8 +78,6 @@ public class SocketIO {
      * @param context     context from which method is called
      */
     public void checkIfExists(final AccessToken accessToken, final Context context) {
-
-
         socket.emit("user_exists", accessToken.getUserId(), new Ack() {
             @Override
             public void call(Object... objects) {
@@ -109,10 +108,8 @@ public class SocketIO {
                     parameters.putString("fields", "id,first_name,last_name,gender,birthday,email");
                     request.setParameters(parameters);
                     request.executeAsync();
-
                 } else {
-
-                    SocketIO.getInstance().getUser(accessToken.getUserId(), context);
+                    SocketIO.getInstance().getUserAndLogin(accessToken.getUserId(), context);
                 }
 
             }
@@ -153,10 +150,8 @@ public class SocketIO {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("userData", userData);
                     context.startActivity(intent);
-                    socket.disconnect();
                 } else {
-                    socket.disconnect();
-                    SocketIO.getInstance().getUser(account.getId(), context);
+                    SocketIO.getInstance().getUserAndLogin(account.getId(), context);
                 }
 
             }
@@ -167,10 +162,10 @@ public class SocketIO {
     /**
      * Send user data to server to be saved in database and go to HobbyActivity
      *
-     * @param jsonObject     contains user data
+     * @param user     contains user data
      * @param packageContext context from which method is called
      */
-    public void register(final JSONObject jsonObject, String userId, String imageString, final Context packageContext) {
+    public void register(final User user, String userId, String imageString, final Context packageContext) {
 
         final JSONObject userImage = new JSONObject();
         try {
@@ -181,7 +176,7 @@ public class SocketIO {
         }
 
         socket.emit("save_image", userImage);
-        socket.emit("register_user", jsonObject);
+        socket.emit("register_user", gson.toJson(user));
 
         Intent intent = new Intent(packageContext, HobbyActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -214,21 +209,17 @@ public class SocketIO {
      *
      * @param loginId google or fb login
      */
-    public void getUser(final String loginId, final Context context) {
+    public void getUserAndLogin(final String loginId, final Context context) {
         socket.emit("get_user", loginId, new Ack() {
             @Override
             public void call(Object... objects) {
                 JSONObject userJSON = (JSONObject) objects[0];
+                User user = gson.fromJson(String.valueOf(userJSON), User.class);
 
-                Profile.getInstance().setUser(userJSON);
-
+                Profile.getInstance().setUser(user);
 
                 SessionManager session = new SessionManager(context);
-                try {
-                    session.setPreferences(userJSON.getString("loginId"), userJSON.getString("origin"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                session.setPreferences(user.getLoginId(), user.getOrigin());
 
                 Intent intent = new Intent(context, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -236,6 +227,4 @@ public class SocketIO {
             }
         });
     }
-
-
 }

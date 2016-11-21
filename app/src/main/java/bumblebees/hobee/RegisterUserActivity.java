@@ -16,9 +16,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
 import android.widget.*;
+
+import bumblebees.hobee.objects.Hobby;
+import bumblebees.hobee.objects.Rank;
+import bumblebees.hobee.objects.User;
 import bumblebees.hobee.utilities.SessionManager;
 import bumblebees.hobee.utilities.SocketIO;
 import bumblebees.hobee.utilities.Profile;
+
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +33,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 public class RegisterUserActivity extends AppCompatActivity {
 
@@ -48,6 +57,8 @@ public class RegisterUserActivity extends AppCompatActivity {
     Button setBirthdayBtn;
     Button chooseImageBtn;
     Bundle userData;
+    User user;
+    Gson gson;
 
     SessionManager session;
 
@@ -60,9 +71,11 @@ public class RegisterUserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register_user);
 
         session = new SessionManager(getApplicationContext());
+        gson = new Gson();
 
         Intent intent = getIntent();
         userData = intent.getBundleExtra("userData");
+
 
         try {
             userGender = userData.getString("gender");
@@ -125,9 +138,10 @@ public class RegisterUserActivity extends AppCompatActivity {
                 // Set shared preferences
                 session.setPreferences(userData.getString("loginId"), userData.getString("origin"));
                 // Set user instance
-                Profile.getInstance().setUser(userJSON);
+                user = createUser();
+                Profile.getInstance().setUser(user);
                 // Save user in database
-                SocketIO.getInstance().register(userJSON, userData.getString("loginId"), getImageBase64(), RegisterUserActivity.this);
+                SocketIO.getInstance().register(user, user.getLoginId(), getImageBase64(), RegisterUserActivity.this);
 //                // Save user image on server
 //                SocketIO.getInstance().sendImage(userData.getString("loginId"), getImageBase64());
 
@@ -173,6 +187,14 @@ public class RegisterUserActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return object;
+    }
+
+    public User createUser(){
+        UUID uuid = UUID.randomUUID();
+        User user = new User(uuid.toString(), userData.getString("loginId"), userData.getString("origin"), firstName.getText().toString(), lastName.getText().toString(),
+                birthday.getText().toString(), email.getText().toString(), selectedGender.getText().toString(), bio.getText().toString(), Calendar.getInstance().getTime(),
+                new Rank(), new ArrayList<Hobby>());
+        return user;
     }
 
 
