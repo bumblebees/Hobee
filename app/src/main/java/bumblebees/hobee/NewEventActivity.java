@@ -89,7 +89,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
 
 
         //set gender spinner options
-        ArrayAdapter<String> genderChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{"any gender", "male", "female"});
+        ArrayAdapter<String> genderChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{"everyone", "male", "female"});
         inputEventGender.setAdapter(genderChoice);
 
         //TODO: get these from your currently available hobbies

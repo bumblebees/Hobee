@@ -127,7 +127,6 @@ public class EventViewActivity extends AppCompatActivity {
 
         }
         //check if the user has already joined the event
-        //TODO: session manager is inconsistent with how event checks and adds users
         else if(event.getEvent_details().checkUser(currentUser)){
             //disable the button so that the user cannot join the event again
             btnJoinEvent.setText("You have already joined this event");

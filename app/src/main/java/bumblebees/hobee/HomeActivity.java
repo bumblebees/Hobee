@@ -1,13 +1,18 @@
 package bumblebees.hobee;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -251,6 +256,7 @@ public class HomeActivity extends AppCompatActivity {
                     try {
                         final Gson g = new Gson();
                         final Event event = g.fromJson(message.toString(), Event.class);
+                        sendNotification(event);
                         final Button btn = new Button(HomeActivity.this);
                         btn.setText(event.getType() + ": " + event.getEvent_details().getEvent_name());
 
@@ -287,6 +293,79 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
     }
 
+    /**
+     * Send notification for an event.
+     * @param event - event that is going to be sent
+     */
+    public void sendNotification(Event event){
+        //check if the notification should be sent or not
+        if(matchesPreferences(event)){
+            Gson g = new Gson();
+            Log.d("event", "preferences match");
+            //send notification
+            NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.bee)
+                    .setContentTitle("New event: "+event.getEvent_details().getEvent_name())
+                    .setContentText(event.getEvent_details().getDescription())
+                    .setAutoCancel(true);
+
+            Intent eventIntent = new Intent(this, EventViewActivity.class);
+            eventIntent.putExtra("event", g.toJson(event));
+
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            stackBuilder.addParentStack(EventViewActivity.class);
+            stackBuilder.addNextIntent(eventIntent);
+
+            PendingIntent eventPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);
+            notificationBuilder.setContentIntent(eventPendingIntent);
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            notificationManager.notify(Integer.parseInt(event.getTimestamp()), notificationBuilder.build());
+
+        }
+        else{
+            Log.d("event", "notification not sent");
+        }
+    }
+
+
+    /**
+     * Checks if the event matches the preferences of the currently logged in user
+     * @param event - event to be checked
+     * @return true if they match, false otherwise
+     */
+    public boolean matchesPreferences(Event event){
+        //check if the user is already a member of the event or is the host
+        if(event.getEvent_details().checkUser(Profile.getInstance().getUser().getSimpleUser()) ||
+                event.getEvent_details().getHost_id().equals(Profile.getInstance().getUserID())){
+            //user is in the event, does not need a notification
+            return false;
+        }
+
+        //check if the age is larger than the max age, or smaller than the minimum age
+        if(event.getEvent_details().getAge_max()<Profile.getInstance().getAge() || event.getEvent_details().getAge_min() > Profile.getInstance().getAge()){
+            Log.d("event", "age mismatch");
+            return false;
+        }
+
+        //check if there are gender restrictions to the event
+        if(!event.getEvent_details().getGender().equals("everyone")){
+            //check that the gender does not match the user's gender
+            if(!event.getEvent_details().getGender().equals(Profile.getInstance().getGender())){
+                Log.d("event", "gender mismatch");
+                return false;
+            }
+        }
+
+        //check if the event is full
+        if(event.getEvent_details().getUsers_accepted().size()==event.getEvent_details().getMaximum_people()){
+            return false;
+        }
+
+        //none of the preferences are contradicted, the user can receive the notification
+        return true;
+    }
 
 
 
