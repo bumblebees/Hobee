@@ -2,7 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:title="Notifications">
-
         <SwitchPreference
             android:defaultValue="true"
             android:title="Notification light"
@@ -15,5 +14,35 @@
             android:defaultValue="true"
             android:title="Notification sound"
             android:key="notification_sound" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Notifications: Days available to participate in events ">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:title="Monday"
+            android:key="notification_monday" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:title="Tuesday"
+            android:key="notification_tuesday" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:title="Wednesday"
+            android:key="notification_wednesday" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:title="Thursday"
+            android:key="notification_thursday" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:title="Friday"
+            android:key="notification_friday" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:title="Saturday"
+            android:key="notification_saturday" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:title="Sunday"
+            android:key="notification_sunday" />
     </PreferenceCategory>
 </PreferenceScreen>

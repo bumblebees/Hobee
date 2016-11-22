@@ -36,6 +36,7 @@ import com.google.gson.Gson;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import com.squareup.picasso.Picasso;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -377,6 +378,54 @@ public class HomeActivity extends AppCompatActivity {
         //check if the event is full
         if(event.getEvent_details().getUsers_accepted().size()==event.getEvent_details().getMaximum_people()){
             return false;
+        }
+
+        //check the user's day of the week preferences
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        int dayOfTheWeek = event.getEvent_details().getDayOfTheWeek();
+        switch(dayOfTheWeek){
+            case Calendar.MONDAY:{
+                if(!preferences.getBoolean("notification_monday", false)){
+                    return false;
+                }
+                break;
+            }
+            case Calendar.TUESDAY:{
+                if(!preferences.getBoolean("notification_tuesday", false)){
+                    return false;
+                }
+                break;
+            }
+            case Calendar.WEDNESDAY:{
+                if(!preferences.getBoolean("notification_wednesday", false)){
+                    return false;
+                }
+                break;
+            }
+            case Calendar.THURSDAY:{
+                if(!preferences.getBoolean("notification_thursday", false)){
+                    return false;
+                }
+                break;
+            }
+            case Calendar.FRIDAY:{
+                if(!preferences.getBoolean("notification_friday", false)){
+                    return false;
+                }
+                break;
+            }
+            case Calendar.SATURDAY:{
+                if(!preferences.getBoolean("notification_saturday", false)){
+                    return false;
+                }
+                break;
+            }
+            case Calendar.SUNDAY:{
+                if(!preferences.getBoolean("notification_sunday", false)){
+                    return false;
+                }
+                break;
+            }
         }
 
         //none of the preferences are contradicted, the user can receive the notification

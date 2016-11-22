@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.security.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -83,6 +84,16 @@ public class EventDetails {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Get the day of the week when the event takes place.
+     * @return int representing the day of the week starting from 1 (Sunday)
+     */
+    public int getDayOfTheWeek(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(Long.parseLong(this.timestamp)*1000L);
+        return cal.get(Calendar.DAY_OF_WEEK);
     }
 
 
