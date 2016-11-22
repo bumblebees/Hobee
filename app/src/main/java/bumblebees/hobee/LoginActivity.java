@@ -2,6 +2,7 @@ package bumblebees.hobee;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -37,6 +38,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         SocketIO.getInstance().start();
         session = new SessionManager(getApplicationContext());
+
+        //initialize the application settings
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         // If user has already logged in, just get his data from the server and go to homepage
         if (session.getId() != null){

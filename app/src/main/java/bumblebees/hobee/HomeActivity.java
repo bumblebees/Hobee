@@ -1,11 +1,14 @@
 package bumblebees.hobee;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -36,8 +39,6 @@ import java.util.ArrayList;
 
 import com.squareup.picasso.Picasso;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -90,6 +91,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // Add options to the menu (empty strings can be replaced with some additional info)
         navItems.add(new NavItem("Profile", R.drawable.profile));
+        navItems.add(new NavItem("Settings", 0));
         navItems.add(new NavItem("Logout", R.drawable.logout));
 
         // DrawerLayout
@@ -160,6 +162,11 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(profile);
                 break;
             case 1:
+                drawerLayout.closeDrawers();
+                Intent settingsIntent = new Intent(HomeActivity.this, SettingsActivity.class);
+                startActivity(settingsIntent);
+                break;
+            case 2:
                 if (session.getOrigin().equals("facebook")){
                     // if facebook user
                     LoginManager.getInstance().logOut();
@@ -301,13 +308,24 @@ public class HomeActivity extends AppCompatActivity {
         //check if the notification should be sent or not
         if(matchesPreferences(event)){
             Gson g = new Gson();
-            Log.d("event", "preferences match");
             //send notification
             NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.bee)
                     .setContentTitle("New event: "+event.getEvent_details().getEvent_name())
                     .setContentText(event.getEvent_details().getDescription())
                     .setAutoCancel(true);
+
+            //set light, sound and vibration if they have been enabled in the preferences
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            if(preferences.getBoolean("notification_light", true)){
+                notificationBuilder.setLights(0xffffff00, 2000, 2000);
+            }
+            if(preferences.getBoolean("notification_sound", false)){
+                notificationBuilder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
+            }
+            if(preferences.getBoolean("notification_vibration", true)){
+                notificationBuilder.setVibrate(new long[]{2000, 2000});
+            }
 
             Intent eventIntent = new Intent(this, EventViewActivity.class);
             eventIntent.putExtra("event", g.toJson(event));
@@ -345,7 +363,6 @@ public class HomeActivity extends AppCompatActivity {
 
         //check if the age is larger than the max age, or smaller than the minimum age
         if(event.getEvent_details().getAge_max()<Profile.getInstance().getAge() || event.getEvent_details().getAge_min() > Profile.getInstance().getAge()){
-            Log.d("event", "age mismatch");
             return false;
         }
 
@@ -353,7 +370,6 @@ public class HomeActivity extends AppCompatActivity {
         if(!event.getEvent_details().getGender().equals("everyone")){
             //check that the gender does not match the user's gender
             if(!event.getEvent_details().getGender().equals(Profile.getInstance().getGender())){
-                Log.d("event", "gender mismatch");
                 return false;
             }
         }

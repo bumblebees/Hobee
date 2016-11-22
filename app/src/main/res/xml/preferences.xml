@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Notifications">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:title="Notification light"
+            android:key="notification_light" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:title="Notification vibration"
+            android:key="notification_vibration" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:title="Notification sound"
+            android:key="notification_sound" />
+    </PreferenceCategory>
+</PreferenceScreen>
