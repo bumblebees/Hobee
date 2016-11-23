@@ -1,44 +1,41 @@
 package bumblebees.hobee;
 
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
-import bumblebees.hobee.utilities.Profile;
-import com.squareup.picasso.Picasso;
+
+import bumblebees.hobee.objects.User;
 
 
 public class UserProfileActivity extends AppCompatActivity {
-
-    TextView userName;
-    TextView userEmail;
-    TextView userGender;
-    TextView userAge;
-    ImageView userImage;
-    TextView hobbiesList;
-    TextView userBio;
-
-
+    private ImageView userImage;
+    private TextView userName,userAge,userGender,userDateSince,userBiography;
+    private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-
         userName = (TextView) findViewById(R.id.userName);
-        userEmail = (TextView) findViewById(R.id.userEmail);
-        userGender = (TextView) findViewById(R.id.userGender);
         userAge = (TextView) findViewById(R.id.userAge);
-        userImage = (ImageView) findViewById(R.id.userImage);
-        hobbiesList = (TextView) findViewById(R.id.listhobbies);
-        userBio = (TextView) findViewById(R.id.userBio);
+        userGender = (TextView) findViewById(R.id.userGender);
+        userDateSince = (TextView) findViewById(R.id.userDateSince);
+        userBiography = (TextView) findViewById(R.id.userBiography);
 
-        userName.setText(Profile.getInstance().getFirstName() + " " + Profile.getInstance().getLastName());
-        userEmail.setText(Profile.getInstance().getEmail());
-        userGender.setText(Profile.getInstance().getGender());
-        userAge.setText(Integer.toString(Profile.getInstance().getAge()));
-        userBio.setText(Profile.getInstance().getBio());
-        Picasso.with(this).load(Profile.getInstance().getPicUrl()).into(userImage);
+        user = getIntent().getParcelableExtra("User");
+
+        System.out.println(user);
+        
+        userName.setText(user.getFirstName() + " " + user.getLastName());
+        userAge.setText(""+ user.getAge());
+        userGender.setText(user.getGender());
+        userDateSince.setText(user.getDateCreated().toString());
+        userBiography.setText(user.getBio());
+        
+        
+        //// TODO: 2016-11-23 Add the hobbies and add the userImage 
+
+
 
     }
-
 }

@@ -9,28 +9,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.UUID;
-import java.util.zip.Inflater;
 
 import bumblebees.hobee.objects.Event;
-import bumblebees.hobee.objects.SimpleUser;
+import bumblebees.hobee.objects.LocalUser;
 import bumblebees.hobee.objects.User;
 import bumblebees.hobee.utilities.MQTT;
-import bumblebees.hobee.utilities.MQTTMessageReceiver;
 import bumblebees.hobee.utilities.Profile;
 import bumblebees.hobee.utilities.SessionManager;
 
@@ -68,7 +60,7 @@ public class EventViewActivity extends AppCompatActivity {
 
         btnJoinEvent = (Button) findViewById(R.id.btnJoinEvent);
 
-        SimpleUser currentUser = new SimpleUser(Profile.getInstance().getUserID(), Profile.getInstance().getFirstName(), Profile.getInstance().getLastName());
+        LocalUser currentUser = new LocalUser(Profile.getInstance().getUserID(), Profile.getInstance().getFirstName(), Profile.getInstance().getLastName());
 
 
         //check if the user is also the host of the event
@@ -89,7 +81,7 @@ public class EventViewActivity extends AppCompatActivity {
                 containerPending.addView(pendingUsers);
             }
             else {
-                for (final SimpleUser user : event.getEvent_details().getUsers_pending()) {
+                for (final LocalUser user : event.getEvent_details().getUsers_pending()) {
                     LayoutInflater inflater = LayoutInflater.from(this);
                     final View row = inflater.inflate(R.layout.user_accept_item, containerPending, false);
 
@@ -99,7 +91,8 @@ public class EventViewActivity extends AppCompatActivity {
                     pendingUser.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            viewUserProfile(user);
+                            //This needs to be fixed
+                            viewUserProfile(user.getUser());
                         }
                     });
 
@@ -159,13 +152,13 @@ public class EventViewActivity extends AppCompatActivity {
         eventAge.setText(event.getEvent_details().getAge_min()+"-"+event.getEvent_details().getAge_max());
         eventHostName.setText(event.getEvent_details().getHost_name());
 
-        for(final SimpleUser simpleUser : event.getEvent_details().getUsers_accepted()){
+        for(final LocalUser localUser : event.getEvent_details().getUsers_accepted()){
             TextView acceptedUser = new TextView(this.getApplicationContext());
-            acceptedUser.setText(simpleUser.getName());
+            acceptedUser.setText(localUser.getName());
             acceptedUser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    viewUserProfile(simpleUser);
+                    viewUserProfile(localUser.getUser());
                 }
             });
             containerUsers.addView(acceptedUser);
@@ -183,7 +176,7 @@ public class EventViewActivity extends AppCompatActivity {
 
     public void joinEvent(Event event){
         SessionManager session = new SessionManager(this.getApplicationContext());
-        SimpleUser currentUser = new SimpleUser(Profile.getInstance().getUserID(), Profile.getInstance().getFirstName(), Profile.getInstance().getLastName());
+        LocalUser currentUser = new LocalUser(Profile.getInstance().getUserID(), Profile.getInstance().getFirstName(), Profile.getInstance().getLastName());
         event.getEvent_details().addUser(currentUser);
 
         updateEvent(event);
@@ -215,7 +208,9 @@ public class EventViewActivity extends AppCompatActivity {
 
     }
 
-    public void viewUserProfile(SimpleUser user){
-        //TODO: open a new activity and pass user as the intent
+    public void viewUserProfile(User user){
+        Intent i = new Intent(this,UserProfileActivity.class);
+        i.putExtra("User",user);
+        startActivity(i);
     }
 }

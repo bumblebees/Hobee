@@ -1,15 +1,12 @@
 package bumblebees.hobee;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.text.format.DateFormat;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -25,31 +22,22 @@ import com.google.gson.Gson;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.EventDetails;
 import bumblebees.hobee.objects.Hobby;
-import bumblebees.hobee.objects.SimpleUser;
+import bumblebees.hobee.objects.LocalUser;
 import bumblebees.hobee.utilities.DatePickerFragment;
 import bumblebees.hobee.utilities.Profile;
 import bumblebees.hobee.utilities.SessionManager;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import bumblebees.hobee.utilities.MQTT;
 import bumblebees.hobee.utilities.TimePickerFragment;
 import io.apptik.widget.MultiSlider;
-import io.socket.client.Ack;
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 
 public class NewEventActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -189,15 +177,15 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
             e.printStackTrace();
         }
 
-        ArrayList<SimpleUser> acceptedUsers = new ArrayList<>();
-        SimpleUser currentUser = new SimpleUser(session.getId(), Profile.getInstance().getFirstName(), Profile.getInstance().getLastName());
+        ArrayList<LocalUser> acceptedUsers = new ArrayList<>();
+        LocalUser currentUser = new LocalUser(session.getId(), Profile.getInstance().getFirstName(), Profile.getInstance().getLastName());
         acceptedUsers.add(currentUser);
 
         Hobby hobby = new Hobby();
         EventDetails eventDetails = new EventDetails(inputEventName.getText().toString(), hostID, Profile.getInstance().getFirstName()+" "+Profile.getInstance().getLastName(),
                 Integer.parseInt(minAge.getText().toString()), Integer.parseInt(maxAge.getText().toString()), inputEventGender.getSelectedItem().toString(),
                 timestamp, Integer.parseInt(inputEventNumber.getText().toString()), inputEventLocation.getText().toString(), inputEventDescription.getText().toString(),
-                new ArrayList<SimpleUser>(), acceptedUsers, hobby);
+                new ArrayList<LocalUser>(), acceptedUsers, hobby);
 
         Event event = new Event(uuid, eventCategory, String.valueOf(timeCreated), eventDetails);
 

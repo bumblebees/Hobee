@@ -227,4 +227,18 @@ public class SocketIO {
             }
         });
     }
+
+    public User getUser(final String loginId){
+        final User[] user = new User[1];
+        //TODO: get the user by using the userID and not the loginID
+        socket.emit("get_user", loginId, new Ack() {
+            @Override
+            public void call(Object... objects) {
+                JSONObject userJSON = (JSONObject) objects[0];
+                user[0] = gson.fromJson(String.valueOf(userJSON), User.class);
+                }
+        });
+        System.out.println(user[0]);
+        return user[0];
+    }
 }
