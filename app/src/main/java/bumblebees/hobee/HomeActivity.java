@@ -264,7 +264,7 @@ public class HomeActivity extends AppCompatActivity {
                     try {
                         final Gson g = new Gson();
                         final Event event = g.fromJson(message.toString(), Event.class);
-                        sendNotification(event);
+                        new Notification(getApplicationContext()).sendNewEvent(event);
                         final Button btn = new Button(HomeActivity.this);
                         btn.setText(event.getType() + ": " + event.getEvent_details().getEvent_name());
 
@@ -301,136 +301,9 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    /**
-     * Send notification for an event.
-     * @param event - event that is going to be sent
-     */
-    public void sendNotification(Event event){
-        //check if the notification should be sent or not
-        if(matchesPreferences(event)){
-            Gson g = new Gson();
-            //send notification
-            NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.bee)
-                    .setContentTitle("New event: "+event.getEvent_details().getEvent_name())
-                    .setContentText(event.getEvent_details().getDescription())
-                    .setAutoCancel(true);
-
-            //set light, sound and vibration if they have been enabled in the preferences
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            if(preferences.getBoolean("notification_light", true)){
-                notificationBuilder.setLights(0xffffff00, 2000, 2000);
-            }
-            if(preferences.getBoolean("notification_sound", false)){
-                notificationBuilder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
-            }
-            if(preferences.getBoolean("notification_vibration", true)){
-                notificationBuilder.setVibrate(new long[]{2000, 2000});
-            }
-
-            Intent eventIntent = new Intent(this, EventViewActivity.class);
-            eventIntent.putExtra("event", g.toJson(event));
-
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-            stackBuilder.addParentStack(EventViewActivity.class);
-            stackBuilder.addNextIntent(eventIntent);
-
-            PendingIntent eventPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);
-            notificationBuilder.setContentIntent(eventPendingIntent);
-
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-            notificationManager.notify(Integer.parseInt(event.getTimestamp()), notificationBuilder.build());
-
-        }
-        else{
-            Log.d("event", "notification not sent");
-        }
-    }
 
 
-    /**
-     * Checks if the event matches the preferences of the currently logged in user
-     * @param event - event to be checked
-     * @return true if they match, false otherwise
-     */
-    public boolean matchesPreferences(Event event){
-        //check if the user is already a member of the event or is the host
-        if(event.getEvent_details().checkUser(Profile.getInstance().getUser().getSimpleUser()) ||
-                event.getEvent_details().getHost_id().equals(Profile.getInstance().getUserID())){
-            //user is in the event, does not need a notification
-            return false;
-        }
 
-        //check if the age is larger than the max age, or smaller than the minimum age
-        if(event.getEvent_details().getAge_max()<Profile.getInstance().getAge() || event.getEvent_details().getAge_min() > Profile.getInstance().getAge()){
-            return false;
-        }
-
-        //check if there are gender restrictions to the event
-        if(!event.getEvent_details().getGender().equals("everyone")){
-            //check that the gender does not match the user's gender
-            if(!event.getEvent_details().getGender().equals(Profile.getInstance().getGender())){
-                return false;
-            }
-        }
-
-        //check if the event is full
-        if(event.getEvent_details().getUsers_accepted().size()==event.getEvent_details().getMaximum_people()){
-            return false;
-        }
-
-        //check the user's day of the week preferences
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int dayOfTheWeek = event.getEvent_details().getDayOfTheWeek();
-        switch(dayOfTheWeek){
-            case Calendar.MONDAY:{
-                if(!preferences.getBoolean("notification_monday", false)){
-                    return false;
-                }
-                break;
-            }
-            case Calendar.TUESDAY:{
-                if(!preferences.getBoolean("notification_tuesday", false)){
-                    return false;
-                }
-                break;
-            }
-            case Calendar.WEDNESDAY:{
-                if(!preferences.getBoolean("notification_wednesday", false)){
-                    return false;
-                }
-                break;
-            }
-            case Calendar.THURSDAY:{
-                if(!preferences.getBoolean("notification_thursday", false)){
-                    return false;
-                }
-                break;
-            }
-            case Calendar.FRIDAY:{
-                if(!preferences.getBoolean("notification_friday", false)){
-                    return false;
-                }
-                break;
-            }
-            case Calendar.SATURDAY:{
-                if(!preferences.getBoolean("notification_saturday", false)){
-                    return false;
-                }
-                break;
-            }
-            case Calendar.SUNDAY:{
-                if(!preferences.getBoolean("notification_sunday", false)){
-                    return false;
-                }
-                break;
-            }
-        }
-
-        //none of the preferences are contradicted, the user can receive the notification
-        return true;
-    }
 
 
 
