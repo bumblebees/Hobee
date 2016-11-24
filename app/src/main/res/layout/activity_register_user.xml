@@ -9,47 +9,9 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:background="#ffe36b"
+    android:background="#fff8d2"
     tools:context="bumblebees.hobee.RegisterUserActivity">
 
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/firstName" android:hint="First name"
-        android:background="#60FFFFFF"
-        android:padding="10dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp" />
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/lastName" android:hint="Last name"
-        android:layout_below="@+id/firstName" android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="#60FFFFFF"
-        android:padding="10dp"
-        android:layout_marginLeft="1dp"
-        android:layout_margin="10dp" />
-    <ImageView
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/userImage"
-        app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
-        android:adjustViewBounds="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/submitBtn"
-        android:layout_alignStart="@+id/submitBtn"
-        android:layout_marginLeft="133dp"
-        android:layout_marginStart="133dp" />
 
     <RadioGroup
             android:id="@+id/gender"
@@ -58,17 +20,6 @@
             android:orientation="horizontal" android:layout_below="@+id/userImage"
             android:layout_alignLeft="@+id/lastName" android:layout_alignStart="@+id/lastName">
 
-        <RadioButton
-            android:id="@+id/radioMale"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/male"
-            android:checked="false" />
-        <RadioButton
-                android:id="@+id/radioFemale"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/female" android:checked="false"/>
     </RadioGroup>
     <TextView
             android:layout_width="wrap_content"
@@ -125,7 +76,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="4dp" />
     <ImageButton
-        app:srcCompat="@drawable/letsgetstarted"
+        app:srcCompat="@drawable/letgetstarted"
         android:id="@+id/submitBtn"
         android:background="#0000"
         android:layout_width="200dp"
@@ -133,5 +84,64 @@
         android:scaleType="fitCenter"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/userImage"
+        app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
+        android:adjustViewBounds="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/firstName" android:hint="First name"
+        android:background="#60FFFFFF"
+        android:padding="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="19dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/userImage"
+        android:layout_toEndOf="@+id/userImage"
+        android:layout_marginStart="20dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/lastName" android:hint="Last name"
+        android:background="#60FFFFFF"
+        android:padding="10dp"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/firstName"
+        android:layout_alignLeft="@+id/firstName"
+        android:layout_alignStart="@+id/firstName" />
+
+    <RadioButton
+        android:id="@+id/radioMale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/male"
+        android:checked="false"
+        android:layout_below="@+id/gender"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="18dp" />
+
+    <RadioButton
+            android:id="@+id/radioFemale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/female" android:checked="false"
+        android:layout_alignBaseline="@+id/radioMale"
+        android:layout_alignBottom="@+id/radioMale"
+        android:layout_alignRight="@+id/userImage"
+        android:layout_alignEnd="@+id/userImage" />
 
 </RelativeLayout>

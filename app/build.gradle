@@ -3,13 +3,9 @@ apply plugin: 'com.google.gms.google-services'
 android {
 
     compileSdkVersion 25
-<<<<<<< HEAD
-    buildToolsVersion "25"
-=======
 
     buildToolsVersion "24.0.3"
 
->>>>>>> develop
     defaultConfig {
 
         applicationId "bumblebees.hobee"

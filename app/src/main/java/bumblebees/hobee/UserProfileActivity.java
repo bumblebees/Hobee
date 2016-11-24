@@ -30,9 +30,9 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
         userName = (TextView) findViewById(R.id.userName);
-        userEmail = (TextView) findViewById(R.id.userEmail);
-        userGender = (TextView) findViewById(R.id.userGender);
-        userAge = (TextView) findViewById(R.id.userAge);
+        // userEmail = (TextView) findViewById(R.id.userEmail);
+        // userGender = (TextView) findViewById(R.id.userGender);
+        // userAge = (TextView) findViewById(R.id.userAge);
         userImage = (ImageView) findViewById(R.id.userImage);
         hobbiesList = (TextView) findViewById(R.id.listhobbies);
         userBio = (TextView) findViewById(R.id.userBio);
