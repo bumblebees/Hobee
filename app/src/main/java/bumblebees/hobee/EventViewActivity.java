@@ -57,11 +57,10 @@ public class EventViewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         g = new Gson();
         final Event event = g.fromJson(intent.getStringExtra("event"), Event.class);
-        SessionManager session = new SessionManager(this.getApplicationContext());
 
         btnJoinEvent = (Button) findViewById(R.id.btnJoinEvent);
 
-        LocalUser currentUser = new LocalUser(Profile.getInstance().getUserID(), Profile.getInstance().getFirstName(), Profile.getInstance().getLastName());
+        LocalUser currentUser = Profile.getInstance().getUser().getSimpleUser();
 
 
         //check if the user is also the host of the event
@@ -163,13 +162,13 @@ public class EventViewActivity extends AppCompatActivity {
                 }
             });
             containerUsers.addView(acceptedUser);
+            Log.d("event", localUser.toString());
         }
 
         eventHostName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String hostID = event.getEvent_details().getHost_id();
-                SocketIO.getInstance().getUserAndOpenProfile(hostID,getApplicationContext());
+                viewUserProfile(event.getEvent_details().getHost_id());
             }
         });
     }
@@ -183,8 +182,7 @@ public class EventViewActivity extends AppCompatActivity {
      */
 
     public void joinEvent(Event event){
-        SessionManager session = new SessionManager(this.getApplicationContext());
-        LocalUser currentUser = new LocalUser(Profile.getInstance().getUserID(), Profile.getInstance().getFirstName(), Profile.getInstance().getLastName());
+        LocalUser currentUser = Profile.getInstance().getUser().getSimpleUser();
         event.getEvent_details().addUser(currentUser);
 
         updateEvent(event);

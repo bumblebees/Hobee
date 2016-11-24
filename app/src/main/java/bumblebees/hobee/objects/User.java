@@ -16,15 +16,16 @@ public class User {
 
     private String userID, loginId;
     private String origin, firstName, lastName, birthday, email, gender, bio;
-    private Date created;
+    private String created;
     private Rank rank;
     private List<Hobby> hobbies;
 
     public String toString() {
         return "UserID: " + userID + ", loginId: " + loginId + ", origin" + origin + ", first name: "
                 + firstName + ", last name: " + lastName + ", birthday: " + birthday + ", gender: " +
-                gender + ", bio " + bio;
+                gender + ", bio: " + bio + ", created:" + created +", rank: "+rank + ", hobbies: " + hobbies;
     }
+
 
 
     public int getAge() {
@@ -50,7 +51,7 @@ public class User {
         return age;
     }
 
-    public Date getDateCreated() {
+    public String getDateCreated() {
         return created;
     }
 
@@ -90,7 +91,7 @@ public class User {
         return bio;
     }
 
-    public Date getCreated() {
+    public String getCreated() {
         return created;
     }
 
@@ -98,11 +99,19 @@ public class User {
         return rank;
     }
 
+    public String userSince(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(Long.parseLong(created)*1000L);
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        return String.valueOf(sdfDate.format(cal.getTime()));
+
+    }
+
     public LocalUser getSimpleUser() {
         return new LocalUser(userID, firstName, lastName);
     }
 
-    public User(String userID, String loginId, String origin, String firstName, String lastName, String birthday, String email, String gender, String bio, Date created, Rank rank, List<Hobby> hobbies) {
+    public User(String userID, String loginId, String origin, String firstName, String lastName, String birthday, String email, String gender, String bio, String created, Rank rank, List<Hobby> hobbies) {
         this.userID = userID;
         this.loginId = loginId;
         this.origin = origin;
@@ -145,7 +154,7 @@ public class User {
         this.bio = bio;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(String created) {
         this.created = created;
     }
 

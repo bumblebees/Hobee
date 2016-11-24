@@ -36,11 +36,13 @@ public class UserProfileActivity extends AppCompatActivity {
             userName.setText(user.getFirstName() + " " + user.getLastName());
             userAge.setText("" + user.getAge());
             userGender.setText(user.getGender());
-            userDateSince.setText("Member since " + user.getDateCreated());
+            userDateSince.setText("Member since " + user.userSince());
             userBiography.setText(user.getBio());
         } catch(NullPointerException e){
             Log.d("Error creating user", e.toString());
-            Toast toast = Toast.makeText(getApplicationContext(),"Error Seeing profile",Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getApplicationContext(),"Error seeing profile",Toast.LENGTH_LONG);
+            toast.show();
+            finish();
         }
         
         //// TODO: 2016-11-23 Add the hobbies and add the userImage 

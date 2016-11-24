@@ -223,6 +223,7 @@ public class SocketIO {
                 User user = gson.fromJson(String.valueOf(userJSON), User.class);
 
                 Profile.getInstance().setUser(user);
+                Log.d("event", user.toString());
 
                 SessionManager session = new SessionManager(context);
                 session.setPreferences(user.getLoginId(), user.getOrigin());
@@ -235,21 +236,17 @@ public class SocketIO {
     }
 
     public void getUserAndOpenProfile(final String UUID, final Context context){
-        //TODO: get the user by using the userID and not the loginID
         socket.emit("get_userUUID", UUID, new Ack() {
             @Override
             public void call(Object... objects) {
                 JSONObject userJSON = (JSONObject) objects[0];
-                User user = gson.fromJson(String.valueOf(userJSON), User.class);
                 Intent intent = new Intent(context, UserProfileActivity.class);
-                try{
-                intent.putExtra("User",userJSON.toString());
-            } catch(NullPointerException e){
-                Log.d("Error creating user", e.toString());
+                if(userJSON != null) {
+                    User user = gson.fromJson(String.valueOf(userJSON), User.class);
+                    intent.putExtra("User",gson.toJson(user));
+                }
 
-            }
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
                 context.startActivity(intent);
                 }
         });

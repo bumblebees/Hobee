@@ -157,8 +157,6 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
      * Creates the JSON that will be sent over MQTT using the completed fields in the form.
      */
     public void addNewEvent() {
-        final SessionManager session = new SessionManager(this.getApplicationContext());
-
         long timeCreated = Calendar.getInstance().getTimeInMillis() / 1000L;
         String eventCategory = eventHobbyChoice.getSelectedItem().toString();
         String hostID = Profile.getInstance().getUserID();
@@ -178,7 +176,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         }
 
         ArrayList<LocalUser> acceptedUsers = new ArrayList<>();
-        LocalUser currentUser = new LocalUser(session.getId(), Profile.getInstance().getFirstName(), Profile.getInstance().getLastName());
+        LocalUser currentUser = Profile.getInstance().getUser().getSimpleUser();
         acceptedUsers.add(currentUser);
 
         Hobby hobby = new Hobby();
