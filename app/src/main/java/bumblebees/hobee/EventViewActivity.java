@@ -165,6 +165,13 @@ public class EventViewActivity extends AppCompatActivity {
             containerUsers.addView(acceptedUser);
         }
 
+        eventHostName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String hostID = event.getEvent_details().getHost_id();
+                SocketIO.getInstance().getUserAndOpenProfile(hostID,getApplicationContext());
+            }
+        });
     }
 
 

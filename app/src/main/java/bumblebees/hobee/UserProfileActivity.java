@@ -2,8 +2,10 @@ package bumblebees.hobee;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -30,12 +32,16 @@ public class UserProfileActivity extends AppCompatActivity {
 
         user = gson.fromJson(getIntent().getStringExtra("User"),User.class);
 
-        userName.setText(user.getFirstName() + " " + user.getLastName());
-        userAge.setText(""+ user.getAge());
-        userGender.setText(user.getGender());
-        userDateSince.setText(user.getDateCreated().toString());
-        userBiography.setText(user.getBio());
-        
+        try {
+            userName.setText(user.getFirstName() + " " + user.getLastName());
+            userAge.setText("" + user.getAge());
+            userGender.setText(user.getGender());
+            userDateSince.setText("Member since " + user.getDateCreated());
+            userBiography.setText(user.getBio());
+        } catch(NullPointerException e){
+            Log.d("Error creating user", e.toString());
+            Toast toast = Toast.makeText(getApplicationContext(),"Error Seeing profile",Toast.LENGTH_SHORT);
+        }
         
         //// TODO: 2016-11-23 Add the hobbies and add the userImage 
 

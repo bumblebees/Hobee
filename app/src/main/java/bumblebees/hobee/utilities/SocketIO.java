@@ -1,9 +1,12 @@
 package bumblebees.hobee.utilities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import bumblebees.hobee.HobbyActivity;
 import bumblebees.hobee.HomeActivity;
@@ -25,6 +28,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class SocketIO {
 
@@ -237,7 +242,12 @@ public class SocketIO {
                 JSONObject userJSON = (JSONObject) objects[0];
                 User user = gson.fromJson(String.valueOf(userJSON), User.class);
                 Intent intent = new Intent(context, UserProfileActivity.class);
+                try{
                 intent.putExtra("User",userJSON.toString());
+            } catch(NullPointerException e){
+                Log.d("Error creating user", e.toString());
+
+            }
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 context.startActivity(intent);

@@ -183,9 +183,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-
-
-
     /**
      *  Inner class to create custom menu list options
      */
