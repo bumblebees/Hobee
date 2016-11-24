@@ -69,6 +69,8 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         inputEventGender = (Spinner) findViewById(R.id.inputEventGender);
         inputEventNumber = (TextView) findViewById(R.id.inputEventNumber);
         ageRangeSlider = (MultiSlider) v.findViewById(R.id.age_range_slider);
+        ageRangeSlider.setMin(16);
+        ageRangeSlider.setMax(96);
         maxAge = (TextView) findViewById(R.id.maxAge);
         minAge = (TextView) findViewById(R.id.minAge);
         minAge.setText(String.valueOf(ageRangeSlider.getThumb(0).getValue()));
