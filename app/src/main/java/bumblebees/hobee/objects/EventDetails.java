@@ -91,8 +91,6 @@ public class EventDetails {
         return cal.get(Calendar.DAY_OF_WEEK);
     }
 
-
-
     public List<LocalUser> getUsers_pending(){
         return users_pending;
     }
@@ -100,6 +98,7 @@ public class EventDetails {
     public List<LocalUser> getUsers_accepted(){
         return users_accepted;
     }
+
     public String getEvent_name() {
         return event_name;
     }

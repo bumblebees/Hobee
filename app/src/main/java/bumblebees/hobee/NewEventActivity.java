@@ -161,7 +161,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
 
         long timeCreated = Calendar.getInstance().getTimeInMillis() / 1000L;
         String eventCategory = eventHobbyChoice.getSelectedItem().toString();
-        String hostID = session.getId();
+        String hostID = Profile.getInstance().getUserID();
 
         UUID uuid = UUID.randomUUID();
 

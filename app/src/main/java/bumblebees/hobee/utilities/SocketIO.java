@@ -15,6 +15,7 @@ import com.facebook.GraphResponse;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
 
+import bumblebees.hobee.UserProfileActivity;
 import bumblebees.hobee.objects.User;
 import io.socket.client.Ack;
 import io.socket.client.IO;
@@ -228,17 +229,19 @@ public class SocketIO {
         });
     }
 
-    public User getUser(final String loginId){
-        final User[] user = new User[1];
+    public void getUserAndOpenProfile(final String UUID, final Context context){
         //TODO: get the user by using the userID and not the loginID
-        socket.emit("get_user", loginId, new Ack() {
+        socket.emit("get_userUUID", UUID, new Ack() {
             @Override
             public void call(Object... objects) {
                 JSONObject userJSON = (JSONObject) objects[0];
-                user[0] = gson.fromJson(String.valueOf(userJSON), User.class);
+                User user = gson.fromJson(String.valueOf(userJSON), User.class);
+                Intent intent = new Intent(context, UserProfileActivity.class);
+                intent.putExtra("User",userJSON.toString());
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                context.startActivity(intent);
                 }
         });
-        System.out.println(user[0]);
-        return user[0];
     }
 }

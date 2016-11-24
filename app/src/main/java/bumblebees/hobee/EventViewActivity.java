@@ -25,6 +25,7 @@ import bumblebees.hobee.objects.User;
 import bumblebees.hobee.utilities.MQTT;
 import bumblebees.hobee.utilities.Profile;
 import bumblebees.hobee.utilities.SessionManager;
+import bumblebees.hobee.utilities.SocketIO;
 
 
 public class EventViewActivity extends AppCompatActivity {
@@ -92,7 +93,7 @@ public class EventViewActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             //This needs to be fixed
-                            viewUserProfile(user.getUser());
+                            viewUserProfile(user.getUserID());
                         }
                     });
 
@@ -158,7 +159,7 @@ public class EventViewActivity extends AppCompatActivity {
             acceptedUser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    viewUserProfile(localUser.getUser());
+                    viewUserProfile(localUser.getUserID());
                 }
             });
             containerUsers.addView(acceptedUser);
@@ -208,9 +209,7 @@ public class EventViewActivity extends AppCompatActivity {
 
     }
 
-    public void viewUserProfile(User user){
-        Intent i = new Intent(this,UserProfileActivity.class);
-        i.putExtra("User",user);
-        startActivity(i);
+    public void viewUserProfile(String userID){
+        SocketIO.getInstance().getUserAndOpenProfile(userID,getApplicationContext());
     }
 }

@@ -5,10 +5,16 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import bumblebees.hobee.objects.User;
 
 
 public class UserProfileActivity extends AppCompatActivity {
+    private Gson gson= new Gson();
     private ImageView userImage;
     private TextView userName,userAge,userGender,userDateSince,userBiography;
     private User user;
@@ -22,10 +28,8 @@ public class UserProfileActivity extends AppCompatActivity {
         userDateSince = (TextView) findViewById(R.id.userDateSince);
         userBiography = (TextView) findViewById(R.id.userBiography);
 
-        user = getIntent().getParcelableExtra("User");
+        user = gson.fromJson(getIntent().getStringExtra("User"),User.class);
 
-        System.out.println(user);
-        
         userName.setText(user.getFirstName() + " " + user.getLastName());
         userAge.setText(""+ user.getAge());
         userGender.setText(user.getGender());
