@@ -150,7 +150,7 @@ public class User {
     }
 
     public void setRank(Rank rank) {
-        this.rank = rank;
+        this.rank  = rank;
     }
 
 }
