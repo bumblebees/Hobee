@@ -1,15 +1,12 @@
 package bumblebees.hobee;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.text.format.DateFormat;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -20,44 +17,49 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import bumblebees.hobee.objects.Event;
+import bumblebees.hobee.objects.EventDetails;
+import bumblebees.hobee.objects.Hobby;
+import bumblebees.hobee.objects.LocalUser;
+import bumblebees.hobee.utilities.DatePickerFragment;
+import bumblebees.hobee.utilities.Profile;
 import bumblebees.hobee.utilities.SessionManager;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.UUID;
+
 import bumblebees.hobee.utilities.MQTT;
+import bumblebees.hobee.utilities.TimePickerFragment;
 import io.apptik.widget.MultiSlider;
-import io.socket.client.Ack;
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 
-public class NewEventActivity extends AppCompatActivity {
+public class NewEventActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     Button btnAddEvent;
-
+    TextView maxAge;
+    TextView minAge;
     TextView inputEventName;
     TextView inputEventLocation;
     TextView inputEventDescription;
-    TextView maxAge;
-    TextView minAge;
-    static TextView inputEventDate;
-    static TextView inputEventTime;
+    TextView inputEventDate;
+    TextView inputEventTime;
     Spinner inputEventGender;
     Spinner eventHobbyChoice;
     TextView inputEventNumber;
     MultiSlider ageRangeSlider;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
-
+        View v = findViewById(android.R.id.content);
 
         inputEventName = (TextView) findViewById(R.id.inputEventName);
         inputEventDescription = (TextView) findViewById(R.id.inputEventDescription);
@@ -66,7 +68,7 @@ public class NewEventActivity extends AppCompatActivity {
         inputEventTime = (TextView) findViewById(R.id.inputEventTime);
         inputEventGender = (Spinner) findViewById(R.id.inputEventGender);
         inputEventNumber = (TextView) findViewById(R.id.inputEventNumber);
-        ageRangeSlider = (MultiSlider) findViewById(R.id.age_range_slider);
+        ageRangeSlider = (MultiSlider) v.findViewById(R.id.age_range_slider);
         maxAge = (TextView) findViewById(R.id.maxAge);
         minAge = (TextView) findViewById(R.id.minAge);
         minAge.setText(String.valueOf(ageRangeSlider.getThumb(0).getValue()));
@@ -75,26 +77,13 @@ public class NewEventActivity extends AppCompatActivity {
 
 
         //set gender spinner options
-        ArrayAdapter<String> genderChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{"any gender", "male", "female"});
+        ArrayAdapter<String> genderChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{"everyone", "male", "female"});
         inputEventGender.setAdapter(genderChoice);
-
-
 
         //TODO: get these from your currently available hobbies
 
         String[] hobbyChoices = {"basketball", "football", "fishing", "cooking"};
-//        String[] hobbyChoices = new String[0];
-//        JSONArray hobbies;
-//        try {
-//            hobbies = userData.getJSONArray("hobbies");
-//            hobbyChoices = new String[hobbies.length()];
-//            for(int i=0; i<hobbies.length(); i++){
-//                hobbyChoices[i]=hobbies.getString(i);
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-        
+
         ArrayAdapter<String> hobbyChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, hobbyChoices);
 
         eventHobbyChoice.setAdapter(hobbyChoice);
@@ -125,95 +114,44 @@ public class NewEventActivity extends AppCompatActivity {
                 newFragment.show(getSupportFragmentManager(), "datePicker");
             }
         });
-/**
- ageRangeSlider.setOnThumbValueChangeListener(new MultiSlider.SimpleChangeListener() {
-@Override public void onValueChanged(MultiSlider multiSlider, MultiSlider.Thumb thumb, int thumbIndex, int value) {
-if (thumbIndex == 0) {
-minAge.setText(String.valueOf(value));
-} else {
-maxAge.setText(String.valueOf(value));
-}
-}
-});
- **/
 
-
-    }
-
-    public static class TimePickerFragment extends DialogFragment
-            implements TimePickerDialog.OnTimeSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current time as the default values for the picker
-            final Calendar c = Calendar.getInstance();
-            int hour = c.get(Calendar.HOUR_OF_DAY);
-            int minute = c.get(Calendar.MINUTE);
-
-            // Create a new instance of TimePickerDialog and return it
-            return new TimePickerDialog(getActivity(), this, hour, minute,
-                    DateFormat.is24HourFormat(getActivity()));
-        }
-
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            NewEventActivity.inputEventTime.setText(hourOfDay + ":" + minute);
-            if (hourOfDay < 10 && minute < 10)
-                NewEventActivity.inputEventTime.setText("0" + hourOfDay + ":0" + minute);
-            else {
-                if (hourOfDay < 10)
-                    NewEventActivity.inputEventTime.setText("0" + hourOfDay + ":" + minute);
-                if (minute < 10)
-                    NewEventActivity.inputEventTime.setText(hourOfDay + ":0" + minute);
-            }
-
-        }
-    }
-
-    public static class DatePickerFragment extends DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), this, year, month, day);
-        }
-
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            month = month + 1;
-            NewEventActivity.inputEventDate.setText(year + "-" + month + "-" + day);
-            if (month < 10 && day < 10)
-                NewEventActivity.inputEventDate.setText(year + "-0" + month + "-0" + day);
-            else {
-                if (month < 10)
-                    NewEventActivity.inputEventDate.setText(year + "-0" + month + "-" + day);
-                if (day < 10)
-                    NewEventActivity.inputEventDate.setText(year + "-" + month + "-0" + day);
+        ageRangeSlider.setOnThumbValueChangeListener(new MultiSlider.OnThumbValueChangeListener() {
+         @Override public void onValueChanged(MultiSlider multiSlider, MultiSlider.Thumb thumb, int thumbIndex, int value) {
+            if (thumbIndex == 0) {
+                minAge.setText(String.valueOf(value));
+            } else {
+                maxAge.setText(String.valueOf(value));
             }
         }
+    });
+
     }
 
-    /**
-     * Generates a hash to be used as ID for MQTT topics.
-     * Current implementation hashes a  string combination of useID+timestamp
-     *
-     * @param id   name of the event
-     * @param time UNIX timestamp when the event was created
-     * @return hash
-     */
-    //TODO:figure out a better way to implement this so that it is for sure unique and easy to generate
-    public String generateHash(String id, long time) {
-        String hash;
-        String toBeHashed = id + time;
-        hash = Base64.encodeToString(String.valueOf(toBeHashed.hashCode()).getBytes(), Base64.URL_SAFE | Base64.NO_PADDING);
-        return hash;
+    public void onDateSet(DatePicker view, int year, int month, int day){
+        month = month + 1;
+        inputEventDate.setText(year + "-" + month + "-" + day);
+        if (month < 10 && day < 10)
+            inputEventDate.setText(year + "-0" + month + "-0" + day);
+        else {
+            if (month < 10)
+                inputEventDate.setText(year + "-0" + month + "-" + day);
+            if (day < 10)
+                inputEventDate.setText(year + "-" + month + "-0" + day);
+        }
     }
 
+
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute){
+        inputEventTime.setText(hourOfDay + ":" + minute);
+        if (hourOfDay < 10 && minute < 10)
+            inputEventTime.setText("0" + hourOfDay + ":0" + minute);
+        else {
+            if (hourOfDay < 10)
+                inputEventTime.setText("0" + hourOfDay + ":" + minute);
+            if (minute < 10)
+                inputEventTime.setText(hourOfDay + ":0" + minute);
+        }
+    }
 
     /**
      * Creates the JSON that will be sent over MQTT using the completed fields in the form.
@@ -224,40 +162,38 @@ maxAge.setText(String.valueOf(value));
         long timeCreated = Calendar.getInstance().getTimeInMillis() / 1000L;
         String eventCategory = eventHobbyChoice.getSelectedItem().toString();
         String hostID = session.getId();
-        String hash = generateHash(hostID, timeCreated);
 
-        JSONObject event = new JSONObject();
-        JSONObject host = new JSONObject();
-        JSONObject eventDetails = new JSONObject();
-        JSONObject hobbyDetails = new JSONObject();
+        UUID uuid = UUID.randomUUID();
+
+        //TODO: find a way to make this easier to parse?
+        String timestamp = "0";
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
         try {
-            //TODO: retrieve this data from somewhere
-            host.put("id", hostID);
-            host.put("name", "host_name");
-
-            eventDetails.put("name", inputEventName.getText());
-            eventDetails.put("location", inputEventLocation.getText());
-            eventDetails.put("time", inputEventTime.getText());
-            eventDetails.put("date", inputEventDate.getText());
-            eventDetails.put("gender", inputEventGender.getSelectedItem().toString());
-            eventDetails.put("description", inputEventDescription.getText());
-            eventDetails.put("maximum_people", inputEventNumber.getText());
-
-            event.put("host", host);
-            event.put("category", eventHobbyChoice.getSelectedItem().toString());
-            event.put("event", eventDetails);
-            event.put("createdTime", timeCreated);
-            event.put("eventID", hash);
-
-
-        } catch (JSONException e) {
+            Date date = sdf.parse(inputEventDate.getText().toString()+" "+inputEventTime.getText().toString());
+            cal.setTime(date);
+            timestamp = String.valueOf(cal.getTimeInMillis() / 1000L);
+        } catch (ParseException e) {
             e.printStackTrace();
         }
 
+        ArrayList<LocalUser> acceptedUsers = new ArrayList<>();
+        LocalUser currentUser = new LocalUser(session.getId(), Profile.getInstance().getFirstName(), Profile.getInstance().getLastName());
+        acceptedUsers.add(currentUser);
 
-        MqttMessage msg = new MqttMessage(event.toString().getBytes());
+        Hobby hobby = new Hobby();
+        EventDetails eventDetails = new EventDetails(inputEventName.getText().toString(), hostID, Profile.getInstance().getFirstName()+" "+Profile.getInstance().getLastName(),
+                Integer.parseInt(minAge.getText().toString()), Integer.parseInt(maxAge.getText().toString()), inputEventGender.getSelectedItem().toString(),
+                timestamp, Integer.parseInt(inputEventNumber.getText().toString()), inputEventLocation.getText().toString(), inputEventDescription.getText().toString(),
+                new ArrayList<LocalUser>(), acceptedUsers, hobby);
+
+        Event event = new Event(uuid, eventCategory, String.valueOf(timeCreated), eventDetails);
+
+        Gson g = new Gson();
+
+        MqttMessage msg = new MqttMessage(g.toJson(event, Event.class).getBytes());
         msg.setRetained(true);
-        String topic = "hobby/event/" + eventCategory + "/" + hash;
+        String topic = "hobby/event/" + eventCategory + "/" + uuid.toString();
         Log.d("mqtt", topic);
         MQTT.getInstance().publishMessage(topic, msg);
 
@@ -270,9 +206,6 @@ maxAge.setText(String.valueOf(value));
 
         Intent homeIntent = new Intent(NewEventActivity.this, HomeActivity.class);
         NewEventActivity.this.startActivity(homeIntent);
-
-
-
 
     }
 }

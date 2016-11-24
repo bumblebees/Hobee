@@ -2,6 +2,7 @@ package bumblebees.hobee;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -38,9 +39,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         SocketIO.getInstance().start();
         session = new SessionManager(getApplicationContext());
 
+        //initialize the application settings
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
         // If user has already logged in, just get his data from the server and go to homepage
         if (session.getId() != null){
-            SocketIO.getInstance().getUser(session.getId(), getApplicationContext());
+            SocketIO.getInstance().getUserAndLogin(session.getId(), getApplicationContext());
         }
 
 
@@ -51,7 +55,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setContentView(R.layout.activity_login);
         callbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton) findViewById(R.id.fb_login_button);
-        loginButton.setReadPermissions(Arrays.asList("user_birthday", "user_photos", "email", "user_friends"));
+        loginButton.setReadPermissions(Arrays.asList("user_birthday", "email"));
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {

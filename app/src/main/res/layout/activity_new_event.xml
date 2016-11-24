@@ -73,13 +73,6 @@
                 android:id="@+id/inputEventTime"
                 android:hint="Press to select time" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:hint="Select minimum age" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
