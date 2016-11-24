@@ -68,9 +68,6 @@ public class LocalUser {
 
     }
 
-
-
-
     @Override
     public int hashCode() {
         int result = userID.hashCode();
