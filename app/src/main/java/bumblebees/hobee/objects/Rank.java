@@ -31,7 +31,7 @@ public class Rank {
     public void rankHost(int review){
         if (review < -3) review = -3;
         if (review > 3) review = 3;
-        reputation = reputation + (15*review);
+        reputation = reputation + (150*review);
 
         ////TODO: Implement this on the activity rankUserActivity and update the database
     }
