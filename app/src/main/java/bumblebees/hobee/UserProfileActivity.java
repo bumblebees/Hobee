@@ -26,7 +26,7 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        Intent intent = this.getIntent();
+        String extra = getIntent().getStringExtra("User");
 
         userName = (TextView) findViewById(R.id.userName);
         userAge = (TextView) findViewById(R.id.userAge);
@@ -37,7 +37,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         // If user wants to see his own profile
 
-        if (intent == null) {
+        if (extra==null) {
             try {
                 userName.setText(Profile.getInstance().getFirstName() + " " + Profile.getInstance().getLastName());
                 userAge.setText("" + Profile.getInstance().getAge());
@@ -48,13 +48,13 @@ public class UserProfileActivity extends AppCompatActivity {
                 }
                 //userDateSince.setText("Member since " + Profile.getInstance().userSince());
                 userBiography.setText(Profile.getInstance().getBio());
+                Picasso.with(this).load(Profile.getInstance().getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
             } catch (NullPointerException e) {
-                Log.d("Error creating user", e.toString());
                 Toast toast = Toast.makeText(getApplicationContext(), "Error seeing profile", Toast.LENGTH_LONG);
                 toast.show();
                 finish();
             }
-            Picasso.with(this).load(Profile.getInstance().getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
+
         }
 
         // If user wants to see someone else's profile
@@ -71,13 +71,13 @@ public class UserProfileActivity extends AppCompatActivity {
                 }
                 //userDateSince.setText("Member since " + Profile.getInstance().userSince());
                 userBiography.setText(user.getBio());
+                Picasso.with(this).load(user.getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
             } catch (NullPointerException e) {
-                Log.d("Error creating user", e.toString());
                 Toast toast = Toast.makeText(getApplicationContext(), "Error seeing profile", Toast.LENGTH_LONG);
                 toast.show();
                 finish();
             }
-            Picasso.with(this).load(user.getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
+
 
         }
     }
