@@ -14,35 +14,18 @@
             android:defaultValue="true"
             android:title="Notification sound"
             android:key="notification_sound" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="Notifications: Days available to participate in events ">
-        <CheckBoxPreference
+        <MultiSelectListPreference
+            android:title="Available days"
+            android:entries="@array/daysOfTheWeek"
+            android:entryValues="@array/daysOfTheWeekCalendarValues"
+            android:key="notification_days"
+            android:summary="Notify of events taking place on the following days of the week." />
+        <SwitchPreference
             android:defaultValue="false"
-            android:title="Monday"
-            android:key="notification_monday" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:title="Tuesday"
-            android:key="notification_tuesday" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:title="Wednesday"
-            android:key="notification_wednesday" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:title="Thursday"
-            android:key="notification_thursday" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:title="Friday"
-            android:key="notification_friday" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:title="Saturday"
-            android:key="notification_saturday" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:title="Sunday"
-            android:key="notification_sunday" />
+            android:title="Pending users"
+            android:key="notification_pending"
+            android:summaryOn="Receive a notification when users are waiting to join an event."
+            android:summaryOff="Do not receive notifications when users are waiting to join an event." />
+
     </PreferenceCategory>
 </PreferenceScreen>

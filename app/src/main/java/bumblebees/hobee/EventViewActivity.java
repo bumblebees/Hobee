@@ -20,11 +20,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import bumblebees.hobee.objects.Event;
-import bumblebees.hobee.objects.LocalUser;
-import bumblebees.hobee.objects.User;
+import bumblebees.hobee.objects.PublicUser;
 import bumblebees.hobee.utilities.MQTT;
 import bumblebees.hobee.utilities.Profile;
-import bumblebees.hobee.utilities.SessionManager;
 import bumblebees.hobee.utilities.SocketIO;
 
 
@@ -60,7 +58,7 @@ public class EventViewActivity extends AppCompatActivity {
 
         btnJoinEvent = (Button) findViewById(R.id.btnJoinEvent);
 
-        LocalUser currentUser = Profile.getInstance().getUser().getSimpleUser();
+        PublicUser currentUser = Profile.getInstance().getUser().getSimpleUser();
 
 
         //check if the user is also the host of the event
@@ -81,7 +79,7 @@ public class EventViewActivity extends AppCompatActivity {
                 containerPending.addView(pendingUsers);
             }
             else {
-                for (final LocalUser user : event.getEvent_details().getUsers_pending()) {
+                for (final PublicUser user : event.getEvent_details().getUsers_pending()) {
                     LayoutInflater inflater = LayoutInflater.from(this);
                     final View row = inflater.inflate(R.layout.user_accept_item, containerPending, false);
 
@@ -102,6 +100,20 @@ public class EventViewActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             event.getEvent_details().confirmUser(user);
                             updateEvent(event);
+                            //TODO: refresh users without having to reload the entire activity
+                            finish();
+                            Intent updatedIntent = getIntent();
+                            updatedIntent.putExtra("event", g.toJson(event));
+                            startActivity(updatedIntent);
+                        }
+                    });
+                    Button rejectUser = (Button) row.findViewById(R.id.userRejectButton);
+                    rejectUser.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            event.getEvent_details().rejectUser(user);
+                            updateEvent(event);
+
                             //TODO: refresh users without having to reload the entire activity
                             finish();
                             Intent updatedIntent = getIntent();
@@ -152,17 +164,17 @@ public class EventViewActivity extends AppCompatActivity {
         eventAge.setText(event.getEvent_details().getAge_min()+"-"+event.getEvent_details().getAge_max());
         eventHostName.setText(event.getEvent_details().getHost_name());
 
-        for(final LocalUser localUser : event.getEvent_details().getUsers_accepted()){
+        for(final PublicUser publicUser : event.getEvent_details().getUsers_accepted()){
             TextView acceptedUser = new TextView(this.getApplicationContext());
-            acceptedUser.setText(localUser.getName());
+            acceptedUser.setText(publicUser.getName());
             acceptedUser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    viewUserProfile(localUser.getUserID());
+                    viewUserProfile(publicUser.getUserID());
                 }
             });
             containerUsers.addView(acceptedUser);
-            Log.d("event", localUser.toString());
+            Log.d("event", publicUser.toString());
         }
 
         eventHostName.setOnClickListener(new View.OnClickListener() {
@@ -182,7 +194,7 @@ public class EventViewActivity extends AppCompatActivity {
      */
 
     public void joinEvent(Event event){
-        LocalUser currentUser = Profile.getInstance().getUser().getSimpleUser();
+        PublicUser currentUser = Profile.getInstance().getUser().getSimpleUser();
         event.getEvent_details().addUser(currentUser);
 
         updateEvent(event);
