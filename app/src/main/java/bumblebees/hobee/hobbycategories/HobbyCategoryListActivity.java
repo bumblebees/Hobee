@@ -1,6 +1,7 @@
 package bumblebees.hobee.hobbycategories;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -22,8 +23,7 @@ import static bumblebees.hobee.R.layout.activity_sportshobby;
 
 public class HobbyCategoryListActivity extends AppCompatActivity {
 
-    int padding = 0;
-    int elementNumber = 0;
+
     ArrayList<String> hobbyList;
 
 
@@ -33,39 +33,28 @@ public class HobbyCategoryListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(activity_hobby_category_list);
         hobbyList = getIntent().getStringArrayListExtra("List");
-        System.out.println(hobbyList);
         loopList(hobbyList);
-
     }
 
     public void loopList(ArrayList<String> L) {
-        for (String element : L) {
             getView();
-            System.out.println(elementNumber);
-        }
+
     }
     public void getView() {
         TableLayout tableLayout = (TableLayout) findViewById(R.id.tableLayout);
-        LayoutInflater Li = LayoutInflater.from(getApplicationContext());
-        View view = Li.inflate(R.layout.hobby_item,null);
-        tableLayout.addView(view);
 
-        for (int i = 0; i < hobbyList.size()-1; i++){
-            TableRow row = new TableRow(this);
-            tableLayout.addView(row);
+        for (String hobby : hobbyList){
 
-            for (int j = 0; j < hobbyList.size()-1; j++){
-                TextView hobbyItemView = (TextView) findViewById(R.id.hobbyItem);
-                LayoutInflater Li2 = LayoutInflater.from(getApplicationContext());
-                View view2 = Li2.inflate(R.layout.hobby_item,null);
-                System.out.println(">>>>>>>>>>>>>>>>>>>>"+elementNumber);
-                System.out.println(">>>>>>>>>>" + hobbyList.size());
-                String string = hobbyList.get(elementNumber);
-                hobbyItemView.setText(string);
-                row.addView(view2);
-                elementNumber ++;
+            LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+            View hobbyView = inflater.inflate(R.layout.hobby_item,tableLayout, false);
+            TextView hobbyItemView = (TextView) hobbyView.findViewById(R.id.hobbyItem);
 
-            }
+            Typeface face= Typeface.createFromAsset(getAssets(), "font/Proxima.ttf");
+            hobbyItemView.setTypeface(face);
+
+            hobbyItemView.setText(hobby);
+            tableLayout.addView(hobbyView);
+
         }
     }
 }

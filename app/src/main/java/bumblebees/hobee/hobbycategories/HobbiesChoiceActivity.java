@@ -32,6 +32,17 @@ public class HobbiesChoiceActivity extends AppCompatActivity {
         showCrafts = (ImageButton)findViewById(R.id.hobby4);
         showCulinary = (ImageButton)findViewById(R.id.hobby5);
         showBoardGames = (ImageButton)findViewById(R.id.hobby6);
+        sportsList.add(football);
+        sportsList.add(basketball);
+        outdoorsList.add(camping);
+        musicList.add(karaoke);
+        musicList.add(ballroom);
+        craftsList.add(museumTour);
+        culinaryList.add(baking);
+        culinaryList.add(cooking);
+        boardGamesList.add(chess);
+        boardGamesList.add(scrabble);
+        boardGamesList.add(monopoly);
 
         showProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,22 +59,21 @@ public class HobbiesChoiceActivity extends AppCompatActivity {
         showSports.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sportsList.add(football);
-                sportsList.add(basketball);
                 Intent intent = new Intent (HobbiesChoiceActivity.this, HobbyCategoryListActivity.class);
                 System.out.println(HobbiesChoiceActivity.this);
                 intent.putStringArrayListExtra("List", (ArrayList<String>) getSportsList());
-                System.out.println(intent.getStringArrayExtra("List"));
-                System.out.println(getSportsList());
                 HobbiesChoiceActivity.this.startActivity(intent);
-               // startIntent(HobbiesChoiceActivity.this, HobbyCategoryListActivity.class, getSportsList());
             }
         });
 
         showOutdoors.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                outdoorsList.add(camping);
+
+                Intent intent = new Intent (HobbiesChoiceActivity.this, HobbyCategoryListActivity.class);
+                System.out.println(HobbiesChoiceActivity.this);
+                intent.putStringArrayListExtra("List", (ArrayList<String>) getOutdoorsList());
+                HobbiesChoiceActivity.this.startActivity(intent);
          //       startIntent(HobbiesChoiceActivity.this, HobbyCategoryListActivity.class, getOutdoorsList());
             }
         });
@@ -71,8 +81,10 @@ public class HobbiesChoiceActivity extends AppCompatActivity {
         showMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                musicList.add(karaoke);
-                musicList.add(ballroom);
+                Intent intent = new Intent (HobbiesChoiceActivity.this, HobbyCategoryListActivity.class);
+                System.out.println(HobbiesChoiceActivity.this);
+                intent.putStringArrayListExtra("List", (ArrayList<String>) getMusicList());
+                HobbiesChoiceActivity.this.startActivity(intent);
             //    startIntent(HobbiesChoiceActivity.this, HobbyCategoryListActivity.class, getMusicList());
             }
         });
@@ -80,7 +92,10 @@ public class HobbiesChoiceActivity extends AppCompatActivity {
         showCrafts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                craftsList.add(museumTour);
+                Intent intent = new Intent (HobbiesChoiceActivity.this, HobbyCategoryListActivity.class);
+                System.out.println(HobbiesChoiceActivity.this);
+                intent.putStringArrayListExtra("List", (ArrayList<String>) getCraftsList());
+                HobbiesChoiceActivity.this.startActivity(intent);
          //       startIntent(HobbiesChoiceActivity.this, HobbyCategoryListActivity.class, getCraftsList());
             }
         });
@@ -88,8 +103,10 @@ public class HobbiesChoiceActivity extends AppCompatActivity {
         showCulinary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                culinaryList.add(baking);
-                culinaryList.add(cooking);
+                Intent intent = new Intent (HobbiesChoiceActivity.this, HobbyCategoryListActivity.class);
+                System.out.println(HobbiesChoiceActivity.this);
+                intent.putStringArrayListExtra("List", (ArrayList<String>) getCulinaryList());
+                HobbiesChoiceActivity.this.startActivity(intent);
           //      startIntent(HobbiesChoiceActivity.this, HobbyCategoryListActivity.class, getCulinaryList());
             }
         });
@@ -97,14 +114,9 @@ public class HobbiesChoiceActivity extends AppCompatActivity {
         showBoardGames.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boardGamesList.add(chess);
-                boardGamesList.add(scrabble);
-                boardGamesList.add(monopoly);
                 Intent intent = new Intent (HobbiesChoiceActivity.this, HobbyCategoryListActivity.class);
                 System.out.println(HobbiesChoiceActivity.this);
                 intent.putStringArrayListExtra("List", (ArrayList<String>) getBoardGamesList());
-                System.out.println(intent.getStringArrayExtra("List"));
-                System.out.println(getBoardGamesList());
                 HobbiesChoiceActivity.this.startActivity(intent);
         //        startIntent(HobbiesChoiceActivity.this, HobbyCategoryListActivity.class, getBoardGamesList());
             }
