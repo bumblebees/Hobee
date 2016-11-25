@@ -14,6 +14,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import java.util.Calendar;
+import java.util.Set;
 
 import bumblebees.hobee.EventViewActivity;
 import bumblebees.hobee.R;
@@ -123,51 +124,10 @@ public class Notification {
         }
 
         //check the user's day of the week preferences
-
         int dayOfTheWeek = event.getEvent_details().getDayOfTheWeek();
-        switch(dayOfTheWeek){
-            case Calendar.MONDAY:{
-                if(!preferences.getBoolean("notification_monday", false)){
-                    return false;
-                }
-                break;
-            }
-            case Calendar.TUESDAY:{
-                if(!preferences.getBoolean("notification_tuesday", false)){
-                    return false;
-                }
-                break;
-            }
-            case Calendar.WEDNESDAY:{
-                if(!preferences.getBoolean("notification_wednesday", false)){
-                    return false;
-                }
-                break;
-            }
-            case Calendar.THURSDAY:{
-                if(!preferences.getBoolean("notification_thursday", false)){
-                    return false;
-                }
-                break;
-            }
-            case Calendar.FRIDAY:{
-                if(!preferences.getBoolean("notification_friday", false)){
-                    return false;
-                }
-                break;
-            }
-            case Calendar.SATURDAY:{
-                if(!preferences.getBoolean("notification_saturday", false)){
-                    return false;
-                }
-                break;
-            }
-            case Calendar.SUNDAY:{
-                if(!preferences.getBoolean("notification_sunday", false)){
-                    return false;
-                }
-                break;
-            }
+        Set<String> selectedDays = preferences.getStringSet("notification_days", null);
+        if(!selectedDays.contains(String.valueOf(dayOfTheWeek))){
+            return false;
         }
         //none of the preferences are contradicted, the user can receive the notification
         return true;
@@ -178,9 +138,11 @@ public class Notification {
      * @param event - event that has been joined
      */
     public void sendPendingUsers(Event event){
-        notificationBuilder.setContentTitle("Pending users: "+event.getEvent_details().getEvent_name());
-        notificationBuilder.setContentText(event.getEvent_details().getUsers_pending().size()+" people want to join the event.");
-        sendEventNotification(notificationBuilder, event);
+        if(preferences.getBoolean("notification_pending", false)) {
+            notificationBuilder.setContentTitle("Pending users: " + event.getEvent_details().getEvent_name());
+            notificationBuilder.setContentText(event.getEvent_details().getUsers_pending().size() + " people want to join the event.");
+            sendEventNotification(notificationBuilder, event);
+        }
     }
 
     /**
