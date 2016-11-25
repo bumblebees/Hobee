@@ -2,14 +2,12 @@ package bumblebees.hobee.objects;
 
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import bumblebees.hobee.utilities.SocketIO;
 
-public class LocalUser {
+public class PublicUser {
 
     private String userID, name;
 
@@ -21,12 +19,12 @@ public class LocalUser {
         return name;
     }
 
-    public LocalUser(String userID, String name) {
+    public PublicUser(String userID, String name) {
         this.userID = userID;
         this.name = name;
     }
 
-    public LocalUser(String userID, String firstName, String lastName){
+    public PublicUser(String userID, String firstName, String lastName){
         this.userID = userID;
         this.name=firstName+" "+lastName;
     }
@@ -62,7 +60,7 @@ public class LocalUser {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        LocalUser that = (LocalUser) o;
+        PublicUser that = (PublicUser) o;
 
         if (!userID.equals(that.userID)) return false;
         return name.equals(that.name);

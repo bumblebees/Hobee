@@ -22,10 +22,10 @@ import com.google.gson.Gson;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.EventDetails;
 import bumblebees.hobee.objects.Hobby;
-import bumblebees.hobee.objects.LocalUser;
+import bumblebees.hobee.objects.PublicUser;
 import bumblebees.hobee.utilities.DatePickerFragment;
 import bumblebees.hobee.utilities.Profile;
-import bumblebees.hobee.utilities.SessionManager;
+
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.text.ParseException;
@@ -177,15 +177,15 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
             e.printStackTrace();
         }
 
-        ArrayList<LocalUser> acceptedUsers = new ArrayList<>();
-        LocalUser currentUser = Profile.getInstance().getUser().getSimpleUser();
+        ArrayList<PublicUser> acceptedUsers = new ArrayList<>();
+        PublicUser currentUser = Profile.getInstance().getUser().getSimpleUser();
         acceptedUsers.add(currentUser);
 
         Hobby hobby = new Hobby();
         EventDetails eventDetails = new EventDetails(inputEventName.getText().toString(), hostID, Profile.getInstance().getFirstName()+" "+Profile.getInstance().getLastName(),
                 Integer.parseInt(minAge.getText().toString()), Integer.parseInt(maxAge.getText().toString()), inputEventGender.getSelectedItem().toString(),
                 timestamp, Integer.parseInt(inputEventNumber.getText().toString()), inputEventLocation.getText().toString(), inputEventDescription.getText().toString(),
-                new ArrayList<LocalUser>(), acceptedUsers, hobby);
+                new ArrayList<PublicUser>(), acceptedUsers, hobby);
 
         Event event = new Event(uuid, eventCategory, String.valueOf(timeCreated), eventDetails);
 

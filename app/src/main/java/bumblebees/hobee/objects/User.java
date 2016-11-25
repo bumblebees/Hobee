@@ -1,8 +1,5 @@
 package bumblebees.hobee.objects;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -107,8 +104,8 @@ public class User {
 
     }
 
-    public LocalUser getSimpleUser() {
-        return new LocalUser(userID, firstName, lastName);
+    public PublicUser getSimpleUser() {
+        return new PublicUser(userID, firstName, lastName);
     }
 
     public User(String userID, String loginId, String origin, String firstName, String lastName, String birthday, String email, String gender, String bio, String created, Rank rank, List<Hobby> hobbies) {
