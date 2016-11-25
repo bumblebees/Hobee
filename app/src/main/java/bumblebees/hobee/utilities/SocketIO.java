@@ -171,11 +171,11 @@ public class SocketIO {
      * @param user     contains user data
      * @param packageContext context from which method is called
      */
-    public void register(final User user, String userId, String imageString, final Context packageContext) {
+    public void register(final User user, String imageString, final Context packageContext) {
 
         final JSONObject userImage = new JSONObject();
         try {
-            userImage.put("userId", userId);
+            userImage.put("userId", user.getUserID());
             userImage.put("imageString", imageString);
         } catch (JSONException e) {
             e.printStackTrace();

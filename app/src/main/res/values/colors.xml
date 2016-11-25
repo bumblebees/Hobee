@@ -3,4 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="FFE299">#ffe299</color>
+    <color name="Bee_color_1">#342220</color>
+    <color name="Bee_color_2">#a37136</color>
+    <color name="Bee_color_3">#fff4e6</color>
+    <color name="Bee_color_4">#f1c36d</color>
 </resources>

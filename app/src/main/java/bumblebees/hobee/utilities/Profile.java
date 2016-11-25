@@ -84,7 +84,7 @@ public class Profile{
     }
 
     public String getPicUrl(){
-        return "http://gunray.skip.chalmers.se:3003/api/containers/userImages/download/" + getLoginId() + ".png";
+        return "http://gunray.skip.chalmers.se:3003/api/containers/userImages/download/" + getUserID() + ".png";
     }
 
     /**

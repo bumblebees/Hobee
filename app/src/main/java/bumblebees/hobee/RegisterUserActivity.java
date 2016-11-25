@@ -141,7 +141,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                 user = createUser();
                 Profile.getInstance().setUser(user);
                 // Save user in database
-                SocketIO.getInstance().register(user, user.getLoginId(), getImageBase64(), RegisterUserActivity.this);
+                SocketIO.getInstance().register(user, getImageBase64(), RegisterUserActivity.this);
 //                // Save user image on server
 //                SocketIO.getInstance().sendImage(userData.getString("loginId"), getImageBase64());
 

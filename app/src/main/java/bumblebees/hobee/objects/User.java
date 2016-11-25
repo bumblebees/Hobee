@@ -98,6 +98,9 @@ public class User {
     public Rank getRank() {
         return rank;
     }
+    public String getPicUrl(){
+        return "http://gunray.skip.chalmers.se:3003/api/containers/userImages/download/" + getUserID() + ".png";
+    }
 
     public String userSince(){
         Calendar cal = Calendar.getInstance();

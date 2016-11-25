@@ -91,7 +91,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // Add options to the menu (empty strings can be replaced with some additional info)
         navItems.add(new NavItem("Profile", R.drawable.profile));
-        navItems.add(new NavItem("Settings", 0));
+        navItems.add(new NavItem("Settings", R.drawable.settings));
         navItems.add(new NavItem("Logout", R.drawable.logout));
 
         // DrawerLayout
@@ -158,7 +158,7 @@ public class HomeActivity extends AppCompatActivity {
         switch(position) {
             case 0:
                 drawerLayout.closeDrawers();
-                Intent profile = new Intent(HomeActivity.this, LocalUsersProfileActivity.class);
+                Intent profile = new Intent(HomeActivity.this, UserProfileActivity.class);
                 startActivity(profile);
                 break;
             case 1:
