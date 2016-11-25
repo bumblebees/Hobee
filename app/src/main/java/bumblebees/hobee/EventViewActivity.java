@@ -107,6 +107,20 @@ public class EventViewActivity extends AppCompatActivity {
                             startActivity(updatedIntent);
                         }
                     });
+                    Button rejectUser = (Button) row.findViewById(R.id.userRejectButton);
+                    rejectUser.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            event.getEvent_details().rejectUser(user);
+                            updateEvent(event);
+
+                            //TODO: refresh users without having to reload the entire activity
+                            finish();
+                            Intent updatedIntent = getIntent();
+                            updatedIntent.putExtra("event", g.toJson(event));
+                            startActivity(updatedIntent);
+                        }
+                    });
 
                     containerPending.addView(row);
 

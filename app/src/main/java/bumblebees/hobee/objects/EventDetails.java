@@ -82,6 +82,14 @@ public class EventDetails {
     }
 
     /**
+     * Reject a user from joining an event and remove the user from the pending user list.
+     * @param user
+     */
+    public void rejectUser(PublicUser user){
+        users_pending.remove(user);
+    }
+
+    /**
      * Get the day of the week when the event takes place.
      * @return int representing the day of the week starting from 1 (Sunday)
      */
