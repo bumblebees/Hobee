@@ -28,6 +28,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.utilities.*;
 import com.facebook.login.LoginManager;
@@ -54,6 +55,7 @@ public class HomeActivity extends AppCompatActivity {
     ImageView avatar;
     ArrayList<NavItem> navItems = new ArrayList<>();
     ListView drawerList;
+    Button hobbyChange;
 
 
     @Override
@@ -63,6 +65,16 @@ public class HomeActivity extends AppCompatActivity {
         MQTT.getInstance().connect(this.getApplicationContext());
 
         session = new SessionManager(getApplicationContext());
+
+        hobbyChange = (Button)findViewById(R.id.changeHobby);
+        hobbyChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent hobby = new Intent(HomeActivity.this, HobbiesChoiceActivity.class);
+                startActivity(hobby);
+            }
+        });
+
 
         // for testing
         textView = (TextView) findViewById(R.id.textView);

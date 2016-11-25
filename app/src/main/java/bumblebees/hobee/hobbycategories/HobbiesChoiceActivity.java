@@ -2,6 +2,7 @@ package bumblebees.hobee.hobbycategories;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import bumblebees.hobee.HomeActivity;
 import bumblebees.hobee.R;
 
-public class HobbiesChoiceActivity extends HobbyCategory {
+public class HobbiesChoiceActivity extends AppCompatActivity {
 
     ImageButton showProfile;
     ImageButton showSports;
@@ -49,7 +50,13 @@ public class HobbiesChoiceActivity extends HobbyCategory {
             public void onClick(View view) {
                 sportsList.add(football);
                 sportsList.add(basketball);
-                startIntent(HobbiesChoiceActivity.this, SportsActivity.class, getSportsList());
+                Intent intent = new Intent (HobbiesChoiceActivity.this, HobbyCategoryListActivity.class);
+                System.out.println(HobbiesChoiceActivity.this);
+                intent.putStringArrayListExtra("List", (ArrayList<String>) getSportsList());
+                System.out.println(intent.getStringArrayExtra("List"));
+                System.out.println(getSportsList());
+                HobbiesChoiceActivity.this.startActivity(intent);
+               // startIntent(HobbiesChoiceActivity.this, HobbyCategoryListActivity.class, getSportsList());
             }
         });
 
@@ -57,7 +64,7 @@ public class HobbiesChoiceActivity extends HobbyCategory {
             @Override
             public void onClick(View view) {
                 outdoorsList.add(camping);
-                startIntent(HobbiesChoiceActivity.this, SportsActivity.class, getOutdoorsList());
+         //       startIntent(HobbiesChoiceActivity.this, HobbyCategoryListActivity.class, getOutdoorsList());
             }
         });
 
@@ -66,7 +73,7 @@ public class HobbiesChoiceActivity extends HobbyCategory {
             public void onClick(View view) {
                 musicList.add(karaoke);
                 musicList.add(ballroom);
-                startIntent(HobbiesChoiceActivity.this, SportsActivity.class, getMusicList());
+            //    startIntent(HobbiesChoiceActivity.this, HobbyCategoryListActivity.class, getMusicList());
             }
         });
 
@@ -74,7 +81,7 @@ public class HobbiesChoiceActivity extends HobbyCategory {
             @Override
             public void onClick(View view) {
                 craftsList.add(museumTour);
-                startIntent(HobbiesChoiceActivity.this, SportsActivity.class, getCraftsList());
+         //       startIntent(HobbiesChoiceActivity.this, HobbyCategoryListActivity.class, getCraftsList());
             }
         });
 
@@ -83,7 +90,7 @@ public class HobbiesChoiceActivity extends HobbyCategory {
             public void onClick(View view) {
                 culinaryList.add(baking);
                 culinaryList.add(cooking);
-                startIntent(HobbiesChoiceActivity.this, SportsActivity.class, getCulinaryList());
+          //      startIntent(HobbiesChoiceActivity.this, HobbyCategoryListActivity.class, getCulinaryList());
             }
         });
 
@@ -93,7 +100,13 @@ public class HobbiesChoiceActivity extends HobbyCategory {
                 boardGamesList.add(chess);
                 boardGamesList.add(scrabble);
                 boardGamesList.add(monopoly);
-                startIntent(HobbiesChoiceActivity.this, SportsActivity.class, getBoardGamesList());
+                Intent intent = new Intent (HobbiesChoiceActivity.this, HobbyCategoryListActivity.class);
+                System.out.println(HobbiesChoiceActivity.this);
+                intent.putStringArrayListExtra("List", (ArrayList<String>) getBoardGamesList());
+                System.out.println(intent.getStringArrayExtra("List"));
+                System.out.println(getBoardGamesList());
+                HobbiesChoiceActivity.this.startActivity(intent);
+        //        startIntent(HobbiesChoiceActivity.this, HobbyCategoryListActivity.class, getBoardGamesList());
             }
         });
     }

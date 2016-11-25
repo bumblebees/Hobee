@@ -58,6 +58,17 @@
                 android:orientation="vertical"
                 android:id="@+id/listParticipatingEvents" />
         </ScrollView>
+
+        <Button
+            android:text="Hobby Stuff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            android:id="@+id/changeHobby"
+            android:layout_below="@+id/btnGetEvents"
+            android:layout_alignLeft="@+id/btnGetEvents"
+            android:layout_alignStart="@+id/btnGetEvents" />
     </RelativeLayout>
 
     <!-- The navigation drawer -->

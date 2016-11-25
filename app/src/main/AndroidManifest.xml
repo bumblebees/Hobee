@@ -47,7 +47,9 @@
                 android:value=".HomeActivity" />
         </activity>
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".UserProfileActivity"></activity>
+        <activity android:name=".UserProfileActivity" />
+        <activity android:name=".hobbycategories.HobbiesChoiceActivity" />
+            <activity android:name=".hobbycategories.HobbyCategoryListActivity"/>
 
     </application>
 
