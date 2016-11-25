@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.TaskStackBuilder;
@@ -159,7 +158,7 @@ public class HomeActivity extends AppCompatActivity {
         switch(position) {
             case 0:
                 drawerLayout.closeDrawers();
-                Intent profile = new Intent(HomeActivity.this, UserProfileActivity.class);
+                Intent profile = new Intent(HomeActivity.this, LocalUsersProfileActivity.class);
                 startActivity(profile);
                 break;
             case 1:
@@ -182,9 +181,6 @@ public class HomeActivity extends AppCompatActivity {
             default:
         }
     }
-
-
-
 
 
     /**

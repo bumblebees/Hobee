@@ -1,20 +1,59 @@
 package bumblebees.hobee.objects;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-/**
- * Created by Andres on 2016-11-17.
- */
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+
+import static java.lang.Long.parseLong;
 
 public class User {
 
     private String userID, loginId;
     private String origin, firstName, lastName, birthday, email, gender, bio;
-    private Date created;
+    private String created;
     private Rank rank;
     private List<Hobby> hobbies;
+
+    public String toString() {
+        return "UserID: " + userID + ", loginId: " + loginId + ", origin" + origin + ", first name: "
+                + firstName + ", last name: " + lastName + ", birthday: " + birthday + ", gender: " +
+                gender + ", bio: " + bio + ", created:" + created +", rank: "+rank + ", hobbies: " + hobbies;
+    }
+
+
+
+    public int getAge() {
+        int age = 0;
+        try {
+            Calendar calendar = new GregorianCalendar();
+            Calendar today = new GregorianCalendar();
+            int factor = 0; //to correctly calculate age when birthday has not been celebrated this year
+            Date birthDate = new SimpleDateFormat("yyyy/MM/dd").parse(birthday);
+            Date currentDate = new Date(); //today
+
+            calendar.setTime(birthDate);
+            today.setTime(currentDate);
+
+            // check if birthday has been celebrated this year
+            if (today.get(Calendar.DAY_OF_YEAR) < calendar.get(Calendar.DAY_OF_YEAR)) {
+                factor = -1; //birthday not celebrated
+            }
+            age = today.get(Calendar.YEAR) - calendar.get(Calendar.YEAR) + factor;
+        } catch (ParseException e) {
+            System.out.println("Given date not in expected format dd/MM/yyyy");
+        }
+        return age;
+    }
+
+    public String getDateCreated() {
+        return created;
+    }
 
     public String getUserID() {
         return userID;
@@ -52,19 +91,27 @@ public class User {
         return bio;
     }
 
-    public Date getCreated() {
+    public String getCreated() {
         return created;
     }
 
-    public Rank getRank(){
+    public Rank getRank() {
         return rank;
     }
 
-    public SimpleUser getSimpleUser(){
-        return new SimpleUser(userID, firstName, lastName);
+    public String userSince(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(Long.parseLong(created)*1000L);
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        return String.valueOf(sdfDate.format(cal.getTime()));
+
     }
 
-    public User(String userID, String loginId, String origin, String firstName, String lastName, String birthday, String email, String gender, String bio, Date created, Rank rank, List<Hobby> hobbies) {
+    public LocalUser getSimpleUser() {
+        return new LocalUser(userID, firstName, lastName);
+    }
+
+    public User(String userID, String loginId, String origin, String firstName, String lastName, String birthday, String email, String gender, String bio, String created, Rank rank, List<Hobby> hobbies) {
         this.userID = userID;
         this.loginId = loginId;
         this.origin = origin;
@@ -107,11 +154,13 @@ public class User {
         this.bio = bio;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(String created) {
         this.created = created;
     }
 
     public void setRank(Rank rank) {
-        this.rank = rank;
+        this.rank  = rank;
     }
+
 }
+

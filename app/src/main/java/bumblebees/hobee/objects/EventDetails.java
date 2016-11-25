@@ -1,12 +1,7 @@
 package bumblebees.hobee.objects;
 
-import android.util.Log;
-
-import java.security.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-import java.util.UUID;
 
 
 public class EventDetails {
@@ -25,14 +20,14 @@ public class EventDetails {
     private int maximum_people;
     private String location;
     private String description;
-    private List<SimpleUser> users_pending;
-    private List<SimpleUser> users_accepted;
+    private List<LocalUser> users_pending;
+    private List<LocalUser> users_accepted;
 
     private Hobby hobby;
 
     public EventDetails(String event_name, String host_id, String host_name, int age_min, int age_max,
                         String gender, String timestamp, int maximum_people, String location, String description,
-                        List<SimpleUser> users_pending, List<SimpleUser> users_accepted, Hobby hobby) {
+                        List<LocalUser> users_pending, List<LocalUser> users_accepted, Hobby hobby) {
         this.event_name = event_name;
         this.host_id = host_id;
         this.host_name = host_name;
@@ -56,7 +51,7 @@ public class EventDetails {
                 users_accepted;
     }
 
-    public void confirmUser(SimpleUser user) {
+    public void confirmUser(LocalUser user) {
         if (users_pending.contains(user)) {
             users_accepted.add(user);
             users_pending.remove(user);
@@ -67,7 +62,7 @@ public class EventDetails {
      * Add a user to the list of pending users of the event.
      * @param user - user to be added
      */
-    public void addUser(SimpleUser user){
+    public void addUser(LocalUser user){
         users_pending.add(user);
     }
 
@@ -76,7 +71,7 @@ public class EventDetails {
      * @param user - user to be checked
      * @return true if the user exists, false otherwise
      */
-    public boolean checkUser(SimpleUser user){
+    public boolean checkUser(LocalUser user){
          if(users_pending.contains(user)){
             return true;
         }
@@ -96,15 +91,14 @@ public class EventDetails {
         return cal.get(Calendar.DAY_OF_WEEK);
     }
 
-
-
-    public List<SimpleUser> getUsers_pending(){
+    public List<LocalUser> getUsers_pending(){
         return users_pending;
     }
 
-    public List<SimpleUser> getUsers_accepted(){
+    public List<LocalUser> getUsers_accepted(){
         return users_accepted;
     }
+
     public String getEvent_name() {
         return event_name;
     }

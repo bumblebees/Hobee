@@ -191,8 +191,10 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     public User createUser(){
         UUID uuid = UUID.randomUUID();
+        Calendar cal = Calendar.getInstance();
+        String createdTimestamp = String.valueOf(cal.getTimeInMillis()/1000L);
         User user = new User(uuid.toString(), userData.getString("loginId"), userData.getString("origin"), firstName.getText().toString(), lastName.getText().toString(),
-                birthday.getText().toString(), email.getText().toString(), selectedGender.getText().toString(), bio.getText().toString(), Calendar.getInstance().getTime(),
+                birthday.getText().toString(), email.getText().toString(), selectedGender.getText().toString(), bio.getText().toString(), createdTimestamp,
                 new Rank(), new ArrayList<Hobby>());
         return user;
     }

@@ -29,7 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UserProfileActivity" />
+        <activity android:name=".LocalUsersProfileActivity" />
         <activity android:name=".RegisterUserActivity" />
         <activity
             android:name=".HomeActivity"
@@ -45,7 +45,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
         </activity>
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".UserProfileActivity"></activity>
     </application>
 
 </manifest>

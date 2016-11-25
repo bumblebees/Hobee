@@ -1,44 +1,53 @@
 package bumblebees.hobee;
 
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
-import bumblebees.hobee.utilities.Profile;
-import com.squareup.picasso.Picasso;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import bumblebees.hobee.objects.User;
 
 
 public class UserProfileActivity extends AppCompatActivity {
-
-    TextView userName;
-    TextView userEmail;
-    TextView userGender;
-    TextView userAge;
-    ImageView userImage;
-    TextView hobbiesList;
-    TextView userBio;
-
-
+    private Gson gson= new Gson();
+    private ImageView userImage;
+    private TextView userName,userAge,userGender,userDateSince,userBiography;
+    private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-
         userName = (TextView) findViewById(R.id.userName);
-        userEmail = (TextView) findViewById(R.id.userEmail);
-        userGender = (TextView) findViewById(R.id.userGender);
         userAge = (TextView) findViewById(R.id.userAge);
-        userImage = (ImageView) findViewById(R.id.userImage);
-        hobbiesList = (TextView) findViewById(R.id.listhobbies);
-        userBio = (TextView) findViewById(R.id.userBio);
+        userGender = (TextView) findViewById(R.id.userGender);
+        userDateSince = (TextView) findViewById(R.id.userDateSince);
+        userBiography = (TextView) findViewById(R.id.userBiography);
 
-        userName.setText(Profile.getInstance().getFirstName() + " " + Profile.getInstance().getLastName());
-        userEmail.setText(Profile.getInstance().getEmail());
-        userGender.setText(Profile.getInstance().getGender());
-        userAge.setText(Integer.toString(Profile.getInstance().getAge()));
-        userBio.setText(Profile.getInstance().getBio());
-        Picasso.with(this).load(Profile.getInstance().getPicUrl()).into(userImage);
+        user = gson.fromJson(getIntent().getStringExtra("User"),User.class);
+
+        try {
+            userName.setText(user.getFirstName() + " " + user.getLastName());
+            userAge.setText("" + user.getAge());
+            userGender.setText(user.getGender());
+            userDateSince.setText("Member since " + user.userSince());
+            userBiography.setText(user.getBio());
+        } catch(NullPointerException e){
+            Log.d("Error creating user", e.toString());
+            Toast toast = Toast.makeText(getApplicationContext(),"Error seeing profile",Toast.LENGTH_LONG);
+            toast.show();
+            finish();
+        }
+        
+        //// TODO: 2016-11-23 Add the hobbies and add the userImage 
+
+
 
     }
-
 }
