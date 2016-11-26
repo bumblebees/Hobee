@@ -22,18 +22,14 @@
 
         <service android:name="org.eclipse.paho.android.service.MqttService" />
 
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity" android:configChanges="orientation" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LocalUsersProfileActivity" />
-        <activity android:name=".RegisterUserActivity" />
-        <activity
-            android:name=".HomeActivity"
-            android:exported="true" />
+        <activity android:name=".RegisterUserActivity" android:configChanges="orientation" android:screenOrientation="portrait" />
+        <activity android:name=".HomeActivity" android:exported="true" android:configChanges="orientation" android:screenOrientation="portrait" />
         <activity android:name=".HobbyActivity" />
         <activity android:name=".SportsHobbyActivity" />
         <activity android:name=".NewEventActivity" />
@@ -45,8 +41,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
         </activity>
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".UserProfileActivity"></activity>
+        <activity android:name=".SettingsActivity" android:configChanges="orientation" android:screenOrientation="portrait" />
+        <activity android:name=".UserProfileActivity" android:configChanges="orientation" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

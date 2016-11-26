@@ -1,9 +1,12 @@
 package bumblebees.hobee.utilities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import bumblebees.hobee.HobbyActivity;
 import bumblebees.hobee.HomeActivity;
@@ -15,6 +18,7 @@ import com.facebook.GraphResponse;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
 
+import bumblebees.hobee.UserProfileActivity;
 import bumblebees.hobee.objects.User;
 import io.socket.client.Ack;
 import io.socket.client.IO;
@@ -24,6 +28,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class SocketIO {
 
@@ -165,11 +171,11 @@ public class SocketIO {
      * @param user     contains user data
      * @param packageContext context from which method is called
      */
-    public void register(final User user, String userId, String imageString, final Context packageContext) {
+    public void register(final User user, String imageString, final Context packageContext) {
 
         final JSONObject userImage = new JSONObject();
         try {
-            userImage.put("userId", userId);
+            userImage.put("userId", user.getUserID());
             userImage.put("imageString", imageString);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -217,6 +223,7 @@ public class SocketIO {
                 User user = gson.fromJson(String.valueOf(userJSON), User.class);
 
                 Profile.getInstance().setUser(user);
+                Log.d("event", user.toString());
 
                 SessionManager session = new SessionManager(context);
                 session.setPreferences(user.getLoginId(), user.getOrigin());
@@ -228,17 +235,20 @@ public class SocketIO {
         });
     }
 
-    public User getUser(final String loginId){
-        final User[] user = new User[1];
-        //TODO: get the user by using the userID and not the loginID
-        socket.emit("get_user", loginId, new Ack() {
+    public void getUserAndOpenProfile(final String UUID, final Context context){
+        socket.emit("get_userUUID", UUID, new Ack() {
             @Override
             public void call(Object... objects) {
                 JSONObject userJSON = (JSONObject) objects[0];
-                user[0] = gson.fromJson(String.valueOf(userJSON), User.class);
+                Intent intent = new Intent(context, UserProfileActivity.class);
+                if(userJSON != null) {
+                    User user = gson.fromJson(String.valueOf(userJSON), User.class);
+                    intent.putExtra("User",gson.toJson(user));
+                }
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
                 }
         });
-        System.out.println(user[0]);
-        return user[0];
     }
 }

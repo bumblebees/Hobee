@@ -1,8 +1,5 @@
 package bumblebees.hobee.objects;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,46 +9,48 @@ import java.util.List;
 
 import static java.lang.Long.parseLong;
 
-public class User implements Parcelable{
+public class User {
 
     private String userID, loginId;
     private String origin, firstName, lastName, birthday, email, gender, bio;
-    private Date created;
+    private String created;
     private Rank rank;
     private List<Hobby> hobbies;
 
-    public String toString(){
+    public String toString() {
         return "UserID: " + userID + ", loginId: " + loginId + ", origin" + origin + ", first name: "
                 + firstName + ", last name: " + lastName + ", birthday: " + birthday + ", gender: " +
-                gender + ", bio " + bio;
+                gender + ", bio: " + bio + ", created:" + created +", rank: "+rank + ", hobbies: " + hobbies;
     }
 
 
 
-    public int getAge(){
-            int age = 0;
-            try {
-                Calendar calendar = new GregorianCalendar();
-                Calendar today = new GregorianCalendar();
-                int factor = 0; //to correctly calculate age when birthday has not been celebrated this year
-                Date birthDate = new SimpleDateFormat("yyyy/MM/dd").parse(birthday);
-                Date currentDate = new Date(); //today
+    public int getAge() {
+        int age = 0;
+        try {
+            Calendar calendar = new GregorianCalendar();
+            Calendar today = new GregorianCalendar();
+            int factor = 0; //to correctly calculate age when birthday has not been celebrated this year
+            Date birthDate = new SimpleDateFormat("yyyy/MM/dd").parse(birthday);
+            Date currentDate = new Date(); //today
 
-                calendar.setTime(birthDate);
-                today.setTime(currentDate);
+            calendar.setTime(birthDate);
+            today.setTime(currentDate);
 
-                // check if birthday has been celebrated this year
-                if (today.get(Calendar.DAY_OF_YEAR) < calendar.get(Calendar.DAY_OF_YEAR)) {
-                    factor = -1; //birthday not celebrated
-                }
-                age = today.get(Calendar.YEAR) - calendar.get(Calendar.YEAR) + factor;
-            } catch (ParseException e) {
-                System.out.println("Given date not in expected format dd/MM/yyyy");
+            // check if birthday has been celebrated this year
+            if (today.get(Calendar.DAY_OF_YEAR) < calendar.get(Calendar.DAY_OF_YEAR)) {
+                factor = -1; //birthday not celebrated
             }
-            return age;
+            age = today.get(Calendar.YEAR) - calendar.get(Calendar.YEAR) + factor;
+        } catch (ParseException e) {
+            System.out.println("Given date not in expected format dd/MM/yyyy");
         }
+        return age;
+    }
 
-    public Date getDateCreated() {return created;}
+    public String getDateCreated() {
+        return created;
+    }
 
     public String getUserID() {
         return userID;
@@ -89,19 +88,30 @@ public class User implements Parcelable{
         return bio;
     }
 
-    public Date getCreated() {
+    public String getCreated() {
         return created;
     }
 
-    public Rank getRank(){
+    public Rank getRank() {
         return rank;
     }
-
-    public LocalUser getSimpleUser(){
-        return new LocalUser(userID, firstName, lastName);
+    public String getPicUrl(){
+        return "http://gunray.skip.chalmers.se:3003/api/containers/userImages/download/" + getUserID() + ".png";
     }
 
-    public User(String userID, String loginId, String origin, String firstName, String lastName, String birthday, String email, String gender, String bio, Date created, Rank rank, List<Hobby> hobbies) {
+    public String userSince(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(Long.parseLong(created)*1000L);
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        return String.valueOf(sdfDate.format(cal.getTime()));
+
+    }
+
+    public PublicUser getSimpleUser() {
+        return new PublicUser(userID, firstName, lastName);
+    }
+
+    public User(String userID, String loginId, String origin, String firstName, String lastName, String birthday, String email, String gender, String bio, String created, Rank rank, List<Hobby> hobbies) {
         this.userID = userID;
         this.loginId = loginId;
         this.origin = origin;
@@ -144,55 +154,13 @@ public class User implements Parcelable{
         this.bio = bio;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(String created) {
         this.created = created;
     }
 
     public void setRank(Rank rank) {
-        this.rank = rank;
+        this.rank  = rank;
     }
 
-    public User(Parcel in){
-        String[] data = new String[11];
-        in.readStringArray(data);
-        this.userID = data[0];
-        this.loginId = data[1];
-        this.origin = data[2];
-        this.firstName = data[3];
-        this.lastName = data[4];
-        this.birthday = data[5];
-        this.email = data [6];
-        this.gender = data[7];
-        this.bio = data[8];
-        this.created = new Date(parseLong(data[9]));
-        this.rank = new Rank(data[10]);
-
-        in.readList(hobbies,Hobby.class.getClassLoader());
-    }
-
-    @Override
-    public int describeContents(){
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int flags){
-        parcel.writeStringArray(new String[]{this.userID,this.loginId,this.origin,this.firstName,
-        this.lastName,this.birthday,this.email,this.gender,this.bio,
-                Long.toString(this.created.getTime()),this.rank.toString()});
-        parcel.writeList(this.hobbies);
-    }
-
-    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>(){
-        @Override
-        public User createFromParcel (Parcel parcel){
-            return new User(parcel);
-        }
-
-        @Override
-        public User[] newArray(int size){
-            return new User[size];
-        }
-    };
 }
 

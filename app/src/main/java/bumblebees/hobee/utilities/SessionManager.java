@@ -60,6 +60,8 @@ public class SessionManager {
     /**
      * Getters
      */
+
+
     public String getId() {
         return preferences.getString(KEY_LOGIN_ID, null);
     }
