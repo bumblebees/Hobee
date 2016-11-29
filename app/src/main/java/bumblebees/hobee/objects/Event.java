@@ -43,8 +43,28 @@ public class Event {
                 timestamp + event_details;
     }
 
+    //equals method overwritten for use when adding and removing events from ArrayLists
+    //an event is considered equal with another when its ID, type and timestamp match
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Event event = (Event) o;
 
+        if (eventID != null ? !eventID.equals(event.eventID) : event.eventID != null) return false;
+        if (type != null ? !type.equals(event.type) : event.type != null) return false;
+        return timestamp != null ? timestamp.equals(event.timestamp) : event.timestamp == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = eventID != null ? eventID.hashCode() : 0;
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
+        return result;
+    }
 }
 
 

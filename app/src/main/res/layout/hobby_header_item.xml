@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:text="Event Header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/Bee_color_1"
+        android:background="@color/Bee_color_4"
+        android:id="@+id/eventTabHeader"
+        android:paddingLeft="50dp"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp" />
+</LinearLayout>

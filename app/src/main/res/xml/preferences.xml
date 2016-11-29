@@ -19,7 +19,7 @@
             android:entries="@array/daysOfTheWeek"
             android:entryValues="@array/daysOfTheWeekCalendarValues"
             android:key="notification_days"
-            android:summary="Notify of events taking place on the following days of the week." />
+             />
         <SwitchPreference
             android:defaultValue="false"
             android:title="Pending users"

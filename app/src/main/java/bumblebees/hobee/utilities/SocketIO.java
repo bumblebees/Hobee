@@ -251,4 +251,31 @@ public class SocketIO {
                 }
         });
     }
+
+    /**
+     * Retrieve the events that the user is hosting.
+     * @param userID
+     * @param ack
+     */
+    public void getHostedEvents(String userID, Ack ack){
+        socket.emit("get_hosted_events", userID, ack);
+    }
+
+    /**
+     * Retrieve the events that the user has been accepted to.
+     * @param userID
+     * @param ack
+     */
+    public void getAcceptedEvents(String userID, Ack ack){
+        socket.emit("get_accepted_events", userID, ack);
+    }
+
+    /**
+     * Retrieve the events that the user is waiting on.
+     * @param userID
+     * @param ack
+     */
+    public void getPendingEvents(String userID, Ack ack){
+        socket.emit("get_pending_events", userID, ack);
+    }
 }

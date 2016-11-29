@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +30,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import bumblebees.hobee.fragments.FragmentAdapter;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.utilities.*;
 import com.facebook.login.LoginManager;
@@ -54,44 +57,44 @@ public class HomeActivity extends AppCompatActivity {
     ImageView avatar;
     ArrayList<NavItem> navItems = new ArrayList<>();
     ListView drawerList;
+    TabLayout tabLayout;
+    ViewPager viewPager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        MQTT.getInstance().connect(this.getApplicationContext());
 
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+
+
+        FragmentAdapter tabAdapter = new FragmentAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(tabAdapter);
+        tabLayout.setupWithViewPager(viewPager, true);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         session = new SessionManager(getApplicationContext());
-
-        // for testing
-        textView = (TextView) findViewById(R.id.textView);
-        textView.setText(session.getId() + " " + session.getOrigin());
-
-        btnNewEvent = (Button) findViewById(R.id.btnCreateEvent);
-        btnNewEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent newEventIntent = new Intent(HomeActivity.this, NewEventActivity.class);
-                HomeActivity.this.startActivity(newEventIntent);
-            }
-        });
-
-
-        btnGetEvents = (Button) findViewById(R.id.btnGetEvents);
-        btnGetEvents.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                subscribeTopics();
-            }
-        });
-
-        eventList = (LinearLayout) findViewById(R.id.listParticipatingEvents);
-
 
         // Add options to the menu (empty strings can be replaced with some additional info)
         navItems.add(new NavItem("Profile", R.drawable.profile));
         navItems.add(new NavItem("Settings", R.drawable.settings));
+        navItems.add(new NavItem("New Event", 0));
         navItems.add(new NavItem("Logout", R.drawable.logout));
 
         // DrawerLayout
@@ -167,6 +170,11 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(settingsIntent);
                 break;
             case 2:
+                //TODO: move this somewhere else
+                Intent newEventIntent = new Intent(HomeActivity.this, NewEventActivity.class);
+                HomeActivity.this.startActivity(newEventIntent);
+                break;
+            case 3:
                 if (session.getOrigin().equals("facebook")){
                     // if facebook user
                     LoginManager.getInstance().logOut();
@@ -181,7 +189,6 @@ public class HomeActivity extends AppCompatActivity {
             default:
         }
     }
-
 
     /**
      *  Inner class to create custom menu list options
@@ -245,62 +252,4 @@ public class HomeActivity extends AppCompatActivity {
             return view;
         }
     }
-
-    public void subscribeTopics(){
-        //String topic = "hobby/event/football/51d5446d-a27b-44bb-a6eb-fccb70176914";
-        //TODO: get the hobbies from the user preferences
-        //we pretend these are the hobbies for now
-        String[] hobbies = {"basketball", "football", "fishing", "cooking"};
-        for (int i = 0; i < hobbies.length; i++) {
-            String topic = "hobby/event/" + hobbies[i] + "/#";
-            MQTT.getInstance().subscribe(topic, 1, new MQTTMessageReceiver() {
-                @Override
-                public void onMessageReceive(MqttMessage message) {
-                    Log.d("mqtt", "received message");
-                    try {
-                        final Gson g = new Gson();
-                        final Event event = g.fromJson(message.toString(), Event.class);
-                        new Notification(getApplicationContext()).sendNewEvent(event);
-                        final Button btn = new Button(HomeActivity.this);
-                        btn.setText(event.getType() + ": " + event.getEvent_details().getEvent_name());
-
-                        btn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                try {
-                                    Intent viewEventIntent = new Intent(HomeActivity.this, EventViewActivity.class);
-                                    viewEventIntent.putExtra("event", g.toJson(event));
-                                    HomeActivity.this.startActivity(viewEventIntent);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                eventList.addView(btn);
-                            }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-    }
-
-    @Override
-    public void onResume(){
-
-        //TODO: refresh event list somehow
-        super.onResume();
-    }
-
-
-
-
-
-
-
 }

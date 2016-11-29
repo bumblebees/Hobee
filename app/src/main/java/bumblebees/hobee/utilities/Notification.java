@@ -98,25 +98,6 @@ public class Notification {
      * @return true if they match, false otherwise
      */
     public boolean matchesPreferences(Event event){
-        //check if the user is already a member of the event or is the host
-        if(event.getEvent_details().checkUser(Profile.getInstance().getUser().getSimpleUser()) ||
-                event.getEvent_details().getHost_id().equals(Profile.getInstance().getUserID())){
-            //user is in the event, does not need a notification
-            return false;
-        }
-
-        //check if the age is larger than the max age, or smaller than the minimum age
-        if(event.getEvent_details().getAge_max()<Profile.getInstance().getAge() || event.getEvent_details().getAge_min() > Profile.getInstance().getAge()){
-            return false;
-        }
-
-        //check if there are gender restrictions to the event
-        if(!event.getEvent_details().getGender().equals("everyone")){
-            //check that the gender does not match the user's gender
-            if(!event.getEvent_details().getGender().equals(Profile.getInstance().getGender())){
-                return false;
-            }
-        }
 
         //check if the event is full
         if(event.getEvent_details().getUsers_accepted().size()==event.getEvent_details().getMaximum_people()){
@@ -129,8 +110,9 @@ public class Notification {
         if(!selectedDays.contains(String.valueOf(dayOfTheWeek))){
             return false;
         }
-        //none of the preferences are contradicted, the user can receive the notification
-        return true;
+        //none of the notification preferences are contradicted
+        //check the user's personal preferences
+        return Profile.getInstance().matchesPreferences(event);
     }
 
     /**
@@ -146,13 +128,27 @@ public class Notification {
     }
 
     /**
-     * Send a notification that a user's request to join an event has been accepted by the host;
-     * @param user - user to be notified
+     * Send a notification that a user's request to join an event has been accepted by the host.
      * @param event
      */
-    public void sendNewUserAccepted(User user, Event event){
+    public void sendUserEventAccepted(Event event){
+        notificationBuilder.setContentTitle("Event accepted: "+event.getEvent_details().getEvent_name());
+        notificationBuilder.setContentText(event.getEvent_details().getDescription());
+
+        sendEventNotification(notificationBuilder, event);
 
 
+    }
+
+    /**
+     * Send a notification that a user's request to join an event has been rejected by the host.
+     * @param event
+     */
+    public void sendUserEventRejected(Event event){
+        notificationBuilder.setContentTitle("Event rejected: "+event.getEvent_details().getEvent_name());
+        notificationBuilder.setContentText(event.getEvent_details().getDescription());
+
+        sendEventNotification(notificationBuilder, event);
 
     }
 

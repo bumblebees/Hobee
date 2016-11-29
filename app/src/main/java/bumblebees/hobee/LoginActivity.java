@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+
+import bumblebees.hobee.utilities.MQTT;
 import bumblebees.hobee.utilities.SessionManager;
 import bumblebees.hobee.utilities.SocketIO;
 import com.facebook.*;
@@ -38,9 +40,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         SocketIO.getInstance().start();
         session = new SessionManager(getApplicationContext());
+        MQTT.getInstance().connect(getApplicationContext());
 
         //initialize the application settings
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preferences, false);
 
         // If user has already logged in, just get his data from the server and go to homepage
         if (session.getId() != null){

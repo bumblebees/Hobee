@@ -1,20 +1,23 @@
 package bumblebees.hobee.utilities;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.User;
 
 public class Profile{
 
     static private Profile instance;
     private User user;
+
+    private ArrayList<String> hostedEvents = new ArrayList<>();
+    private ArrayList<String> acceptedEvents = new ArrayList<>();
+    private ArrayList<String> pendingEvents = new ArrayList<>();
 
 
     public static Profile getInstance(){
@@ -115,5 +118,38 @@ public class Profile{
         }
         return age;
     }
+
+
+    /**
+     * Check if the event matches the user.
+     * @param event event to be checked
+     * @return true if they match, false otherwise
+     */
+    public boolean matchesPreferences(Event event){
+        //check if the user is already a member of the event or is the host
+        if(event.getEvent_details().checkUser(user.getSimpleUser()) ||
+                event.getEvent_details().getHost_id().equals(user.getUserID())){
+            //user is in the event, does not need a notification
+            return false;
+        }
+
+        //check if the age is larger than the max age, or smaller than the minimum age
+        if(event.getEvent_details().getAge_max()<user.getAge() || event.getEvent_details().getAge_min() > user.getAge()){
+            return false;
+        }
+
+        //check if there are gender restrictions to the event
+        if(!event.getEvent_details().getGender().equals("everyone")){
+            //check that the gender does not match the user's gender
+            if(!event.getEvent_details().getGender().equals(user.getGender())){
+                return false;
+            }
+        }
+
+        //TODO: check hobbies as well
+
+        return true;
+    }
+
 
 }

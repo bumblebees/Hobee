@@ -1,5 +1,6 @@
 package bumblebees.hobee.objects;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -97,6 +98,17 @@ public class EventDetails {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(Long.parseLong(this.timestamp)*1000L);
         return cal.get(Calendar.DAY_OF_WEEK);
+    }
+
+    /**
+     * Retrieve a formatted string representing the date and time when the event takes place.
+     * @return
+     */
+    public String getDateAndTime(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(Long.parseLong(this.timestamp)*1000L);
+        SimpleDateFormat sdfDateTime = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        return String.valueOf(sdfDateTime.format(cal.getTime()));
     }
 
     public List<PublicUser> getUsers_pending(){
