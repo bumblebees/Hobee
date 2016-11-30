@@ -4,16 +4,60 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Hobby implements Parcelable {
-    private String skill;
+
+    private int id;
+    private String name;
+    private String difficultyLevel;
+    private String datePreference;
+    private String timePreference;
 
 
     public Hobby(){
-
     }
 
     public Hobby(Parcel in) {
         String[] data = new String[1];
-        this.skill = data[0];
+        this.difficultyLevel = data[0];
+    }
+
+    public void setId(int id){
+         this.id = id;
+    }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public void setDifficultyLevel(String difficultyLevel){
+        this.difficultyLevel = difficultyLevel;
+    }
+
+    public void setDatePreference(String datePreference){
+        this.datePreference = datePreference;
+    }
+
+    public void setTimePreference(String timePreference){
+        this.timePreference = timePreference;
+    }
+
+    public int getId(){
+        return id;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public String getDifficultyLevel(){
+        return difficultyLevel;
+    }
+
+    public String getDatePreference(){
+        return datePreference;
+    }
+
+    public String getTimePreference(){
+        return timePreference;
     }
 
     @Override
