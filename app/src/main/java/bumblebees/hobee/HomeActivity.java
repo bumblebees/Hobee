@@ -39,6 +39,9 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.squareup.picasso.Picasso;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -68,7 +71,6 @@ public class HomeActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
-
 
         FragmentAdapter tabAdapter = new FragmentAdapter(getSupportFragmentManager());
         viewPager.setAdapter(tabAdapter);
@@ -122,6 +124,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        subscribeTopics();
     }
 
     /**
@@ -252,4 +255,69 @@ public class HomeActivity extends AppCompatActivity {
             return view;
         }
     }
+
+    /**
+     * Subscribe to the MQTT topics and fill in the list of events that the user is participating in.
+     */
+    public void subscribeTopics(){
+        final Gson gson = new Gson();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Set<String> emptyLocation = new HashSet<>(); //to prevent null pointer exception
+        Set<String> preferencesStringSet = preferences.getStringSet("location_topics", emptyLocation);
+
+        //we pretend these are the hobbies for now
+        String[] hobbies = {"basketball", "football", "fishing", "cooking"};
+
+        if(!preferencesStringSet.isEmpty()){
+            for(String location:preferencesStringSet){
+                for(final String hobby : hobbies){
+                    //subscribe to all topics that match the location and the hobby
+                    String topic = "geo/"+location+"/event/hobby/"+hobby+"/#";
+                    MQTT.getInstance().subscribe(topic, 1, new MQTTMessageReceiver() {
+                        @Override
+                        public void onMessageReceive(MqttMessage message) {
+                            try {
+                                Log.d("eventFrag", "got an event");
+                                final Event event = gson.fromJson(message.toString(), Event.class);
+                                //check if the user's preferences match the event and if the user is not already a member of it
+                                if(event.getEvent_details().getHost_id().equals(Profile.getInstance().getUserID())){
+                                    //user is the host
+                                    Log.d("evFrag", "we are here");
+                                    Profile.getInstance().addHostedEvent(event);
+                                }
+                                else if(event.getEvent_details().getUsers_pending().contains(Profile.getInstance().getUser().getSimpleUser())){
+                                    //user is in the pending list
+                                    Profile.getInstance().addPendingEvent(event);
+                                }
+                                else if(event.getEvent_details().getUsers_accepted().contains(Profile.getInstance().getUser().getSimpleUser())){
+                                    //user is in the accepted list
+                                    if(Profile.getInstance().getPendingEvents().contains(event)){
+                                        Profile.getInstance().removePendingEvent(event);
+                                        new Notification(HomeActivity.this).sendUserEventAccepted(event);
+                                    }
+                                    Profile.getInstance().addAcceptedEvent(event);
+                                }
+                                else if(Profile.getInstance().matchesPreferences(event)) {
+                                    //check if user had been pending on the event
+                                    if(Profile.getInstance().getPendingEvents().contains(event)){
+                                        Profile.getInstance().removePendingEvent(event);
+                                        new Notification(HomeActivity.this).sendUserEventRejected(event);
+                                    }
+                                    Profile.getInstance().addEligibleEvent(hobby, event);
+                                    new Notification(HomeActivity.this).sendNewEvent(event);
+                                }
+                                else{
+                                    //drop it
+                                    Log.d("eventFrag", "event dropped");
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    }
+
 }

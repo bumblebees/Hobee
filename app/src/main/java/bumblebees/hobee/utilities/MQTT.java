@@ -116,6 +116,16 @@ public class MQTT implements MqttCallback {
         } catch (MqttException e) {
             e.printStackTrace();
         }
+        catch(NullPointerException e){
+            //client has not connected yet
+            //TODO: find a better way to wait for the client to finish connecting
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+            subscribe(topic, QoS, callback);
+        }
     }
 
     public void unsubscribe(final String topic){
@@ -146,11 +156,10 @@ public class MQTT implements MqttCallback {
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         Log.d("mqtt", "message from: "+topic);
-        //geo/swe/bohuslan/gothenburg/center/event/hobby/basketball/563f45e9-2f6d-4fad-8fd6-c60d8d66a80d
         //parse event topics when subscription contained a wildcard for the ID
         if(topic.startsWith("geo") && topic.contains("event/hobby/")){
             int index = topic.lastIndexOf("/");
-            String subTopic = topic.substring(0, index);
+            String subTopic = topic.substring(0, index) + "/#";
             ArrayList<MQTTMessageReceiver> categoryList = callbackList.get(subTopic);
             for(int i=0; i<categoryList.size(); i++){
                 //send the message to the callback function(s)

@@ -249,6 +249,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
 
             MqttMessage msg = new MqttMessage(g.toJson(event, Event.class).getBytes());
             msg.setRetained(true);
+            msg.setQos(1);
             String topic = event.getTopic();
 
             MQTT.getInstance().publishMessage(topic, msg);

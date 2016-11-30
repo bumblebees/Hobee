@@ -174,7 +174,6 @@ public class EventViewActivity extends AppCompatActivity {
                 }
             });
             containerUsers.addView(acceptedUser);
-            Log.d("event", publicUser.toString());
         }
 
         eventHostName.setOnClickListener(new View.OnClickListener() {
@@ -198,6 +197,7 @@ public class EventViewActivity extends AppCompatActivity {
         event.getEvent_details().addUser(currentUser);
 
         updateEvent(event);
+        Profile.getInstance().removeEligibleEvent(event.getType(), event);
 
         //TODO: add event to user's events
 
@@ -218,7 +218,7 @@ public class EventViewActivity extends AppCompatActivity {
      * @param event - event to be updated
      */
     private void updateEvent(Event event) {
-        String topic = "hobby/event/" + event.getType() + "/" + event.getEventID();
+        String topic = event.getTopic();
         MqttMessage message = new MqttMessage(g.toJson(event).getBytes());
         message.setRetained(true);
         message.setQos(1);

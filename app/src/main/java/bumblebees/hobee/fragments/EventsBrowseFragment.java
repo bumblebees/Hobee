@@ -29,6 +29,7 @@ public class EventsBrowseFragment extends Fragment {
 
     Gson gson = new Gson();
     ArrayList<Pair<String, ArrayList<Event>>> content;
+
     //we pretend these are the hobbies for now
     String[] hobbies = {"basketball", "football", "fishing", "cooking"};
 
@@ -57,7 +58,6 @@ public class EventsBrowseFragment extends Fragment {
             }
         });
         findEvents();
-
         return view;
     }
 
@@ -70,7 +70,7 @@ public class EventsBrowseFragment extends Fragment {
 
         //expand all groups by default
         for(int i=0;i<hobbies.length; i++){
-            eventsTabList.expandGroup(i);
+           // eventsTabList.expandGroup(i);
             adapter.notifyDataSetChanged();
         }
 
@@ -81,38 +81,8 @@ public class EventsBrowseFragment extends Fragment {
      */
     public void findEvents(){
       for (String hobby : hobbies) {
-          final ArrayList<Event> hobbyList = new ArrayList();
-          String topic = "hobby/event/" + hobby + "/#";
-          MQTT.getInstance().subscribe(topic, 1, new MQTTMessageReceiver() {
-              @Override
-              public void onMessageReceive(MqttMessage message) {
-                  try {
-                      final Event event = gson.fromJson(message.toString(), Event.class);
-                      //check if the user's preferences match the event and if the user is not already a member of it
-                      if(Profile.getInstance().matchesPreferences(event)) {
-                          //event matches, add it to the list
-                          if (hobbyList.contains(event)) {
-                              hobbyList.remove(event);
-                          }
-                          hobbyList.add(event);
-                      }
-                  } catch (Exception e) {
-                      e.printStackTrace();
-                  }
-              }
-          });
-          Pair<String, ArrayList<Event>> pair = new Pair<>(hobby.toUpperCase(), hobbyList);
+          Pair<String, ArrayList<Event>> pair = new Pair<>(hobby.toUpperCase(), Profile.getInstance().getEligibleEventList().get(hobby));
           content.add(pair);
       }
-
   }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        for (String hobby : hobbies) {
-            String topic = "hobby/event/" + hobby + "/#";
-            MQTT.getInstance().unsubscribe(topic);
-        }
-    }
 }

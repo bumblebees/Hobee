@@ -37,31 +37,18 @@ public class EventsMainFragment extends Fragment {
 
     ExpandableListView eventsTabList;
 
-    ArrayList<Event> hostedEvents, acceptedEvents, pendingEvents;
-    ArrayList<String> hostedEventsTopics, acceptedEventsTopics, pendingEventsTopics;
-
     HobbyExpandableListAdapter adapter;
     private SwipeRefreshLayout refreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        hostedEvents = new ArrayList<>();
-        acceptedEvents = new ArrayList<>();
-        pendingEvents = new ArrayList<>();
-        hostedEventsTopics = new ArrayList<>();
-        acceptedEventsTopics = new ArrayList<>();
-        pendingEventsTopics = new ArrayList<>();
+
 
         content = new ArrayList<>();
-
-        getHostedEvents();
-        getPendingEvents();
-        getAcceptedEvents();
-
-        content.add(new Pair<>("Hosted events", hostedEvents));
-        content.add(new Pair<>("Joined events", acceptedEvents));
-        content.add(new Pair<>("Pending events", pendingEvents));
+        content.add(new Pair<>("Hosted events", Profile.getInstance().getHostedEvents()));
+        content.add(new Pair<>("Joined events", Profile.getInstance().getAcceptedEvents()));
+        content.add(new Pair<>("Pending events", Profile.getInstance().getPendingEvents()));
     }
 
     @Override
@@ -77,7 +64,6 @@ public class EventsMainFragment extends Fragment {
             }
         });
         return view;
-
     }
 
     @Override
@@ -93,101 +79,9 @@ public class EventsMainFragment extends Fragment {
         }
     }
 
-
-    public void getHostedEvents(){
-        SocketIO.getInstance().getHostedEvents(Profile.getInstance().getUserID(), new Ack() {
-            @Override
-            public void call(Object... objects) {
-                JSONArray array = (JSONArray) objects[0];
-                for (int i = 0; i < array.length(); i++) {
-                    try {
-                        JSONObject obj = array.getJSONObject(i);
-                        String topic = "hobby/event/" + obj.getString("type") + "/" + obj.getString("eventID");
-                        MQTT.getInstance().subscribe(topic, 1, new MQTTMessageReceiver() {
-                            @Override
-                            public void onMessageReceive(MqttMessage message) {
-                                final Event event = gson.fromJson(message.toString(), Event.class);
-                                if(hostedEvents.contains(event)){
-                                    hostedEvents.remove(event);
-                                }
-                                hostedEvents.add(event);
-                                adapter.notifyDataSetChanged();
-                            }
-                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
-
-    public void getAcceptedEvents(){
-        SocketIO.getInstance().getAcceptedEvents(Profile.getInstance().getUserID(), new Ack() {
-            @Override
-            public void call(Object... objects) {
-                JSONArray array = (JSONArray) objects[0];
-                for (int i = 0; i < array.length(); i++) {
-                    try {
-                        JSONObject obj = array.getJSONObject(i);
-                        String topic = "hobby/event/" + obj.getString("type") + "/" + obj.getString("eventID");
-                        MQTT.getInstance().subscribe(topic, 1, new MQTTMessageReceiver() {
-                            @Override
-                            public void onMessageReceive(MqttMessage message) {
-                                final Event event = gson.fromJson(message.toString(), Event.class);
-                                if(acceptedEvents.contains(event)){
-                                    acceptedEvents.remove(event);
-                                }
-                                acceptedEvents.add(event);
-                                adapter.notifyDataSetChanged();
-                            }
-                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
-
-
-    public void getPendingEvents(){
-        SocketIO.getInstance().getPendingEvents(Profile.getInstance().getUserID(), new Ack() {
-            @Override
-            public void call(Object... objects) {
-                JSONArray array = (JSONArray) objects[0];
-                for (int i = 0; i < array.length(); i++) {
-                    try {
-                        JSONObject obj = array.getJSONObject(i);
-                        final String topic = "hobby/event/" + obj.getString("type") + "/" + obj.getString("eventID");
-                        MQTT.getInstance().subscribe(topic, 1, new MQTTMessageReceiver() {
-                            @Override
-                            public void onMessageReceive(MqttMessage message) {
-                                final Event event = gson.fromJson(message.toString(), Event.class);
-                                if(pendingEvents.contains(event)){
-                                    pendingEvents.remove(event);
-                                }
-                                if(event.getEvent_details().getUsers_accepted().contains(Profile.getInstance().getUser().getSimpleUser())){
-                                    acceptedEvents.add(event);
-                                    new Notification(getActivity()).sendUserEventAccepted(event);
-                                }
-                                else if (!event.getEvent_details().getUsers_pending().contains(Profile.getInstance().getUser().getSimpleUser())){
-                                      new Notification(getActivity()).sendUserEventRejected(event);
-                                      MQTT.getInstance().unsubscribe(topic);
-                                }
-                                else{
-                                    pendingEvents.add(event);
-                                }
-                                adapter.notifyDataSetChanged();
-                            }
-                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            }
-        });
-    }
-
 }
