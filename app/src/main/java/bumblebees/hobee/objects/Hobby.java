@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class Hobby implements Parcelable {
 
-    private int id;
+    private double id;
     private String name;
     private String difficultyLevel;
     private String datePreference;
@@ -13,6 +13,11 @@ public class Hobby implements Parcelable {
 
 
     public Hobby(){
+    }
+
+    public Hobby(double id, String name){
+        this.id = id;
+        this.name = name;
     }
 
     public Hobby(Parcel in) {
@@ -40,7 +45,7 @@ public class Hobby implements Parcelable {
         this.timePreference = timePreference;
     }
 
-    public int getId(){
+    public double getId(){
         return id;
     }
 
