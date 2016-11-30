@@ -72,7 +72,7 @@ public class EventsMainFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
                 refreshLayout.setRefreshing(false);
             }
         });
@@ -146,7 +146,6 @@ public class EventsMainFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
-
             }
         });
     }

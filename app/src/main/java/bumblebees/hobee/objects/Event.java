@@ -10,16 +10,18 @@ public class Event {
     private String type;
     private String timestamp;
     private EventDetails event_details;
+    private String location;
 
     public Event(){
 
     }
 
-    public Event(UUID eventID, String type, String timestamp, EventDetails event_details) {
+    public Event(UUID eventID, String type, String timestamp, EventDetails event_details, String location) {
         this.eventID = eventID;
         this.type = type;
         this.timestamp = timestamp;
         this.event_details = event_details;
+        this.location = location;
     }
 
     public String getType(){
@@ -41,6 +43,14 @@ public class Event {
     public String toString(){
         return "Event ID " + eventID.toString() + " Event Type " + type + " Event timestamp " +
                 timestamp + event_details;
+    }
+
+    /**
+     * Retrieves the topic where the event is posted, including the "geo" prefix and the "event/hobby/" prefix.
+     * @return
+     */
+    public String getTopic(){
+        return "geo/"+location+"/event/hobby/"+type+"/"+eventID;
     }
 
     //equals method overwritten for use when adding and removing events from ArrayLists

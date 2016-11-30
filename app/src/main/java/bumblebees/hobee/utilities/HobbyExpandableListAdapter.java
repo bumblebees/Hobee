@@ -99,10 +99,12 @@ public class HobbyExpandableListAdapter extends BaseExpandableListAdapter {
         eventDate.setText(event.getEvent_details().getDateAndTime());
 
         //check if the logged in user is the host of the event
-        if(Profile.getInstance().getUserID().equals(event.getEvent_details().getHost_id())){
-          //show the pending count for the event
-            eventPendingCount.setVisibility(View.VISIBLE);
-            eventPendingCount.setText(String.valueOf(event.getEvent_details().getUsers_pending().size()));
+        if(Profile.getInstance().getUserID().equals(event.getEvent_details().getHost_id())) {
+            //show the pending count for the event
+            if (event.getEvent_details().getUsers_pending().size() > 0) {
+                eventPendingCount.setVisibility(View.VISIBLE);
+                eventPendingCount.setText(String.valueOf(event.getEvent_details().getUsers_pending().size()));
+            }
         }
 
         //TODO: set ImageView based on hobby

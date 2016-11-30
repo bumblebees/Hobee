@@ -49,6 +49,25 @@
                 android:id="@+id/inputEventNumber"
                 android:hint="Number of people needed" />
 
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp">
+
+                <TextView
+                    android:text="Area"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView"
+                    android:textSize="18sp" />
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinnerLocation" />
+
+            </TableRow>
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -63,7 +82,9 @@
                 android:ems="10"
                 android:id="@+id/inputEventDate"
                 android:inputType="date"
-                android:hint="Press to select date" />
+                android:hint="Press to select date"
+                android:textSize="18sp"
+                android:padding="5dp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -71,7 +92,9 @@
                 android:inputType="time"
                 android:ems="10"
                 android:id="@+id/inputEventTime"
-                android:hint="Press to select time" />
+                android:hint="Press to select time"
+                android:padding="5dp"
+                android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -86,14 +109,17 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Age Range:"/>
+                        android:text="Age Range:"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:textSize="18sp" />
                     <TextView
                         android:id="@+id/minAge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="min"
                         android:paddingLeft="10dp"
-                        />
+                        android:textSize="18sp" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -102,7 +128,8 @@
                         android:id="@+id/maxAge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="max" />
+                        android:text="max"
+                        android:textSize="18sp" />
                 </LinearLayout>
 
                 <io.apptik.widget.MultiSlider
@@ -112,14 +139,14 @@
 
                     app:range1="@drawable/multislider_scrubber_track_holo_light"
 
-                    />
+                    android:padding="10dp" />
 
             </LinearLayout>
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="4dp">
+                android:padding="5dp">
 
                 <TextView
                     android:text="Gender"

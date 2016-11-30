@@ -66,7 +66,6 @@ public class MQTT implements MqttCallback {
                     public void onSuccess(IMqttToken asyncActionToken) {
                         Log.d("mqtt", "connected");
                         isConnected = true;
-
                     }
 
                     @Override
@@ -82,6 +81,7 @@ public class MQTT implements MqttCallback {
 
     public void publishMessage(String topic, MqttMessage message){
        try{
+
            client.publish(topic, message);
 
        } catch (MqttPersistenceException e) {
@@ -145,16 +145,12 @@ public class MQTT implements MqttCallback {
 
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
-
         Log.d("mqtt", "message from: "+topic);
-
-        if(topic.startsWith("hobby/event/")){
-            String category = topic.replace("hobby/event/", "");
-            int index = category.indexOf("/");
-            category = category.substring(0, index);
-
-
-            String subTopic = "hobby/event/"+category+"/#";
+        //geo/swe/bohuslan/gothenburg/center/event/hobby/basketball/563f45e9-2f6d-4fad-8fd6-c60d8d66a80d
+        //parse event topics when subscription contained a wildcard for the ID
+        if(topic.startsWith("geo") && topic.contains("event/hobby/")){
+            int index = topic.lastIndexOf("/");
+            String subTopic = topic.substring(0, index);
             ArrayList<MQTTMessageReceiver> categoryList = callbackList.get(subTopic);
             for(int i=0; i<categoryList.size(); i++){
                 //send the message to the callback function(s)
@@ -162,13 +158,11 @@ public class MQTT implements MqttCallback {
             }
         }
 
+        //send the message to the callback functions when the subscription matches the topic exactly
         ArrayList<MQTTMessageReceiver> list  = callbackList.get(topic);
         for(int i=0; i<list.size(); i++){
             list.get(i).onMessageReceive(message);
         }
-
-
-
     }
 
 
