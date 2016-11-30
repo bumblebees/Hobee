@@ -67,7 +67,7 @@ public class Hobby implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeStringArray(new String[]{this.skill});
+        parcel.writeStringArray(new String[]{this.difficultyLevel});
     }
 
     public static final Parcelable.Creator<Hobby> CREATOR= new Parcelable.Creator<Hobby>(){

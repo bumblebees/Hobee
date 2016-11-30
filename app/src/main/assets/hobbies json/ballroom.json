@@ -3,7 +3,7 @@
         "name":"Ballroom dancing",
         "properties":
         {
-                "difficultyLevel": ["beginner", "intermediate", "pro"],
+                "difficultyLevel": ["beginner", "intermediate", "expert"],
 
                 "preferences":
                 {
