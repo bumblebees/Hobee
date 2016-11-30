@@ -16,7 +16,6 @@ public class Hobby implements Parcelable {
         this.skill = data[0];
     }
 
-
     @Override
     public int describeContents(){
         return 0;
