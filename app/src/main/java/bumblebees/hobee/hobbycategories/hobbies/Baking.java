@@ -10,6 +10,8 @@ import bumblebees.hobee.objects.Hobby;
  */
 
 public class Baking extends Hobby {
-
+    public Baking (double id, String name){
+        super(5.1, "Baking");
+    }
 
     }
