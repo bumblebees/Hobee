@@ -1,6 +1,7 @@
 package bumblebees.hobee.hobbycategories;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.zip.Inflater;
 
 import bumblebees.hobee.R;
+import bumblebees.hobee.objects.Hobby;
 
 import static bumblebees.hobee.R.layout.activity_hobby_category_list;
 import static bumblebees.hobee.R.layout.activity_sportshobby;
@@ -54,7 +56,21 @@ public class HobbyCategoryListActivity extends AppCompatActivity {
 
             hobbyItemView.setText(hobby);
             tableLayout.addView(hobbyView);
+            final String hobbyName = hobby.toString();
+            hobbyItemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent (HobbyCategoryListActivity.this, HobbiesActivity.class);
+                //    System.out.println(HobbiesChoiceActivity.this);
+                    intent.putExtra("Hobby", createHobbyInstance(hobbyName));
+                    HobbyCategoryListActivity.this.startActivity(intent);
+                }
+            });
 
         }
+    }
+    public Hobby createHobbyInstance (String hobbyName) {
+        Hobby hobby = new Hobby(hobbyName);
+        return hobby;
     }
 }

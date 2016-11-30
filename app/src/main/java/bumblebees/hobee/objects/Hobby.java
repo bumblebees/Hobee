@@ -15,6 +15,9 @@ public class Hobby implements Parcelable {
     public Hobby(){
     }
 
+    public Hobby(String name){
+        this.name = name;
+    }
     public Hobby(double id, String name){
         this.id = id;
         this.name = name;
