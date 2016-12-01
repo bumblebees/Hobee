@@ -3,6 +3,11 @@ package bumblebees.hobee.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * A class to represent a hobby.
+ * All specific hobbies must extend this class,
+ * some additional fields migth have to added to the subclasses
+ */
 public class Hobby implements Parcelable {
 
     private double id;
