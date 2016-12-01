@@ -15,6 +15,9 @@ public class Hobby implements Parcelable {
     public Hobby(){
     }
 
+    public Hobby(String name){
+        this.name = name;
+    }
     public Hobby(double id, String name){
         this.id = id;
         this.name = name;
@@ -72,7 +75,7 @@ public class Hobby implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeStringArray(new String[]{this.skill});
+        parcel.writeStringArray(new String[]{this.difficultyLevel});
     }
 
     public static final Parcelable.Creator<Hobby> CREATOR= new Parcelable.Creator<Hobby>(){
