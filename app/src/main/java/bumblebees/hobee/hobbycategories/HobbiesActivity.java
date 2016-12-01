@@ -14,5 +14,8 @@ public class HobbiesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hobbies);
         hobby = getIntent().getParcelableExtra("Hobby");
+        System.out.println(hobby.getName());
     }
+
+
 }
