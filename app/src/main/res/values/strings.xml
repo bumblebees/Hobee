@@ -4,4 +4,46 @@
     <string name="male">male</string>
     <string name="female">female</string>
     <string name="set">Set</string>
+
+
+    <string name="level_prompt">Choose your level</string>
+    <string-array name="difficulty_level">
+        <item>Beginner</item>
+        <item>Intermediate</item>
+        <item>Expert</item>
+    </string-array>
+
+    <string-array name="day">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
+
+    <string-array name="time1">
+        <item>08:00</item>
+        <item>10:00</item>
+        <item>12:00</item>
+        <item>14:00</item>
+        <item>16:00</item>
+        <item>18:00</item>
+        <item>20:00</item>
+        <item>22:00</item>
+        <item>24:00</item>
+    </string-array>
+
+    <string-array name="time2">
+        <item>08:00</item>
+        <item>10:00</item>
+        <item>12:00</item>
+        <item>14:00</item>
+        <item>16:00</item>
+        <item>18:00</item>
+        <item>20:00</item>
+        <item>22:00</item>
+        <item>24:00</item>
+    </string-array>
 </resources>

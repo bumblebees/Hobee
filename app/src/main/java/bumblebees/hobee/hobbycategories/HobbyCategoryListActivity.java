@@ -57,20 +57,23 @@ public class HobbyCategoryListActivity extends AppCompatActivity {
             hobbyItemView.setText(hobby);
             tableLayout.addView(hobbyView);
             final String hobbyName = hobby.toString();
+            System.out.println(">>>>>>>>>>>>>>" +hobbyName);
             hobbyItemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent (HobbyCategoryListActivity.this, HobbiesActivity.class);
                 //    System.out.println(HobbiesChoiceActivity.this);
-                    intent.putExtra("Hobby", createHobbyInstance(hobbyName));
+                 //   intent.putExtra("Hobby", createHobbyInstance(hobbyName));
+                    intent.putExtra("HobbyName", hobbyName);
                     HobbyCategoryListActivity.this.startActivity(intent);
+
                 }
             });
-
         }
     }
     public Hobby createHobbyInstance (String hobbyName) {
         Hobby hobby = new Hobby(hobbyName);
+        System.out.println(hobby.getName());
         return hobby;
     }
 }
