@@ -1,4 +1,4 @@
-package bumblebees.hobee.parser;
+package bumblebees.hobee.jsonparser;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
