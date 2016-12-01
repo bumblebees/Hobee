@@ -11,6 +11,10 @@ public class Football extends Hobby {
     private String position;
     private double height;
 
+    public Football(double id, String name){
+        super(1.1, "Football");
+    }
+
 
     public void setPosition(String position){
         this.position = position;
