@@ -155,7 +155,6 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         }
     }
 
-
     public Hobby createHobbyInstance (String hobbyName) {
         Hobby hobby = new Hobby(hobbyName);
         return hobby;
@@ -187,5 +186,8 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
             }
         });
     }
+
+
+
 }
 
