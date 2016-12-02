@@ -3,6 +3,8 @@ package bumblebees.hobee.jsonparser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -20,7 +22,18 @@ import bumblebees.hobee.objects.Hobby;
 public class JSONParser {
 
     Hobby hobby = null;
+    JSONObject jsonObject;
 
+
+    public void writeJSONFile(String jsonPath, Hobby newHobby){
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            mapper.writeValue(new File("something.json"), newHobby);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void readJSONFile(String jsonPath){
         File jsonFile = new File(jsonPath);
