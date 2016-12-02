@@ -24,6 +24,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import bumblebees.hobee.R;
 import bumblebees.hobee.jsonparser.JSONParser;
 import bumblebees.hobee.objects.Hobby;
+import bumblebees.hobee.utilities.Profile;
 
 import static android.R.id.list;
 
@@ -31,6 +32,9 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
 
     // Checkbox list
     List<String> checkList = new ArrayList<String>();
+    Spinner spinnerDifficultyLevel;
+    Spinner spinnerTimeFrom;
+    Spinner spinnerTimeTo;
 
     Hobby hobby;
     TextView textView;
@@ -62,11 +66,11 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         submitBtn = (Button) findViewById(R.id.button_submit);
 
         // Spinner element
-        Spinner spinnerDifficultyLevel = (Spinner) findViewById(R.id.spinner_difficulty_level);
+        spinnerDifficultyLevel = (Spinner) findViewById(R.id.spinner_difficulty_level);
         //spinnerDifficultyLevel.setPrompt("Title");
 
-        Spinner spinnerTimeFrom = (Spinner) findViewById(R.id.spinner_time_from);
-        Spinner spinnerTimeTo = (Spinner) findViewById(R.id.spinner_time_to);
+        spinnerTimeFrom = (Spinner) findViewById(R.id.spinner_time_from);
+        spinnerTimeTo = (Spinner) findViewById(R.id.spinner_time_to);
 
 
         // Spinner click listener
@@ -168,39 +172,73 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         return hobby;
     }
 
-    private Hobby getBasicHobby(){
-
+    private void setBasicHobby(){
         hobby.setDifficultyLevel("userInput");
         hobby.setDatePreference("userInput");
         hobby.setTimePreference("userInput");
-        return hobby;
     }
 
-    private Hobby getBasketballHobby(){
-        return hobby;
+    private void setBallSportHobby(){
+
     }
 
-    private Hobby getFootballHobby(){
-        return hobby;
-    }
-
-    /**
-    private JSONObject appendJSONDataToJSONFile(String jsonFile) throws Exception{
-        jsonParser = new JSONParser();
-        JSONObject newJSONDataObject = new JSONObject();
-        JSONArray jsonArray = currentJSONFile.getJSONArray("sample");
-
+    public JSONObject createJsonObject(){
+        JSONObject jsonObject = new JSONObject();
         try {
-            newJSONDataObject.put("someInfo", XX);
+            JSONArray jsonArray = new JSONArray();
+
+            jsonArray.put(spinnerDifficultyLevel.getSelectedItem().toString());
+
+            if (checkBoxMonday.isChecked()) {
+                jsonArray.put(checkBoxMonday.getText().toString());
+            }
+            if (checkBoxTuesday.isChecked()) {
+                jsonArray.put(checkBoxTuesday.getText().toString());
+            }
+            if (checkBoxWednesday.isChecked()) {
+                jsonArray.put(checkBoxWednesday.getText().toString());
+            }
+            if (checkBoxThursday.isChecked()) {
+                jsonArray.put(checkBoxThursday.getText().toString());
+            }
+            if (checkBoxFriday.isChecked()) {
+                jsonArray.put(checkBoxFriday.getText().toString());
+            }
+            if (checkBoxSaturday.isChecked()) {
+                jsonArray.put(checkBoxSaturday.getText().toString());
+            }
+            if (checkBoxSunday.isChecked()) {
+                jsonArray.put(checkBoxSaturday.getText().toString());
+            }
+
+            jsonArray.put(spinnerTimeFrom.getSelectedItem().toString());
+            jsonArray.put(spinnerTimeTo.getSelectedItem().toString());
+
+            jsonObject.put("hobbies", jsonArray);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        jsonArray.put(newJSONDataObject);
-
-        return newJSONDataObject;
+        return jsonObject;
     }
-     */
+/**
+    private JSONObject createJSONFile(String hobbyName) throws Exception{
+        JSONObject jsonObject = new JSONObject();
+        setBasicHobby();
+
+        if (hobbyName == "Football" || hobbyName == "Basketball"){
+            setBallSportHobby();
+        }
+        try {
+            jsonObject.put("someInfo", XX);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+ */
+
     /*
     * Toast
     */
