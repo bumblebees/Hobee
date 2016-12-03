@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import bumblebees.hobee.utilities.SocketIO;
 
 public class PublicUser {
-
     private String userID, name;
 
     public String getUserID() {

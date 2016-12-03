@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            app:srcCompat="@drawable/profile"
+            android:id="@+id/userImage"
+            android:layout_width="128dp"
+            android:layout_height="128dp" />
+
+        <TextView
+            android:text="Jose Luis Cardenas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:id="@+id/userName"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/userImage"
+            android:layout_toEndOf="@+id/userImage" />
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_below="@+id/userName"
+            android:layout_marginTop="25dp"
+            android:id="@+id/seekBar"
+            android:layout_toRightOf="@+id/userImage"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:max="6"/>
+
+        <TextView
+            android:text="0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/numberView"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:layout_below="@+id/seekBar"
+            android:layout_toRightOf="@+id/userImage"
+            android:layout_toEndOf="@+id/userImage"
+            android:layout_marginLeft="97dp"
+            android:layout_marginStart="97dp" />
+
+    </RelativeLayout>
+</TableRow>
