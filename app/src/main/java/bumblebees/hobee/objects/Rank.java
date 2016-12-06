@@ -17,14 +17,14 @@ import static java.lang.Integer.parseInt;
 
 public class Rank {
     private int reputation;
-    private int globalRank, hostRank;
+    private int globalRep, hostRep;
     private int noShows;
 
 
 
     public Rank() {
-        globalRank = 0;
-        hostRank=0;
+        globalRep = 0;
+        hostRep= 0;
         noShows = 0;
     }
 
@@ -36,8 +36,16 @@ public class Rank {
         ////TODO: Implement this on the activity rankUserActivity and update the database
     }
 
-    public void rankGlobal(){
+    public int getGlobalRep(){
+        return globalRep;
+    }
 
+    public int getHostRep(){
+        return hostRep;
+    }
+
+    public int getNoShows(){
+        return noShows;
     }
 
 
@@ -48,13 +56,13 @@ public class Rank {
         String[] str =rank.split(",",2);
         String[] gRank, hRank;
         gRank = str[0].split(":",2);
-        this.globalRank = parseInt(gRank[1]);
+        this.globalRep = parseInt(gRank[1]);
         hRank = str[1].split(":",2);
-        this.hostRank = parseInt(hRank[1]);
+        this.hostRep = parseInt(hRank[1]);
     }
 
     public String toString(){
-        return "globalRank:"+ globalRank + ",hostRank:" + hostRank;
+        return "globalRank:"+ globalRep + ",hostRank:" + hostRep;
     }
 
 }
