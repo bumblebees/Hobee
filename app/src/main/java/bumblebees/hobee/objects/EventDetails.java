@@ -1,6 +1,7 @@
 package bumblebees.hobee.objects;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class EventDetails {
     private String description;
     private List<PublicUser> users_pending;
     private List<PublicUser> users_accepted;
+    private ArrayList<String> users_unranked;
 
     private Hobby hobby;
 
@@ -157,5 +159,9 @@ public class EventDetails {
         return description;
     }
 
+    public ArrayList<String> getUsers_unranked() {
+        return users_unranked;
+    }
 }
+
 

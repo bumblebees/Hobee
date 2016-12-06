@@ -19,6 +19,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
 
 import bumblebees.hobee.UserProfileActivity;
+import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.User;
 import io.socket.client.Ack;
 import io.socket.client.IO;
@@ -29,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -232,6 +234,34 @@ public class SocketIO {
                 }
         });
     }
+
+    public void sendUserIDArrayAndOpenRankActivity(final String event, final ArrayList<String> userIDList ){
+
+        String userString = "[";
+        for(String str:userIDList)
+        userString = userString + "\"" + str + "\"" + ",";
+
+        userString.substring(0,userString.length()-2);
+        userString.concat("]");
+
+        socket.emit("get_user_array", userString, new Ack() {
+            @Override
+            public void call(Object... objects) {
+                JSONArray usersArray = (JSONArray) objects[userIDList.size()];
+                Intent intent = new Intent();
+                ArrayList<String> users = new ArrayList<String>();
+                if(usersArray != null)
+                    for(int i=0;i<usersArray.length();i++)
+                        try {users.add(usersArray.getString(i));
+                        } catch (JSONException e) {e.printStackTrace();}
+
+                intent.putStringArrayListExtra("users",users);
+                intent.putExtra("event",event);
+                getApplicationContext().startActivity(intent);
+            }
+        });
+    }
+
 
     public void sendRanking(JSONObject ranks){
         socket.emit("save_rank", ranks);

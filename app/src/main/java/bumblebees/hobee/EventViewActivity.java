@@ -29,8 +29,9 @@ import bumblebees.hobee.utilities.SocketIO;
 public class EventViewActivity extends AppCompatActivity {
    TextView eventName, eventDescription, eventLocation, eventDate, eventTime,eventPeople,eventGender, eventAge, eventHostName;
     Gson g;
+    String eventString;
     LinearLayout containerUsers, containerPending;
-
+    Event event;
     Button btnJoinEvent;
 
     @Override
@@ -54,7 +55,8 @@ public class EventViewActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         g = new Gson();
-        final Event event = g.fromJson(intent.getStringExtra("event"), Event.class);
+        eventString = intent.getStringExtra("event");
+        event = g.fromJson(eventString, Event.class);
 
         btnJoinEvent = (Button) findViewById(R.id.btnJoinEvent);
 
@@ -229,4 +231,10 @@ public class EventViewActivity extends AppCompatActivity {
     public void viewUserProfile(String userID){
         SocketIO.getInstance().getUserAndOpenProfile(userID,getApplicationContext());
     }
+
+    public void rankEvent(){
+        SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(eventString, event.getEvent_details().getUsers_unranked());
+    }
+
+
 }
