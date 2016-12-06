@@ -222,22 +222,6 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
 
         return jsonObject;
     }
-/**
-    private JSONObject createJSONFile(String hobbyName) throws Exception{
-        JSONObject jsonObject = new JSONObject();
-        setBasicHobby();
-
-        if (hobbyName == "Football" || hobbyName == "Basketball"){
-            setBallSportHobby();
-        }
-        try {
-            jsonObject.put("someInfo", XX);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
-    }
- */
 
     /*
     * Toast
