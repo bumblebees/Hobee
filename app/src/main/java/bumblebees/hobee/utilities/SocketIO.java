@@ -31,6 +31,7 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -235,7 +236,7 @@ public class SocketIO {
         });
     }
 
-    public void sendUserIDArrayAndOpenRankActivity(final String event, final ArrayList<String> userIDList ){
+    public void sendUserIDArrayAndOpenRankActivity(final String event, final List<String> userIDList ){
 
         String userString = "[";
         for(String str:userIDList)

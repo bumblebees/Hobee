@@ -40,6 +40,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -236,12 +237,15 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         ArrayList<PublicUser> acceptedUsers = new ArrayList<>();
         PublicUser currentUser = Profile.getInstance().getUser().getSimpleUser();
         acceptedUsers.add(currentUser);
+        ArrayList<String> users_unranked = new ArrayList<>();
+        users_unranked.add(Profile.getInstance().getUserID());
+
         try {
             Hobby hobby = new Hobby();
             EventDetails eventDetails = new EventDetails(inputEventName.getText().toString(), hostID, currentUser.getName(),
                     Integer.parseInt(minAge.getText().toString()), Integer.parseInt(maxAge.getText().toString()), inputEventGender.getSelectedItem().toString(),
                     timestamp, Integer.parseInt(inputEventNumber.getText().toString()), inputEventLocation.getText().toString(), inputEventDescription.getText().toString(),
-                    new ArrayList<PublicUser>(), acceptedUsers, hobby);
+                    new ArrayList<PublicUser>(), acceptedUsers, hobby, users_unranked);
 
             Event event = new Event(uuid, eventCategory, String.valueOf(timeCreated), eventDetails, areas.get(spinnerLocation.getSelectedItem().toString()));
 
