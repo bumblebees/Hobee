@@ -238,14 +238,8 @@ public class SocketIO {
 
     public void sendUserIDArrayAndOpenRankActivity(final String event, final List<String> userIDList ){
 
-        String userString = "[";
-        for(String str:userIDList)
-        userString = userString + "\"" + str + "\"" + ",";
-
-        userString.substring(0,userString.length()-2);
-        userString.concat("]");
-
-        socket.emit("get_user_array", userString, new Ack() {
+        Log.d("Getting the user array","");
+        socket.emit("get_user_array", userIDList, new Ack() {
             @Override
             public void call(Object... objects) {
                 JSONArray usersArray = (JSONArray) objects[userIDList.size()];
