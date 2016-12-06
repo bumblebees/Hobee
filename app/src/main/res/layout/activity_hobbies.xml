@@ -12,104 +12,44 @@
     tools:context="bumblebees.hobee.hobbycategories.HobbiesActivity">
 
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/name"
-        android:contentDescription="Name"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="30sp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="13dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <CheckBox
-        android:text="Monday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkBox_monday"
-        android:layout_marginTop="29dp"
-        android:layout_below="@+id/spinner_difficulty_level"
-        android:layout_toRightOf="@+id/textView10"
-        android:layout_toEndOf="@+id/textView10" />
-
     <CheckBox
         android:text="Tuesday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/checkBox_tuesday"
-        android:layout_below="@+id/checkBox_monday"
-        android:layout_alignRight="@+id/textView19"
-        android:layout_alignEnd="@+id/textView19" />
+        android:layout_below="@+id/checkBox_monday" />
 
     <CheckBox
         android:text="Wednesday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/checkBox_wednesday"
-        android:layout_below="@+id/checkBox_tuesday"
-        android:layout_alignRight="@+id/textView19"
-        android:layout_alignEnd="@+id/textView19" />
-
-    <CheckBox
-        android:text="Saturday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkBox_saturday"
-        android:layout_below="@+id/checkBox_friday"
-        android:layout_alignRight="@+id/textView19"
-        android:layout_alignEnd="@+id/textView19" />
+        android:layout_below="@+id/checkBox_tuesday" />
 
     <CheckBox
         android:text="Thursday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/checkBox_thursday"
-        android:layout_below="@+id/checkBox_wednesday"
-        android:layout_alignRight="@+id/textView19"
-        android:layout_alignEnd="@+id/textView19" />
+        android:layout_below="@+id/checkBox_wednesday" />
 
     <CheckBox
         android:text="Friday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/checkBox_friday"
-        android:layout_below="@+id/checkBox_thursday"
-        android:layout_alignRight="@+id/textView20"
-        android:layout_alignEnd="@+id/textView20" />
-
-    <CheckBox
-        android:text="Sunday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkBox_sunday"
-        android:layout_below="@+id/checkBox_saturday"
-        android:layout_alignRight="@+id/textView20"
-        android:layout_alignEnd="@+id/textView20" />
-
-    <Spinner
-        android:text="[Select a Planet...]"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner_difficulty_level"
-        android:layout_below="@+id/name"
-        android:layout_toRightOf="@+id/name"
-        android:layout_toEndOf="@+id/name" />
+        android:layout_below="@+id/checkBox_thursday" />
 
     <TextView
         android:text="Time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView9"
-        android:textSize="18sp"
         android:layout_marginBottom="17dp"
         android:layout_above="@+id/textView7"
         android:layout_alignLeft="@+id/textView7"
-        android:layout_alignStart="@+id/textView7" />
+        android:layout_alignStart="@+id/textView7"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <TextView
         android:text="From"
@@ -119,15 +59,6 @@
         android:layout_alignLeft="@+id/name"
         android:layout_alignStart="@+id/name"
         android:layout_above="@+id/spinner_time_to" />
-
-    <Button
-        android:text="Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button_submit"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -139,30 +70,98 @@
         android:layout_alignStart="@+id/textView7" />
 
     <TextView
-        android:text="Difficulty Level"
-        android:textSize="16sp"
+        android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/checkBox_monday"
-        android:layout_alignLeft="@+id/name"
-        android:layout_alignStart="@+id/name" />
+        android:id="@+id/name"
+        android:contentDescription="Name"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="30sp" />
+
+    <TextView
+        android:text="Day"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView11"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/spinner_difficulty_level"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_difficulty_level"
+        android:layout_below="@+id/name"
+        android:layout_alignLeft="@+id/button_submit"
+        android:layout_alignStart="@+id/button_submit"
+        android:layout_marginLeft="22dp"
+        android:layout_marginStart="22dp" />
+
+    <CheckBox
+        android:text="Sunday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_sunday"
+        android:layout_below="@+id/checkBox_saturday"
+        android:layout_toRightOf="@+id/button_submit"
+        android:layout_toEndOf="@+id/button_submit" />
+
+    <CheckBox
+        android:text="Saturday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_saturday"
+        android:layout_above="@+id/checkBox_tuesday"
+        android:layout_alignLeft="@+id/checkBox_sunday"
+        android:layout_alignStart="@+id/checkBox_sunday" />
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/spinner_time_from"
-        android:layout_marginTop="59dp"
-        android:layout_below="@+id/checkBox_sunday"
-        android:layout_toRightOf="@+id/checkBox_tuesday"
-        android:layout_toEndOf="@+id/checkBox_tuesday" />
+        android:layout_marginTop="66dp"
+        android:layout_below="@+id/checkBox_friday"
+        android:layout_toRightOf="@+id/checkBox_friday"
+        android:layout_toEndOf="@+id/checkBox_friday" />
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/spinner_time_to"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="19dp"
         android:layout_below="@+id/spinner_time_from"
         android:layout_alignLeft="@+id/spinner_time_from"
         android:layout_alignStart="@+id/spinner_time_from" />
+
+    <Button
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_submit"
+        android:layout_marginBottom="37dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <CheckBox
+        android:text="Monday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox_monday"
+        android:layout_marginTop="10dp"
+        android:textSize="14sp"
+        android:layout_below="@+id/textView11"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Difficulty Level"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView11"
+        android:layout_alignRight="@+id/name"
+        android:layout_alignEnd="@+id/name" />
 
 </RelativeLayout>

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/tools">
     <string name="app_name">Hobee</string>
     <string name="facebook_app_id">1176322032414631</string>
     <string name="male">male</string>

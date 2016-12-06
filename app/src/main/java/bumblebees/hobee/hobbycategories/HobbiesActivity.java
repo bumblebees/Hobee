@@ -265,5 +265,8 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
             }
         });
     }
+
+
+
 }
 
