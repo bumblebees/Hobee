@@ -3,6 +3,7 @@ package bumblebees.hobee.objects;
 import java.security.Timestamp;
 import java.util.UUID;
 
+import bumblebees.hobee.utilities.Profile;
 
 
 public class Event {
@@ -75,6 +76,12 @@ public class Event {
         result = 31 * result + (timestamp != null ? timestamp.hashCode() : 0);
         return result;
     }
+
+    public boolean isCurrentUserHost(){
+        if (event_details.getHost_id() == Profile.getInstance().getUserID()) return true;
+        return false;
+    }
+
 }
 
 

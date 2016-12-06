@@ -251,4 +251,8 @@ public class SocketIO {
                 }
         });
     }
+
+    public void sendRanking(JSONObject ranks){
+        socket.emit("save_rank", ranks);
+    }
 }
