@@ -24,6 +24,7 @@ import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -189,26 +190,6 @@ public class SocketIO {
         packageContext.startActivity(intent);
     }
 
-//    public void sendImage(String userId, String imageString){
-//
-//        final JSONObject userImage = new JSONObject();
-//        try {
-//            userImage.put("userId", userId);
-//            userImage.put("imageString", imageString);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-//            @Override
-//            public void call(Object... objects) {
-//                socket.emit("save_image", userImage);
-//                socket.disconnect();
-//            }
-//        });
-//        socket.connect();
-//    }
-
 
     /**
      * Get user data from database and save it to user class
@@ -250,5 +231,9 @@ public class SocketIO {
                 context.startActivity(intent);
                 }
         });
+    }
+
+    public void sendRanking(JSONObject ranks){
+        socket.emit("save_rank", ranks);
     }
 }
