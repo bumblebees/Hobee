@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import bumblebees.hobee.HobbyActivity;
 import bumblebees.hobee.HomeActivity;
+import bumblebees.hobee.RankUserActivity;
 import bumblebees.hobee.RegisterUserActivity;
 
 import com.facebook.AccessToken;
@@ -227,6 +228,7 @@ public class SocketIO {
                 Intent intent = new Intent(context, UserProfileActivity.class);
                 if(userJSON != null) {
                     User user = gson.fromJson(String.valueOf(userJSON), User.class);
+
                     intent.putExtra("User",gson.toJson(user));
                 }
 
@@ -236,23 +238,24 @@ public class SocketIO {
         });
     }
 
-    public void sendUserIDArrayAndOpenRankActivity(final String event, final List<String> userIDList ){
+    public void sendUserIDArrayAndOpenRankActivity(final String event, final List<String> userIDList , final Context context){
 
         Log.d("Getting the user array","");
         socket.emit("get_user_array", userIDList, new Ack() {
             @Override
             public void call(Object... objects) {
-                JSONArray usersArray = (JSONArray) objects[userIDList.size()];
-                Intent intent = new Intent();
+                JSONArray usersArray = (JSONArray) objects[0];
+
                 ArrayList<String> users = new ArrayList<String>();
                 if(usersArray != null)
                     for(int i=0;i<usersArray.length();i++)
                         try {users.add(usersArray.getString(i));
                         } catch (JSONException e) {e.printStackTrace();}
-
-                intent.putStringArrayListExtra("users",users);
+                Intent intent = new Intent(context, RankUserActivity.class);
+                intent.putStringArrayListExtra("userList",users);
                 intent.putExtra("event",event);
-                getApplicationContext().startActivity(intent);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
             }
         });
     }
