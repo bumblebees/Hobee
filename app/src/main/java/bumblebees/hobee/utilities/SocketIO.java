@@ -18,7 +18,11 @@ import com.facebook.GraphResponse;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
 
+
 import bumblebees.hobee.UserProfileActivity;
+
+import bumblebees.hobee.hobbycategories.HobbyCategoryListActivity;
+
 import bumblebees.hobee.objects.User;
 import io.socket.client.Ack;
 import io.socket.client.IO;
@@ -184,7 +188,7 @@ public class SocketIO {
         socket.emit("save_image", userImage);
         socket.emit("register_user", gson.toJson(user));
 
-        Intent intent = new Intent(packageContext, HobbyActivity.class);
+        Intent intent = new Intent(packageContext, HobbyCategoryListActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);
     }

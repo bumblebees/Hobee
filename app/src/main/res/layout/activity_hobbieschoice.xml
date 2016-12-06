@@ -4,111 +4,145 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffe36b"
+    android:background="#fff8d2"
     android:orientation="vertical"
     android:weightSum="1">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="137dp"
+        android:layout_height="30dp"
         android:layout_weight="0.07">
 
-        <ImageButton
+        <ImageView
+            app:srcCompat="@drawable/choosehobbies"
+            android:id="@+id/imageView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 
-            app:srcCompat="@drawable/computergames"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_weight="0.13">
+
+        <ImageButton
+            app:srcCompat="@drawable/sportsy"
             android:id="@+id/hobby1"
-            android:layout_width="166dp"
-            android:layout_height="120dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:scaleType="fitCenter"
             android:layout_weight="0.12"
+            android:background="#0000"
+            android:layout_marginRight="182dp"
+            android:layout_marginEnd="182dp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:background="#0000"/>
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
         <ImageButton
-            app:srcCompat="@drawable/music"
+            app:srcCompat="@drawable/outdoors"
             android:id="@+id/hobby2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="fitCenter"
             android:layout_weight="0.12"
-            android:layout_marginLeft="182dp"
-            android:layout_marginStart="182dp"
+            android:background="#0000"
+            android:layout_marginLeft="184dp"
+            android:layout_marginStart="184dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:background="#0000"/>
+            android:layout_alignParentStart="true"/>
 
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="148dp">
+        android:layout_height="120dp"
+        android:layout_weight="0.13">
 
         <ImageButton
-            app:srcCompat="@drawable/outdoors"
+            app:srcCompat="@drawable/music"
             android:id="@+id/hobby3"
-            android:layout_width="166dp"
-            android:layout_height="120dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:scaleType="fitCenter"
             android:layout_weight="0.12"
+            android:background="#0000"
+            android:layout_marginRight="182dp"
+            android:layout_marginEnd="182dp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:background="#0000"/>
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
         <ImageButton
-
-            app:srcCompat="@drawable/cooking"
+            app:srcCompat="@drawable/crafts"
             android:id="@+id/hobby4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="fitCenter"
             android:layout_weight="0.12"
-            android:layout_marginLeft="17dp"
-            android:layout_marginStart="17dp"
+            android:background="#0000"
+            android:layout_marginLeft="184dp"
+            android:layout_marginStart="184dp"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/hobby3"
-            android:layout_toEndOf="@+id/hobby3"
-            android:background="#0000"/>
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
 
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="361dp"
-        android:layout_height="120dp"
-        android:layout_weight="0.41">
-
-        <ImageButton
-            app:srcCompat="@drawable/sport"
-            android:id="@+id/hobby5"
-            android:layout_width="166dp"
-            android:layout_height="120dp"
-            android:scaleType="fitCenter"
-            android:layout_weight="0.12"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
-            android:background="#0000"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="37dp"
-        android:layout_weight="0.40">
+        android:layout_height="120dp"
+        android:layout_weight="0.13">
 
         <ImageButton
-
-            app:srcCompat="@drawable/show_profile"
-            android:id="@+id/showProfile"
-
-            android:layout_width="200dp"
-            android:layout_height="100dp"
+            app:srcCompat="@drawable/culinary"
+            android:id="@+id/hobby5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:scaleType="fitCenter"
+            android:layout_weight="0.12"
+            android:background="#0000"
+            android:layout_marginRight="182dp"
+            android:layout_marginEnd="182dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <ImageButton
+            app:srcCompat="@drawable/boardgames"
+            android:id="@+id/hobby6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:layout_weight="0.12"
+            android:background="#0000"
+            android:layout_marginLeft="184dp"
+            android:layout_marginStart="184dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="27dp"
+        android:layout_weight="0.22">
+
+        <ImageButton
+            app:srcCompat="@drawable/imdone"
+            android:id="@+id/showProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:layout_weight="0.12"
+            android:background="#0000"
+            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:background="#0000"/>
+            android:layout_marginTop="23dp" />
     </RelativeLayout>
 
 </LinearLayout>
