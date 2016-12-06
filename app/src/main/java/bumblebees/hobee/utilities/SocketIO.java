@@ -245,12 +245,14 @@ public class SocketIO {
             @Override
             public void call(Object... objects) {
                 JSONArray usersArray = (JSONArray) objects[0];
-
+                System.out.println(objects[0]);
                 ArrayList<String> users = new ArrayList<String>();
                 if(usersArray != null)
                     for(int i=0;i<usersArray.length();i++)
                         try {users.add(usersArray.getString(i));
                         } catch (JSONException e) {e.printStackTrace();}
+
+
                 Intent intent = new Intent(context, RankUserActivity.class);
                 intent.putStringArrayListExtra("userList",users);
                 intent.putExtra("event",event);
@@ -262,6 +264,7 @@ public class SocketIO {
 
 
     public void sendRanking(JSONObject ranks){
-        socket.emit("save_rank", ranks);
+        System.out.println(ranks.toString());
+        socket.emit("save_ranks", ranks);
     }
 }

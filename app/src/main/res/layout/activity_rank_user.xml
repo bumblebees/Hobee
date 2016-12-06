@@ -29,8 +29,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/bttnDone"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:onClick="sendRanks"/>
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 

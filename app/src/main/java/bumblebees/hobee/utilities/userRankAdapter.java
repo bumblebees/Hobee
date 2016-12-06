@@ -26,7 +26,7 @@ public class UserRankAdapter extends BaseAdapter {
     private ArrayList<String> userStringList;
     private ArrayList<User> userList = new ArrayList<>();
     private Gson gson = new Gson();
-    private String[][] ranks = new String[userList.size()][3];
+    private String[][] ranks = new String[userList.size()+1][3];
     private int repMultiplier = 150;
     private Boolean isHost = false;
 

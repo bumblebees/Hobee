@@ -3,6 +3,8 @@ package bumblebees.hobee;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -43,35 +45,45 @@ public class RankUserActivity extends AppCompatActivity {
 
         usersList.setAdapter(new UserRankAdapter(this,users, event));
         adapter = (UserRankAdapter) usersList.getAdapter();
+
+        buttonDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendRanks();
+            }
+        });
     }
 
-    private void sendRanks() throws JSONException {
+
+    private void sendRanks()  {
         String[][] ranks = adapter.getRanks();
         Boolean hasranked = false;
-
+        JSONObject rankingMessage = new JSONObject();
         JSONArray parent = new JSONArray();
 
         //Create two dimmentional array with JSON objects
-
-            for (int j = 0; j < users.size(); j++) {
-                JSONArray child = new JSONArray();
-                for (int i = 0; i < 3; i++) {
-                    if (!hasranked)
-                        if (i > 0)
-                            if (Integer.parseInt(ranks[j][i]) != 0)
-                                hasranked = true;
-                    child.put(i, ranks[j][i]);
+            try {
+                for (int j = 0; j < users.size(); j++) {
+                    JSONArray child = new JSONArray();
+                    for (int i = 0; i < 3; i++) {
+                        if (!hasranked)
+                            if (i > 0)
+                                if (Integer.parseInt(ranks[j][i]) != 0)
+                                    hasranked = true;
+                        child.put(i, ranks[j][i]);
+                    }
+                    parent.put(j, child);
                 }
-                parent.put(j, child);
+
+
+                rankingMessage.put("hasRanked", hasranked);
+                rankingMessage.put("userID", Profile.getInstance().getUserID());
+                rankingMessage.put("eventID", event.getEventID());
+                rankingMessage.put("hostRep", ranks[0][1]);
+                rankingMessage.put("userReps", parent);
             }
-
-        JSONObject rankingMessage = new JSONObject();
-        rankingMessage.put("hasRanked",hasranked);
-        rankingMessage.put("userID",Profile.getInstance().getUserID());
-        rankingMessage.put("eventID",event.getEventID());
-        rankingMessage.put("hostRep", ranks[0][1]);
-        rankingMessage.put("userReps",parent);
-
+            catch (JSONException e){
+                Log.d("Json" , e.toString());}
         SocketIO.getInstance().sendRanking(rankingMessage);
         showHomeActivity();
     }
