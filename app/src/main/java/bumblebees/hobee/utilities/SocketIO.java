@@ -257,7 +257,7 @@ public class SocketIO {
         });
     }
 
-    public void addHobbyToUser(User user, Hobby hobby){
+    public void addHobbyToUser(Hobby hobby){
         JSONObject newHobby = new JSONObject();
         try {
             newHobby.put("hobby_name", hobby.getName());

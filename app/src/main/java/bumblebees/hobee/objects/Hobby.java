@@ -3,6 +3,9 @@ package bumblebees.hobee.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A class to represent a hobby.
  * All specific hobbies must extend this class,
@@ -13,7 +16,7 @@ public class Hobby implements Parcelable {
     private double id;
     private String name;
     private String difficultyLevel;
-    private String datePreference;
+    private List<String> datePreference = new ArrayList<>();
     private String timeFrom;
     private String timeTo;
 
@@ -46,7 +49,8 @@ public class Hobby implements Parcelable {
     }
 
     public void setDatePreference(String datePreference){
-        this.datePreference = datePreference;
+
+        this.datePreference.add(datePreference);
     }
 
     public void setTimeFrom(String timeFrom){
@@ -69,7 +73,7 @@ public class Hobby implements Parcelable {
         return difficultyLevel;
     }
 
-    public String getDatePreference(){
+    public List<String> getDatePreference(){
         return datePreference;
     }
 

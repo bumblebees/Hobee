@@ -25,6 +25,7 @@ import bumblebees.hobee.R;
 import bumblebees.hobee.jsonparser.JSONParser;
 import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.utilities.Profile;
+import bumblebees.hobee.utilities.SocketIO;
 
 import static android.R.id.list;
 
@@ -64,6 +65,12 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         textView.setTypeface(face);
 
         submitBtn = (Button) findViewById(R.id.button_submit);
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                setHobby();
+                SocketIO.getInstance().addHobbyToUser(hobby);
+            }
+        });
 
         // Spinner element
         spinnerDifficultyLevel = (Spinner) findViewById(R.id.spinner_difficulty_level);
@@ -138,31 +145,40 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
 
         switch(view.getId()) {
             case R.id.checkBox_monday:
-                checkList.add(checkBoxMonday.getTag().toString());
+                hobby.setDatePreference(checkBoxMonday.getTag().toString());
+                //checkList.add(checkBoxMonday.getTag().toString());
                 break;
 
             case R.id.checkBox_tuesday:
-                checkList.add(checkBoxTuesday.getTag().toString());
+                hobby.setDatePreference(checkBoxTuesday.getTag().toString());
+
+                //checkList.add(checkBoxTuesday.getTag().toString());
                 break;
 
             case R.id.checkBox_wednesday:
-                checkList.add(checkBoxWednesday.getTag().toString());
+                hobby.setDatePreference(checkBoxWednesday.getTag().toString());
+
+                //checkList.add(checkBoxWednesday.getTag().toString());
                 break;
 
             case R.id.checkBox_thursday:
-                checkList.add(checkBoxThursday.getTag().toString());
+                hobby.setDatePreference(checkBoxThursday.getTag().toString());
+                //checkList.add(checkBoxThursday.getTag().toString());
                 break;
 
             case R.id.checkBox_friday:
-                checkList.add(checkBoxFriday.getTag().toString());
+                hobby.setDatePreference(checkBoxFriday.getTag().toString());
+                //checkList.add(checkBoxFriday.getTag().toString());
                 break;
 
             case R.id.checkBox_saturday:
-                checkList.add(checkBoxSaturday.getTag().toString());
+                hobby.setDatePreference(checkBoxSaturday.getTag().toString());
+                //checkList.add(checkBoxSaturday.getTag().toString());
                 break;
 
             case R.id.checkBox_sunday:
-                checkList.add(checkBoxSunday.getTag().toString());
+                hobby.setDatePreference(checkBoxSunday.getTag().toString());
+                //checkList.add(checkBoxSunday.getTag().toString());
                 break;
         }
     }
@@ -172,55 +188,10 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         return hobby;
     }
 
-    private void setBasicHobby(){
-        hobby.setDifficultyLevel("userInput");
-        hobby.setDatePreference("userInput");
-        hobby.setTimePreference("userInput");
-    }
-
-    private void setBallSportHobby(){
-
-    }
-
-    public JSONObject createJsonObject(){
-        JSONObject jsonObject = new JSONObject();
-        try {
-            JSONArray jsonArray = new JSONArray();
-
-            jsonArray.put(spinnerDifficultyLevel.getSelectedItem().toString());
-
-            if (checkBoxMonday.isChecked()) {
-                jsonArray.put(checkBoxMonday.getText().toString());
-            }
-            if (checkBoxTuesday.isChecked()) {
-                jsonArray.put(checkBoxTuesday.getText().toString());
-            }
-            if (checkBoxWednesday.isChecked()) {
-                jsonArray.put(checkBoxWednesday.getText().toString());
-            }
-            if (checkBoxThursday.isChecked()) {
-                jsonArray.put(checkBoxThursday.getText().toString());
-            }
-            if (checkBoxFriday.isChecked()) {
-                jsonArray.put(checkBoxFriday.getText().toString());
-            }
-            if (checkBoxSaturday.isChecked()) {
-                jsonArray.put(checkBoxSaturday.getText().toString());
-            }
-            if (checkBoxSunday.isChecked()) {
-                jsonArray.put(checkBoxSaturday.getText().toString());
-            }
-
-            jsonArray.put(spinnerTimeFrom.getSelectedItem().toString());
-            jsonArray.put(spinnerTimeTo.getSelectedItem().toString());
-
-            jsonObject.put("hobbies", jsonArray);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return jsonObject;
+    private void setHobby(){
+        hobby.setDifficultyLevel(spinnerDifficultyLevel.getSelectedItem().toString());
+        hobby.setTimeFrom(spinnerTimeFrom.getSelectedItem().toString());
+        hobby.setTimeTo(spinnerTimeTo.getSelectedItem().toString());
     }
 
     /*
@@ -243,9 +214,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                for (String str : checkList) {
-                    //here goes the saving to JSON
-                }
+
             }
         });
     }
