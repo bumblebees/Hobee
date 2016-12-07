@@ -9,6 +9,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import bumblebees.hobee.objects.Event;
+import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.User;
 
 public class Profile{
@@ -147,11 +148,23 @@ public class Profile{
                 return false;
             }
         }
-
-        //TODO: check hobbies as well
+        matchDayOfWeek(event);
 
         return true;
     }
+
+    private boolean matchDayOfWeek(Event event) {
+        for (Hobby hobby : user.getHobbies()) {
+            for (String day : hobby.getDatePreference()) {
+                if (day.equals(event.getEvent_details().getDayOfTheWeek())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    
 
     public ArrayList<Event> getAcceptedEvents() {
         return acceptedEvents;
