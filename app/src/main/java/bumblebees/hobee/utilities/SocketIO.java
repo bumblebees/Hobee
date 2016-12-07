@@ -245,7 +245,6 @@ public class SocketIO {
             @Override
             public void call(Object... objects) {
                 JSONArray usersArray = (JSONArray) objects[0];
-                System.out.println(objects[0]);
                 ArrayList<String> users = new ArrayList<String>();
                 if(usersArray != null)
                     for(int i=0;i<usersArray.length();i++)

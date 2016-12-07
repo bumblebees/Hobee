@@ -70,13 +70,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textHost"
-            android:layout_marginRight="30dp"
-            android:layout_marginEnd="30dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"
             android:layout_alignBaseline="@+id/noShow"
             android:layout_alignBottom="@+id/noShow"
-            android:layout_alignRight="@+id/seekBar"
-            android:layout_alignEnd="@+id/seekBar" />
+            android:layout_toLeftOf="@+id/noShow"
+            android:layout_toStartOf="@+id/noShow" />
 
     </RelativeLayout>
 </TableRow>

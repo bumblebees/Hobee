@@ -78,7 +78,7 @@ public class Event {
     }
 
     public boolean isCurrentUserHost(){
-        if (event_details.getHost_id() == Profile.getInstance().getUserID()) return true;
+        if (event_details.getHost_id().equals(Profile.getInstance().getUserID())) return true;
         return false;
     }
 

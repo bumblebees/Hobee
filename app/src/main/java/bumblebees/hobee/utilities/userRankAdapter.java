@@ -39,16 +39,18 @@ public class UserRankAdapter extends BaseAdapter {
 
 
         for (String str : userStringList) {
-            Log.d("user", str);
             User user = gson.fromJson(str, User.class);
-
             //If the user to be added to the list is the host, put him first
-            if(user.getUserID() == event.getEvent_details().getHost_id()){
+            if(!user.getUserID().equals(Profile.getInstance().getUserID()))
+                userList.add(user);
+
+            if(user.getUserID().equals(event.getEvent_details().getHost_id())){
+                Log.d("User is host",user.toString());
                 User userTemp = userList.get(0);
                 userList.set(0,user);
-                user = userTemp;
+                userList.add(userTemp);
             }
-            userList.add(user);
+
             ranks = new String[userList.size()+1][3];
         }
 
@@ -76,11 +78,7 @@ public class UserRankAdapter extends BaseAdapter {
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View row = inflater.inflate(R.layout.user_rank_item, viewGroup, false);
 
-        //So you don't rank yourself
-        if (!userList.get(i).getUserID().equals(Profile.getInstance().getUserID())) {
-
-
-            ////TODO implement images
+             ////TODO implement images
             ImageView userImage = (ImageView) row.findViewById(R.id.userImage);
 
             final TextView numberView = (TextView) row.findViewById(R.id.numberView);
@@ -143,12 +141,7 @@ public class UserRankAdapter extends BaseAdapter {
              */
 
             return row;
-        }
-            ranks[i][0] = userList.get(i).getUserID();
-            ranks[i][1] = "0";
-            ranks[i][2] = "false";
-            row.setVisibility(View.GONE);
-        return row;
+
     }
     public String[][] getRanks() {
         return ranks;
