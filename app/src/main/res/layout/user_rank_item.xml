@@ -15,28 +15,6 @@
             android:layout_height="128dp" />
 
         <TextView
-            android:text="Jose Luis Cardenas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
-            android:id="@+id/userName"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/userImage"
-            android:layout_toEndOf="@+id/userImage" />
-
-        <SeekBar
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_below="@+id/userName"
-            android:layout_marginTop="25dp"
-            android:id="@+id/seekBar"
-            android:layout_toRightOf="@+id/userImage"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:max="6"/>
-
-        <TextView
             android:text="0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,6 +25,56 @@
             android:layout_toEndOf="@+id/userImage"
             android:layout_marginLeft="97dp"
             android:layout_marginStart="97dp" />
+
+        <CheckBox
+            android:text="No show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/noShow"
+            android:layout_below="@+id/userName"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:text="Jose Luis Cardenas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/userName"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/userImage"
+            android:layout_toEndOf="@+id/userImage" />
+
+        <TextView
+            android:text="Your rank:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView16"
+            android:layout_alignBaseline="@+id/numberView"
+            android:layout_alignBottom="@+id/numberView"
+            android:layout_centerHorizontal="true" />
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:id="@+id/seekBar"
+            android:max="6"
+            android:layout_below="@+id/noShow"
+            android:layout_alignRight="@+id/userName"
+            android:layout_alignEnd="@+id/userName"
+            android:layout_toRightOf="@+id/userImage"
+            android:layout_toEndOf="@+id/userImage" />
+
+        <TextView
+            android:text="HOST"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textHost"
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            android:layout_alignBaseline="@+id/noShow"
+            android:layout_alignBottom="@+id/noShow"
+            android:layout_toLeftOf="@+id/noShow"
+            android:layout_toStartOf="@+id/noShow" />
 
     </RelativeLayout>
 </TableRow>
