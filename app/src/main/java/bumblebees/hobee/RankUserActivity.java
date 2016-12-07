@@ -66,11 +66,14 @@ public class RankUserActivity extends AppCompatActivity {
                 for (int j = 0; j < users.size(); j++) {
                     JSONArray child = new JSONArray();
                     for (int i = 0; i < 3; i++) {
-                        if (!hasranked)
-                            if (i > 0)
+                        if(i==0) child.put(i, ranks[j][i]);
+                        if (i == 1){
+                            child.put(i, Integer.parseInt(ranks[j][i]));
+                            if (!hasranked)
                                 if (Integer.parseInt(ranks[j][i]) != 0)
                                     hasranked = true;
-                        child.put(i, ranks[j][i]);
+                        }
+                        if(i==2) child.put(i,Boolean.parseBoolean(ranks[j][i]));
                     }
                     parent.put(j, child);
                 }
@@ -79,7 +82,7 @@ public class RankUserActivity extends AppCompatActivity {
                 rankingMessage.put("hasRanked", hasranked);
                 rankingMessage.put("userID", Profile.getInstance().getUserID());
                 rankingMessage.put("eventID", event.getEventID());
-                rankingMessage.put("hostRep", ranks[0][1]);
+                rankingMessage.put("hostRep", Integer.parseInt(ranks[0][1]));
                 rankingMessage.put("userReps", parent);
             }
             catch (JSONException e){

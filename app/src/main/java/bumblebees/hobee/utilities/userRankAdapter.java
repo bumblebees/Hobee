@@ -26,7 +26,7 @@ public class UserRankAdapter extends BaseAdapter {
     private ArrayList<String> userStringList;
     private ArrayList<User> userList = new ArrayList<>();
     private Gson gson = new Gson();
-    private String[][] ranks = new String[userList.size()+1][3];
+    private String[][] ranks;
     private int repMultiplier = 150;
     private Boolean isHost = false;
 
@@ -49,6 +49,7 @@ public class UserRankAdapter extends BaseAdapter {
                 user = userTemp;
             }
             userList.add(user);
+            ranks = new String[userList.size()+1][3];
         }
 
     }
@@ -143,6 +144,9 @@ public class UserRankAdapter extends BaseAdapter {
 
             return row;
         }
+            ranks[i][0] = userList.get(i).getUserID();
+            ranks[i][1] = "0";
+            ranks[i][2] = "false";
             row.setVisibility(View.GONE);
         return row;
     }
