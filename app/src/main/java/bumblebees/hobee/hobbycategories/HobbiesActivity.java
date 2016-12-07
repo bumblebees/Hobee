@@ -1,5 +1,6 @@
 package bumblebees.hobee.hobbycategories;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -69,6 +70,8 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
             public void onClick(View v) {
                 setHobby();
                 SocketIO.getInstance().addHobbyToUser(hobby);
+                Intent intent = new Intent(HobbiesActivity.this, HobbiesChoiceActivity.class);
+                HobbiesActivity.this.startActivity(intent);
             }
         });
 
