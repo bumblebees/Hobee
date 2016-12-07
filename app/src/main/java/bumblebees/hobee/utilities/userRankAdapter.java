@@ -2,6 +2,7 @@ package bumblebees.hobee.utilities;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +14,13 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+
 import bumblebees.hobee.R;
+import bumblebees.hobee.UserProfileActivity;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.User;
 
@@ -40,16 +44,21 @@ public class UserRankAdapter extends BaseAdapter {
 
         for (String str : userStringList) {
             User user = gson.fromJson(str, User.class);
-            //If the user to be added to the list is the host, put him first
-            if(!user.getUserID().equals(Profile.getInstance().getUserID()))
+            //If the user to be added to the list is the local user and he is not the host
+            if(!user.getUserID().equals(Profile.getInstance().getUserID()) && !((user.getUserID().equals(event.getEvent_details().getHost_id()))))
                 userList.add(user);
 
+            //If the user being added to the list is the host
             if(user.getUserID().equals(event.getEvent_details().getHost_id())){
-                Log.d("User is host",user.toString());
-                User userTemp = userList.get(0);
-                userList.set(0,user);
-                userList.add(userTemp);
-            }
+                User userTemp = null;
+                if(userList.size()>0){
+                    userTemp = userList.get(0);
+                    userList.set(0,user);
+                    userList.add(userTemp);
+                }
+                else{ userList.add(user);}
+
+                }
 
             ranks = new String[userList.size()+1][3];
         }
@@ -78,8 +87,9 @@ public class UserRankAdapter extends BaseAdapter {
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View row = inflater.inflate(R.layout.user_rank_item, viewGroup, false);
 
-             ////TODO implement images
             ImageView userImage = (ImageView) row.findViewById(R.id.userImage);
+            if(userList.get(i) != null)
+            Picasso.with(context).load(userList.get(i).getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
 
             final TextView numberView = (TextView) row.findViewById(R.id.numberView);
 
@@ -120,9 +130,7 @@ public class UserRankAdapter extends BaseAdapter {
                     }
                 }
             });
-
-
-
+            //Default values for rank if user decides to not rank current view
             ranks[i][0] = userList.get(i).getUserID();
             ranks[i][1] = "0";
             ranks[i][2] = "false";
@@ -147,13 +155,19 @@ public class UserRankAdapter extends BaseAdapter {
 
             ////TODO Implement onClickListeners so that you can see the user's profile
 
-            /** userImage.setOnClickListener( new View.OnClickListener() {
+            userImage.setOnClickListener( new View.OnClickListener() {
             @Override public void onClick(View v) {
             //Open user profile
-            Intent intent = new Intent();
+            Intent intent = new Intent(context, UserProfileActivity.class);
+                intent.putExtra("User",gson.toJson(userList.get(i)).toString());
+                context.startActivity(intent);
             }
             });;
-             */
+
+            if(userList.get(i).getUserID().equals(Profile.getInstance().getUserID())){
+                seekBar.setEnabled(false);
+                noShow.setEnabled(false);
+            }
 
             return row;
 
