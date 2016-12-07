@@ -48,7 +48,7 @@ public class UserRankAdapter extends BaseAdapter {
             if(!user.getUserID().equals(Profile.getInstance().getUserID()) && !((user.getUserID().equals(event.getEvent_details().getHost_id()))))
                 userList.add(user);
 
-            //If the user being added to the list is the host
+            //If the user being added to the ..list is the host
             if(user.getUserID().equals(event.getEvent_details().getHost_id())){
                 User userTemp = null;
                 if(userList.size()>0){
