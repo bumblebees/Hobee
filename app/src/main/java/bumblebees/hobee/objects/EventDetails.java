@@ -1,5 +1,10 @@
 package bumblebees.hobee.objects;
 
+import com.google.gson.Gson;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -161,8 +166,19 @@ public class EventDetails {
         return description;
     }
 
-    public List<String> getUsers_unranked() {
-        return users_unranked;
+    public JSONObject getUsers_unranked() {
+        JSONArray jsonArray = new JSONArray();
+        for (int i=0; i < users_unranked.size(); i++){
+            jsonArray.put(users_unranked.get(i));
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.putOpt("array", jsonArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }
 

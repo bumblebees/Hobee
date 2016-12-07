@@ -7,3 +7,17 @@
 /captures
 .externalNativeBuild
 /app/google-services.json
+/android/
+android/.arcconfig
+android/.gitignore
+android/app/.gitignore
+android/app/build.gradle
+android/app/proguard-rules.pro
+android/app/src/
+android/build.gradle
+android/gradle.properties
+android/gradle/
+android/gradlew
+android/gradlew.bat
+android/settings.gradle
+gen/

@@ -238,7 +238,7 @@ public class SocketIO {
         });
     }
 
-    public void sendUserIDArrayAndOpenRankActivity(final String event, final List<String> userIDList , final Context context){
+    public void sendUserIDArrayAndOpenRankActivity(final String event, final JSONObject userIDList , final Context context){
 
         Log.d("Getting the user array","");
         socket.emit("get_user_array", userIDList, new Ack() {
