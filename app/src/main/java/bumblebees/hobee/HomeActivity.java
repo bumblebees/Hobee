@@ -31,8 +31,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import bumblebees.hobee.fragments.FragmentAdapter;
+import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.utilities.*;
 import com.facebook.login.LoginManager;
@@ -64,15 +64,16 @@ public class HomeActivity extends AppCompatActivity {
     ListView drawerList;
     TabLayout tabLayout;
     ViewPager viewPager;
-
+    Button hobbyChange;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
+        session = new SessionManager(getApplicationContext());
+
 
         FragmentAdapter tabAdapter = new FragmentAdapter(getSupportFragmentManager());
         viewPager.setAdapter(tabAdapter);
@@ -296,7 +297,6 @@ public class HomeActivity extends AppCompatActivity {
                                 //check if the user's preferences match the event and if the user is not already a member of it
                                 if(event.getEvent_details().getHost_id().equals(Profile.getInstance().getUserID())){
                                     //user is the host
-                                    Log.d("evFrag", "we are here");
                                     Profile.getInstance().addHostedEvent(event);
                                 }
                                 else if(event.getEvent_details().getUsers_pending().contains(Profile.getInstance().getUser().getSimpleUser())){
@@ -322,7 +322,6 @@ public class HomeActivity extends AppCompatActivity {
                                 }
                                 else{
                                     //drop it
-                                    Log.d("eventFrag", "event dropped");
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

@@ -29,6 +29,7 @@ public class UserProfileActivity extends AppCompatActivity {
         String extra = getIntent().getStringExtra("User");
 
         userName = (TextView) findViewById(R.id.userName);
+
         userAge = (TextView) findViewById(R.id.userAge);
         userGender = (ImageView) findViewById(R.id.userGender);
         //userDateSince = (TextView) findViewById(R.id.userDateSince);
@@ -57,7 +58,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
         }
 
-        // If user wants to see someone else's profile
 
         else {
             user = gson.fromJson(getIntent().getStringExtra("User"), User.class);

@@ -19,8 +19,10 @@ public class HobbyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hobbieschoice);
 
-        showProfile = (ImageButton) findViewById(R.id.showProfile);
-        showSports = (ImageButton) findViewById(R.id.hobby5);
+        final String userID = this.getIntent().getStringExtra("user_ID");
+
+        showProfile = (ImageButton)findViewById(R.id.showProfile);
+        showSports = (ImageButton)findViewById(R.id.hobby1);
 
         showProfile.setOnClickListener(new View.OnClickListener() {
             @Override

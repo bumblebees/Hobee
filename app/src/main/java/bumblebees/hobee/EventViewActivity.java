@@ -3,6 +3,7 @@ package bumblebees.hobee;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,10 +16,20 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import bumblebees.hobee.fragments.CancelEventDialogFragment;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.PublicUser;
 import bumblebees.hobee.utilities.MQTT;
@@ -62,14 +73,17 @@ public class EventViewActivity extends AppCompatActivity {
 
 
         //check if the user is also the host of the event
-        //if so, disable the join button and show the list of pending users
-        Log.d("event", Profile.getInstance().getUserID());
-        Log.d("event", event.getEvent_details().getHost_id());
-
+        //if so, turn the button into one that cancels the event
         if(event.getEvent_details().getHost_id().equals(Profile.getInstance().getUserID())){
-            btnJoinEvent.setText("Event host");
-            btnJoinEvent.setEnabled(false);
+            btnJoinEvent.setText("Host: cancel event");
+            //btnJoinEvent.setEnabled(false);
 
+            btnJoinEvent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    cancelEvent(event);
+                }
+            });
 
             containerPending.setVisibility(View.VISIBLE);
 
@@ -223,6 +237,21 @@ public class EventViewActivity extends AppCompatActivity {
         message.setRetained(true);
         message.setQos(1);
         MQTT.getInstance().publishMessage(topic, message);
+
+    }
+
+    /**
+     * Cancels the current event.
+     * @param event - current event
+     */
+    private void cancelEvent(Event event){
+
+        Gson gson = new Gson();
+        DialogFragment cancelEventDialog = new CancelEventDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("event", gson.toJson(event));
+        cancelEventDialog.setArguments(bundle);
+        cancelEventDialog.show(getSupportFragmentManager(), "cancelEvent");
 
     }
 

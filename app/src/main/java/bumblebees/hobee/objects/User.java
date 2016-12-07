@@ -95,6 +95,11 @@ public class User {
     public Rank getRank() {
         return rank;
     }
+
+    public List<Hobby> getHobbies(){
+        return hobbies;
+    }
+
     public String getPicUrl(){
         return "http://gunray.skip.chalmers.se:3003/api/containers/userImages/download/" + getUserID() + ".png";
     }
@@ -160,6 +165,10 @@ public class User {
 
     public void setRank(Rank rank) {
         this.rank  = rank;
+    }
+
+    public void addHobby(Hobby hobby) {
+        this.hobbies.add(hobby);
     }
 
 }

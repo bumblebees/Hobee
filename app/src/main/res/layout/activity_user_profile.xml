@@ -12,6 +12,7 @@
 
     <LinearLayout
             android:orientation="vertical"
+
             android:layout_width="match_parent"
             android:layout_height="258dp" android:elevation="1dp"
             android:layout_weight="0.09" android:weightSum="1" android:background="@color/Bee_color_4">
