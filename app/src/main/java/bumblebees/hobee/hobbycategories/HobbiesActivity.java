@@ -139,7 +139,11 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         checkBoxSunday = (CheckBox)findViewById(R.id.checkBox_sunday);
     }
 
-    public void onCheckboxClicked(View view) {
+    /**
+     *
+     * @param view
+     */
+    private void onCheckboxClicked(View view) {
 
         boolean checked = ((CheckBox) view).isChecked();
 
@@ -183,11 +187,19 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         }
     }
 
+    /**
+     *
+     * @param hobbyName
+     * @return
+     */
     private Hobby createHobbyInstance (String hobbyName) {
         Hobby hobby = new Hobby(hobbyName);
         return hobby;
     }
 
+    /**
+     * Reads all information from user input and populates the hobby with the correct values
+     */
     private void setHobby(){
         hobby.setDifficultyLevel(spinnerDifficultyLevel.getSelectedItem().toString());
         hobby.setTimeFrom(spinnerTimeFrom.getSelectedItem().toString());

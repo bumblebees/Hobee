@@ -153,6 +153,11 @@ public class Profile{
         return true;
     }
 
+    /**
+     *
+     * @param event
+     * @return true if a day matches, false otherwise
+     */
     private boolean matchDayOfWeek(Event event) {
         for (Hobby hobby : user.getHobbies()) {
             for (String day : hobby.getDatePreference()) {
@@ -164,7 +169,7 @@ public class Profile{
         return false;
     }
 
-    
+
 
     public ArrayList<Event> getAcceptedEvents() {
         return acceptedEvents;

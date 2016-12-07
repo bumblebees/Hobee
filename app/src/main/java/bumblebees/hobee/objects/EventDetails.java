@@ -107,7 +107,7 @@ public class EventDetails {
     public String getDateAndTime(){
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(Long.parseLong(this.timestamp)*1000L);
-        SimpleDateFormat sdfDateTime = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        SimpleDateFormat sdfDateTime = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         return String.valueOf(sdfDateTime.format(cal.getTime()));
     }
 
