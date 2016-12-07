@@ -29,6 +29,7 @@ import java.net.UnknownHostException;
 import bumblebees.hobee.EventViewActivity;
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
+import bumblebees.hobee.utilities.Profile;
 
 public class CancelEventDialogFragment extends DialogFragment{
 
@@ -55,6 +56,8 @@ public class CancelEventDialogFragment extends DialogFragment{
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         cancelEvent(event, dialogCancelReason.getText().toString());
+                        Profile.getInstance().removeHostedEvent(event);
+                        getActivity().finish();
                     }
                 })
                 .setNegativeButton("Go back", new DialogInterface.OnClickListener() {
@@ -65,7 +68,6 @@ public class CancelEventDialogFragment extends DialogFragment{
                 });
 
         builder.setTitle("Cancel event?");
-
         return builder.create();
     }
 
