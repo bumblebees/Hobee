@@ -23,6 +23,7 @@ import bumblebees.hobee.UserProfileActivity;
 
 import bumblebees.hobee.hobbycategories.HobbyCategoryListActivity;
 
+import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.User;
 import io.socket.client.Ack;
 import io.socket.client.IO;
@@ -254,5 +255,17 @@ public class SocketIO {
                 context.startActivity(intent);
                 }
         });
+    }
+
+    public void addHobbyToUser(User user, Hobby hobby){
+        JSONObject newHobby = new JSONObject();
+        try {
+            newHobby.put("hobby_name", hobby.getName());
+            newHobby.put("difficulty_level", hobby.getDifficultyLevel());
+            newHobby.put("date_preferencce", hobby.getDatePreference());
+            newHobby.put("time_preference", hobby.getTimePreference());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
