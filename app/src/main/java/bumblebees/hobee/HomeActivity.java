@@ -1,11 +1,13 @@
 package bumblebees.hobee;
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.TabLayout;
@@ -254,6 +256,18 @@ public class HomeActivity extends AppCompatActivity {
 
             return view;
         }
+    }
+
+    /**
+     * Set up alarms to trigger events such as notifications.
+     */
+    public void setUpRepeatingTasks(){
+        AlarmManager alarmManager;
+        PendingIntent pendingIntentAlarm = null;
+
+        alarmManager = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 
+                AlarmManager.INTERVAL_FIFTEEN_MINUTES, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntentAlarm);
     }
 
     /**

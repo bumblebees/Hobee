@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.Set;
 
 import bumblebees.hobee.EventViewActivity;
+import bumblebees.hobee.HomeActivity;
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.User;
@@ -91,6 +92,26 @@ public class Notification {
         notificationManager.notify(event.hashCode(), notificationBuilder.build());
     }
 
+    /**
+     * Send a notification that opens the HomeActivity.
+     * @param notificationBuilder - notification to be sent
+     */
+    private void sendGeneralNotification(NotificationCompat.Builder notificationBuilder){
+        Intent eventIntent = new Intent(context, HomeActivity.class);
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addParentStack(HomeActivity.class);
+        stackBuilder.addNextIntent(eventIntent);
+
+        PendingIntent eventPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);
+        notificationBuilder.setContentIntent(eventPendingIntent);
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(1, notificationBuilder.build());
+
+    }
+
 
     /**
      * Checks if the event matches the preferences of the currently logged in user
@@ -124,6 +145,23 @@ public class Notification {
             notificationBuilder.setContentTitle("Pending users: " + event.getEvent_details().getEvent_name());
             notificationBuilder.setContentText(event.getEvent_details().getUsers_pending().size() + " people want to join the event.");
             sendEventNotification(notificationBuilder, event);
+        }
+    }
+
+    /**
+     * Inform the host how many users are waiting to join the events they are hosting.
+     * Go to the homepage to see the events with pending people.
+     */
+
+    public void sendPendingUsersTotal(){
+        if(preferences.getBoolean("notification_pending", false)) {
+            int totalPending = 0;
+            for(Event event:Profile.getInstance().getPendingEvents()) {
+               totalPending += event.getEvent_details().getUsers_pending().size();
+            }
+            notificationBuilder.setContentTitle("Pending users");
+            notificationBuilder.setContentText(totalPending + " people want to join events you are hosting.");
+            sendGeneralNotification(notificationBuilder);
         }
     }
 
