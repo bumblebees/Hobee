@@ -83,7 +83,7 @@ public class UserRankAdapter extends BaseAdapter {
 
             final TextView numberView = (TextView) row.findViewById(R.id.numberView);
 
-            CheckBox noShow = (CheckBox) row.findViewById(R.id.noShow);
+            final CheckBox noShow = (CheckBox) row.findViewById(R.id.noShow);
 
             if (!isHost) {
                 noShow.setVisibility(View.INVISIBLE);
@@ -93,7 +93,7 @@ public class UserRankAdapter extends BaseAdapter {
             TextView userName = (TextView) row.findViewById(R.id.userName);
             TextView textHost = (TextView) row.findViewById(R.id.textHost);
             textHost.setVisibility(View.INVISIBLE);
-            SeekBar seekBar = (SeekBar) row.findViewById(R.id.seekBar);
+            final SeekBar seekBar = (SeekBar) row.findViewById(R.id.seekBar);
 
             if (i == 0) {
                 row.setBackgroundColor(0xff0000ff);
@@ -103,21 +103,36 @@ public class UserRankAdapter extends BaseAdapter {
             userName.setText(userList.get(i).getFirstName() + " " + userList.get(i).getLastName());
             numberView.setText("0");
 
-            if (noShow.isChecked()) {
-                seekBar.setEnabled(false);
-                ranks[i][0] = userList.get(i).getUserID();
-                ranks[i][1] = "0";
-                ranks[i][2] = "true";
-            }
+
+
+            noShow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (noShow.isChecked()) {
+                        seekBar.setEnabled(false);
+                        ranks[i][1] = "0";
+                        ranks[i][2] = "true";
+                        numberView.setText("0");
+                    } else{
+                        seekBar.setEnabled(true);
+                        ranks[i][1] = "0";
+                        ranks[i][2] = "false";
+                    }
+                }
+            });
+
+
+
+            ranks[i][0] = userList.get(i).getUserID();
+            ranks[i][1] = "0";
+            ranks[i][2] = "false";
 
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
                     numberView.setText(String.valueOf(progresValue - 3));
-                    ranks[i][0] = userList.get(i).getUserID();
                     ranks[i][1] = String.valueOf(repMultiplier * (progresValue - 3));
-                    ranks[i][2] = "false";
                 }
 
                 @Override

@@ -27,7 +27,7 @@
             android:layout_marginStart="97dp" />
 
         <CheckBox
-            android:text="Showed up"
+            android:text="No show"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/noShow"
