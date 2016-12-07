@@ -263,7 +263,8 @@ public class SocketIO {
             newHobby.put("hobby_name", hobby.getName());
             newHobby.put("difficulty_level", hobby.getDifficultyLevel());
             newHobby.put("date_preferencce", hobby.getDatePreference());
-            newHobby.put("time_preference", hobby.getTimePreference());
+            newHobby.put("time_from", hobby.getTimeFrom());
+            newHobby.put("time_to", hobby.getTimeTo());
         } catch (JSONException e) {
             e.printStackTrace();
         }
