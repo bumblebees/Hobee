@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:text="You are about to cancel this event."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dialogWarningText"
+        android:layout_weight="1"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="14sp"
+        android:padding="10dp" />
+
+    <TextView
+        android:text="Reason for cancelling:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView18"
+        android:layout_weight="1"
+        android:textSize="14sp"
+        android:textColor="@color/Bee_color_1" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/dialogCancelReason"
+        android:layout_weight="1"
+        android:singleLine="false" />
+</LinearLayout>
