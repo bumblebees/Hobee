@@ -104,10 +104,17 @@ public class EventDetails {
      * Retrieve a formatted string representing the date and time when the event takes place.
      * @return
      */
-    public String getDateAndTime(){
+    public String getDate(){
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(Long.parseLong(this.timestamp)*1000L);
-        SimpleDateFormat sdfDateTime = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        SimpleDateFormat sdfDateTime = new SimpleDateFormat("dd/MM/yyyy");
+        return String.valueOf(sdfDateTime.format(cal.getTime()));
+    }
+
+    public String getTime(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(Long.parseLong(this.timestamp)*1000L);
+        SimpleDateFormat sdfDateTime = new SimpleDateFormat("HH:mm");
         return String.valueOf(sdfDateTime.format(cal.getTime()));
     }
 
@@ -155,6 +162,10 @@ public class EventDetails {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getHobbyName(){
+        return hobby.getName();
     }
 
 }

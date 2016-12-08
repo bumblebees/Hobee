@@ -17,8 +17,8 @@ public class Hobby implements Parcelable {
     private String name;
     private String difficultyLevel;
     private List<String> datePreference = new ArrayList<>();
-    private String timeFrom;
-    private String timeTo;
+    private Double timeFrom;
+    private Double timeTo;
 
     public Hobby(){
     }
@@ -53,11 +53,11 @@ public class Hobby implements Parcelable {
         this.datePreference.add(datePreference);
     }
 
-    public void setTimeFrom(String timeFrom){
+    public void setTimeFrom(Double timeFrom){
         this.timeFrom = timeFrom;
     }
 
-    public void setTimeTo(String timeTo){
+    public void setTimeTo(Double timeTo){
         this.timeTo = timeTo;
     }
 
@@ -77,11 +77,11 @@ public class Hobby implements Parcelable {
         return datePreference;
     }
 
-    public String getTimeFrom(){
+    public Double getTimeFrom(){
         return timeFrom;
     }
 
-    public String getTimeTo(){
+    public Double getTimeTo(){
         return timeTo;
     }
 

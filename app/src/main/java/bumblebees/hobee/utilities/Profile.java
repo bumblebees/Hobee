@@ -148,9 +148,28 @@ public class Profile{
                 return false;
             }
         }
-        matchDayOfWeek(event);
+        // Check if the user has a hobby matching the event,
+        // if true, check if day of week and time of day are matching too
+        if (matchHobby(event) == true) {
+            matchDayOfWeek(event);
+            matchTimeOfDay(event);
+        }
 
         return true;
+    }
+
+    /**
+     *
+     * @param event
+     * @return true if hobby matches event, false otherwise
+     */
+    private boolean matchHobby(Event event){
+        for (Hobby hobby : user.getHobbies()){
+            if (hobby.getName().equals(event.getEvent_details().getHobbyName())){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -160,8 +179,27 @@ public class Profile{
      */
     private boolean matchDayOfWeek(Event event) {
         for (Hobby hobby : user.getHobbies()) {
-            for (String day : hobby.getDatePreference()) {
-                if (day.equals(event.getEvent_details().getDayOfTheWeek())) {
+            if (hobby.getName().equals(event.getEvent_details().getHobbyName())) {
+                for (String day : hobby.getDatePreference()) {
+                    if (day.equals(event.getEvent_details().getDayOfTheWeek())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param event
+     * @return true if time of day matches, false otherwise
+     */
+    private boolean matchTimeOfDay(Event event){
+        for (Hobby hobby : user.getHobbies()){
+            if (hobby.getName().equals(event.getEvent_details().getHobbyName())){
+                double eventTime = Double.parseDouble((event.getEvent_details().getTime()));
+                if (eventTime >= hobby.getTimeFrom() && eventTime <= hobby.getTimeTo()){
                     return true;
                 }
             }

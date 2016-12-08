@@ -95,32 +95,32 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         difficultyList.add("Intermediate");
         difficultyList.add("Expert");
 
-        List<String> timeListTo = new ArrayList<String>();
-        timeListTo.add("8:00");
-        timeListTo.add("10:00");
-        timeListTo.add("12:00");
-        timeListTo.add("14:00");
-        timeListTo.add("16:00");
-        timeListTo.add("18:00");
-        timeListTo.add("20:00");
-        timeListTo.add("22:00");
-        timeListTo.add("24:00");
+        List<Double> timeListTo = new ArrayList<Double>();
+        timeListTo.add(8.00);
+        timeListTo.add(10.00);
+        timeListTo.add(12.00);
+        timeListTo.add(14.00);
+        timeListTo.add(16.00);
+        timeListTo.add(18.00);
+        timeListTo.add(20.00);
+        timeListTo.add(22.00);
+        timeListTo.add(24.00);
 
-        List<String> timeListFrom = new ArrayList<String>();
-        timeListFrom.add("8:00");
-        timeListFrom.add("10:00");
-        timeListFrom.add("12:00");
-        timeListFrom.add("14:00");
-        timeListFrom.add("16:00");
-        timeListFrom.add("18:00");
-        timeListFrom.add("20:00");
-        timeListFrom.add("22:00");
-        timeListFrom.add("24:00");
+        List<Double> timeListFrom = new ArrayList<Double>();
+        timeListFrom.add(8.00);
+        timeListFrom.add(10.00);
+        timeListFrom.add(12.00);
+        timeListFrom.add(14.00);
+        timeListFrom.add(16.00);
+        timeListFrom.add(18.00);
+        timeListFrom.add(20.00);
+        timeListFrom.add(22.00);
+        timeListFrom.add(24.00);
 
         // Creating adapter for spinner
         ArrayAdapter<String> dataAdapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, difficultyList);
-        ArrayAdapter<String> dataAdapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, timeListFrom);
-        ArrayAdapter<String> dataAdapter3 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, timeListTo);
+        ArrayAdapter<Double> dataAdapter2 = new ArrayAdapter<Double>(this, android.R.layout.simple_spinner_item, timeListFrom);
+        ArrayAdapter<Double> dataAdapter3 = new ArrayAdapter<Double>(this, android.R.layout.simple_spinner_item, timeListTo);
 
         // Drop down layout style - list view with radio button
         dataAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -205,8 +205,8 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
      */
     private void setHobby(){
         hobby.setDifficultyLevel(spinnerDifficultyLevel.getSelectedItem().toString());
-        hobby.setTimeFrom(spinnerTimeFrom.getSelectedItem().toString());
-        hobby.setTimeTo(spinnerTimeTo.getSelectedItem().toString());
+        hobby.setTimeFrom(Double.parseDouble(spinnerTimeFrom.getSelectedItem().toString()));
+        hobby.setTimeTo(Double.parseDouble(spinnerTimeTo.getSelectedItem().toString()));
     }
 
     /*
