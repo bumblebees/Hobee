@@ -26,13 +26,11 @@
             android:name=".LoginActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".RegisterUserActivity"
@@ -63,14 +61,20 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity android:name=".RankUserActivity">
+
             <!--
   <intent-filter>
       <action android:name="android.intent.action.MAIN" />
 
       <category android:name="android.intent.category.LAUNCHER" />
   </intent-filter>
-              -->
-</activity>
-</application>
+            -->
+        </activity>
+
+        <service
+            android:name=".utilities.MQTTService"
+            android:enabled="true"
+            android:exported="false"></service>
+    </application>
 
 </manifest>
