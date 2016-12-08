@@ -136,7 +136,7 @@
         android:layout_alignStart="@+id/spinner_time_from" />
 
     <Button
-        android:text="Button"
+        android:text="Add hobby"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button_submit"
