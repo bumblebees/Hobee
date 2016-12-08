@@ -249,16 +249,6 @@ public class SocketIO {
 
 
     public void addHobbyToUser(Hobby hobby, String userID) {
-//        JSONObject newHobby = new JSONObject();
-//        try {
-//            newHobby.put("hobby_name", hobby.getName());
-//            newHobby.put("difficulty_level", hobby.getDifficultyLevel());
-//            newHobby.put("date_preferencce", hobby.getDatePreference());
-//            newHobby.put("time_from", hobby.getTimeFrom());
-//            newHobby.put("time_to", hobby.getTimeTo());
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
         JSONObject obj = new JSONObject();
         try {
             obj.put("userID", userID);

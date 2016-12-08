@@ -91,10 +91,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
 
 
         // Spinner Drop down elements
-        List<String> difficultyList = new ArrayList<String>();
-        difficultyList.add("Beginner");
-        difficultyList.add("Intermediate");
-        difficultyList.add("Expert");
+        String[] difficultyList = getResources().getStringArray(R.array.hobbySkillOptions);
 
         List<Double> timeListTo = new ArrayList<Double>();
         timeListTo.add(8.00);

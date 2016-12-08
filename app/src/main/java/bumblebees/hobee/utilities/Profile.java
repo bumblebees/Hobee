@@ -1,5 +1,7 @@
 package bumblebees.hobee.utilities;
 
+import android.util.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -276,5 +278,20 @@ public class Profile{
         if(hostedEvents.contains(event)){
             hostedEvents.remove(event);
         }
+    }
+
+    public void addOrUpdateHobby(Hobby hobby){
+        if(user.getHobbies().contains(hobby)){
+            user.getHobbies().remove(hobby);
+        }
+        user.getHobbies().add(hobby);
+    }
+
+    public ArrayList<String> getHobbyNames(){
+        ArrayList<String> list = new ArrayList<>();
+            for (Hobby hobby : user.getHobbies()) {
+                list.add(hobby.getName().toLowerCase());
+            }
+        return list;
     }
 }
