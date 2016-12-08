@@ -81,7 +81,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         appToolbar = (Toolbar) findViewById(R.id.profileToolbar);
         setSupportActionBar(appToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         // If user wants to see his own profile

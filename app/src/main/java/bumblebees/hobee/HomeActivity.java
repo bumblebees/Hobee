@@ -325,8 +325,9 @@ public class HomeActivity extends AppCompatActivity {
                                         Profile.getInstance().removePendingEvent(event);
                                         new Notification(HomeActivity.this).sendUserEventRejected(event);
                                     }
-                                    Profile.getInstance().addEligibleEvent(hobby, event);
-                                    new Notification(HomeActivity.this).sendNewEvent(event);
+                                    if(Profile.getInstance().addEligibleEvent(hobby, event)) {
+                                        new Notification(HomeActivity.this).sendNewEvent(event);
+                                    }
                                 }
                                 else{
                                     //drop it

@@ -260,11 +260,16 @@ public class Profile{
         return eligibleEventList;
     }
 
-    public void addEligibleEvent(String hobby, Event event){
+    //returns true if the event is new
+    //false otherwise
+    public boolean  addEligibleEvent(String hobby, Event event){
+        boolean res = true;
         if(eligibleEventList.get(hobby).contains(event)){
             eligibleEventList.get(hobby).remove(event);
+            res = false;
         }
         eligibleEventList.get(hobby).add(event);
+        return res;
     }
 
     public void removeEligibleEvent(String hobby, Event event){
