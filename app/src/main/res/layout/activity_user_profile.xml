@@ -10,6 +10,15 @@
               tools:context="bumblebees.hobee.UserProfileActivity" android:weightSum="1"
               android:background="@color/Bee_color_3">
 
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/Bee_color_4"
+        android:theme="?attr/actionBarTheme"
+        android:minHeight="?attr/actionBarSize"
+        android:id="@+id/profileToolbar"
+        android:elevation="4dp" />
+
     <LinearLayout
             android:orientation="vertical"
 

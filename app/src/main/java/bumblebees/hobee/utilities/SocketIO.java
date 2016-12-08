@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 
 import bumblebees.hobee.UserProfileActivity;
 
+import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
 import bumblebees.hobee.hobbycategories.HobbyCategoryListActivity;
 
 
@@ -197,7 +198,7 @@ public class SocketIO {
         socket.emit("save_image", userImage);
         socket.emit("register_user", gson.toJson(user));
 
-        Intent intent = new Intent(packageContext, HobbyCategoryListActivity.class);
+        Intent intent = new Intent(packageContext, HobbiesChoiceActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);
     }

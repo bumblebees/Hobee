@@ -4,10 +4,17 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
 import bumblebees.hobee.objects.User;
 import bumblebees.hobee.utilities.CropSquareTransformation;
 import bumblebees.hobee.utilities.Profile;
@@ -21,6 +28,30 @@ public class UserProfileActivity extends AppCompatActivity {
     private ImageView userImage, userGender;
     private TextView userName, userAge, userDateSince, userBiography;
     private User user;
+    Toolbar appToolbar;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.profile_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menuEditHobbies:
+                Intent intent = new Intent(this, HobbiesChoiceActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                this.startActivity(intent);
+                return true;
+            case R.id.menuEditProfile:
+                //TODO: open edit profile activity here
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +67,10 @@ public class UserProfileActivity extends AppCompatActivity {
         //userDateSince = (TextView) findViewById(R.id.userDateSince);
         userBiography = (TextView) findViewById(R.id.userBiography);
         userImage = (ImageView) findViewById(R.id.userImage);
+
+        appToolbar = (Toolbar) findViewById(R.id.profileToolbar);
+        setSupportActionBar(appToolbar);
+
 
         // If user wants to see his own profile
 

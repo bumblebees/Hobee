@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Edit profile"
+        android:icon="@drawable/profile"
+        android:id="@+id/menuEditProfile"
+        android:visible="true"
+        android:enabled="true"
+        app:showAsAction="always" />
+    <item android:title="EditHobbies"
+        android:id="@+id/menuEditHobbies"
+        android:icon="@drawable/chess"
+        android:visible="true"
+        android:enabled="true"
+        app:showAsAction="always" />
+</menu>
