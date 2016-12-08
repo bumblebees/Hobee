@@ -19,7 +19,7 @@ import com.squareup.picasso.Transformation;
 public class UserProfileActivity extends AppCompatActivity {
     private Gson gson = new Gson();
     private ImageView userImage, userGender;
-    private TextView userName, userAge, userDateSince, userBiography;
+    private TextView userName, userAge, userDateSince, userBiography, globalRank, hostRank, noShows;
     private User user;
 
     @Override
@@ -36,6 +36,10 @@ public class UserProfileActivity extends AppCompatActivity {
         //userDateSince = (TextView) findViewById(R.id.userDateSince);
         userBiography = (TextView) findViewById(R.id.userBiography);
         userImage = (ImageView) findViewById(R.id.userImage);
+        globalRank = (TextView) findViewById(R.id.globalRank);
+        hostRank = (TextView) findViewById(R.id.hostRank);
+        noShows = (TextView) findViewById(R.id.noShows);
+
 
         // If user wants to see his own profile
 
@@ -49,6 +53,9 @@ public class UserProfileActivity extends AppCompatActivity {
                     userGender.setImageResource(R.drawable.female);
                 }
                 //userDateSince.setText("Member since " + Profile.getInstance().userSince());
+                globalRank.setText(reputationToRank(Profile.getInstance().getGlobalRep()));
+                hostRank.setText(reputationToRank(Profile.getInstance().getHostlRep()));
+                noShows.setText(Integer.toString(Profile.getInstance().getNoShows()));
                 userBiography.setText(Profile.getInstance().getBio());
                 Picasso.with(this).load(Profile.getInstance().getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
             } catch (NullPointerException e) {
@@ -71,6 +78,9 @@ public class UserProfileActivity extends AppCompatActivity {
                     userGender.setImageResource(R.drawable.female);
                 }
                 //userDateSince.setText("Member since " + Profile.getInstance().userSince());
+                globalRank.setText(reputationToRank(user.getRank().getGlobalRep()));
+                hostRank.setText(reputationToRank(user.getRank().getHostRep()));
+                noShows.setText(Integer.toString(user.getRank().getNoShows()));
                 userBiography.setText(user.getBio());
                 Picasso.with(this).load(user.getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
             } catch (NullPointerException e) {
@@ -81,6 +91,17 @@ public class UserProfileActivity extends AppCompatActivity {
 
 
         }
+    }
+
+    private String reputationToRank(int reputation){
+        if (reputation < -7000){return "-3";}
+        if (reputation > -7000 && reputation <= -2500){return "-2";}
+        if (reputation > -2500 && reputation <= -1000){return "-1";}
+        if (reputation > -1000 && reputation <= 1000){return "0";}
+        if (reputation > 1000 && reputation <= 2500){return "+1";}
+        if (reputation > 2500 && reputation <= 7000){return "+2";}
+        if (reputation > 7000){return "+3";}
+        else {return "err";}
     }
 
 
