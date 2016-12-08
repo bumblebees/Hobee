@@ -271,4 +271,10 @@ public class Profile{
             eligibleEventList.get(hobby).remove(event);
         }
     }
+
+    public void removeHostedEvent(Event event){
+        if(hostedEvents.contains(event)){
+            hostedEvents.remove(event);
+        }
+    }
 }
