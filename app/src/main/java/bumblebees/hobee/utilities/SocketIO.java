@@ -240,6 +240,9 @@ public class SocketIO {
 
                     intent.putExtra("User",gson.toJson(user));
                 }
+                else{
+                    intent.putExtra("User", "error");
+                }
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);

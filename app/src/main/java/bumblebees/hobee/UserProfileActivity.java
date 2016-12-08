@@ -30,10 +30,21 @@ public class UserProfileActivity extends AppCompatActivity {
     private User user;
     Toolbar appToolbar;
 
+    boolean hideMenu = false;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.profile_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(hideMenu){
+            menu.findItem(R.id.menuEditHobbies).setVisible(false);
+            menu.findItem(R.id.menuEditProfile).setVisible(false);
+        }
         return true;
     }
 
@@ -70,6 +81,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         appToolbar = (Toolbar) findViewById(R.id.profileToolbar);
         setSupportActionBar(appToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         // If user wants to see his own profile
@@ -94,8 +106,14 @@ public class UserProfileActivity extends AppCompatActivity {
 
         }
 
-
+        else if(extra.equals("error")){
+            Toast toast = Toast.makeText(getApplicationContext(), "Error seeing profile", Toast.LENGTH_LONG);
+            toast.show();
+            finish();
+        }
         else {
+            hideMenu = true;
+            invalidateOptionsMenu();
             user = gson.fromJson(getIntent().getStringExtra("User"), User.class);
             try {
                 userName.setText(user.getFirstName() + " " + user.getLastName());
