@@ -20,6 +20,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.EventDetails;
@@ -239,7 +240,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         users_unranked.add(Profile.getInstance().getUserID());
 
         try {
-            Hobby hobby = new Hobby();
+            Hobby hobby = new Hobby(eventHobbyChoice.getSelectedItem().toString(), spinnerHobbySkillChoice.getSelectedItem().toString());
             EventDetails eventDetails = new EventDetails(inputEventName.getText().toString(), hostID, currentUser.getName(),
                     Integer.parseInt(minAge.getText().toString()), Integer.parseInt(maxAge.getText().toString()), inputEventGender.getSelectedItem().toString(),
                     timestamp, Integer.parseInt(inputEventNumber.getText().toString()), inputEventLocation.getText().toString(), inputEventDescription.getText().toString(),
@@ -247,7 +248,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
 
             Event event = new Event(uuid, eventCategory, String.valueOf(timeCreated), eventDetails, areas.get(spinnerLocation.getSelectedItem().toString()));
 
-            Gson g = new Gson();
+            Gson g = new GsonBuilder().setVersion(0.3).create();
 
             MqttMessage msg = new MqttMessage(g.toJson(event, Event.class).getBytes());
             msg.setRetained(true);

@@ -252,10 +252,9 @@ public class Profile{
 
     public HashMap<String, ArrayList<Event>> getEligibleEventList() {
         if(eligibleEventList.isEmpty()){
-            //we pretend these are the hobbies for now
-            String[] hobbies = {"basketball", "football", "fishing", "cooking"};
-            for(int i=0; i<hobbies.length;i++) {
-                eligibleEventList.put(hobbies[i], new ArrayList<Event>());
+            ArrayList<String> hobbies = Profile.getInstance().getHobbyNames();
+            for(String hobby: hobbies) {
+                eligibleEventList.put(hobby, new ArrayList<Event>());
             }
         }
         return eligibleEventList;

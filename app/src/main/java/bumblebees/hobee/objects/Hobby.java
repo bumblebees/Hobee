@@ -3,6 +3,9 @@ package bumblebees.hobee.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.Until;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +16,20 @@ import java.util.List;
  */
 public class Hobby implements Parcelable {
 
+    //TODO: do something about this ugly hack -> see custom exclusion strategies for Gson
+    //the @Until(0.2) annotation is a hack to exclude the fields from the Gson parser when creating the event json
+    //create the gson parser and use any version larger than 0.2
+    //Gson g = new GsonBuilder().setVersion(0.3).create();
+
+    @Until(0.2)
     private double id;
     private String name;
     private String difficultyLevel;
+    @Until(0.2)
     private List<String> datePreference = new ArrayList<>();
+    @Until(0.2)
     private Double timeFrom;
+    @Until(0.2)
     private Double timeTo;
 
     public Hobby(){
@@ -29,6 +41,11 @@ public class Hobby implements Parcelable {
     public Hobby(double id, String name){
         this.id = id;
         this.name = name;
+    }
+
+    public Hobby(String name, String difficultyLevel){
+        this.name = name;
+        this.difficultyLevel = difficultyLevel;
     }
 
     public Hobby(Parcel in) {

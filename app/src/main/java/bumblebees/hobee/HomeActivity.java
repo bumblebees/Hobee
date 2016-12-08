@@ -17,6 +17,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +63,7 @@ public class HomeActivity extends AppCompatActivity {
     ListView drawerList;
     TabLayout tabLayout;
     ViewPager viewPager;
-    Button hobbyChange;
+    Toolbar appToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,8 @@ public class HomeActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         session = new SessionManager(getApplicationContext());
 
+        appToolbar = (Toolbar) findViewById(R.id.homeToolbar);
+        setSupportActionBar(appToolbar);
 
         FragmentAdapter tabAdapter = new FragmentAdapter(getSupportFragmentManager());
         viewPager.setAdapter(tabAdapter);
@@ -266,8 +269,7 @@ public class HomeActivity extends AppCompatActivity {
         Set<String> emptyLocation = new HashSet<>(); //to prevent null pointer exception
         Set<String> preferencesStringSet = preferences.getStringSet("location_topics", emptyLocation);
 
-        //we pretend these are the hobbies for now
-        String[] hobbies = {"basketball", "football", "fishing", "cooking"};
+        ArrayList<String> hobbies = Profile.getInstance().getHobbyNames();
 
         if(!preferencesStringSet.isEmpty()){
             for(String location:preferencesStringSet){

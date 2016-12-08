@@ -177,6 +177,10 @@ public class EventDetails {
         return hobby.getName();
     }
 
+    public String getHobbySkill(){
+        return hobby.getDifficultyLevel();
+    }
+
     public JSONObject getUsers_unranked() {
         JSONArray jsonArray = new JSONArray();
         for (int i=0; i < users_unranked.size(); i++){
