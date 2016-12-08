@@ -58,9 +58,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
         }
 
-        // If user wants to see someone else's profile
-        user = getIntent().getParcelableExtra("User");
-
 
         else {
             user = gson.fromJson(getIntent().getStringExtra("User"), User.class);

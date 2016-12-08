@@ -72,19 +72,6 @@ public class HomeActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         session = new SessionManager(getApplicationContext());
 
-        hobbyChange = (Button)findViewById(R.id.changeHobby);
-        hobbyChange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent hobby = new Intent(HomeActivity.this, HobbiesChoiceActivity.class);
-                startActivity(hobby);
-            }
-        });
-
-
-        // for testing
-        textView = (TextView) findViewById(R.id.textView);
-        textView.setText(session.getId() + " " + session.getOrigin());
 
         FragmentAdapter tabAdapter = new FragmentAdapter(getSupportFragmentManager());
         viewPager.setAdapter(tabAdapter);
@@ -296,7 +283,6 @@ public class HomeActivity extends AppCompatActivity {
                                 //check if the user's preferences match the event and if the user is not already a member of it
                                 if(event.getEvent_details().getHost_id().equals(Profile.getInstance().getUserID())){
                                     //user is the host
-                                    Log.d("evFrag", "we are here");
                                     Profile.getInstance().addHostedEvent(event);
                                 }
                                 else if(event.getEvent_details().getUsers_pending().contains(Profile.getInstance().getUser().getSimpleUser())){
@@ -322,7 +308,6 @@ public class HomeActivity extends AppCompatActivity {
                                 }
                                 else{
                                     //drop it
-                                    Log.d("eventFrag", "event dropped");
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
