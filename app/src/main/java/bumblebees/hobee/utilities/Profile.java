@@ -87,6 +87,18 @@ public class Profile{
        return user.getGender();
     }
 
+    public int getGlobalRep(){
+        return user.getRank().getGlobalRep();
+    }
+
+    public int getHostlRep(){
+        return user.getRank().getHostRep();
+    }
+
+    public int getNoShows(){
+        return user.getRank().getNoShows();
+    }
+
     public String getBio(){
         return user.getBio();
     }
