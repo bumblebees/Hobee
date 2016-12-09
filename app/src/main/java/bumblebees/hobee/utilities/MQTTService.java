@@ -47,6 +47,7 @@ public class MQTTService extends Service implements MqttCallback {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        sendBroadcast(new Intent("hobee.mqtt.RESTART"));
     }
 
     @Override
