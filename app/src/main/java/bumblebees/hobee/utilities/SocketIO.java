@@ -227,10 +227,13 @@ public class SocketIO {
                 User user = gson.fromJson(String.valueOf(userJSON), User.class);
 
                 Profile.getInstance().setUser(user);
+
                 Log.d("event", user.toString());
 
                 SessionManager session = new SessionManager(context);
                 session.setPreferences(user.getLoginId(), user.getOrigin());
+
+                session.saveUserData(user, new EventManager());
 
                 Intent intent = new Intent(context, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -19,15 +19,22 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import bumblebees.hobee.objects.User;
+
 public class MQTTService extends Service implements MqttCallback {
 
     private final String TAG = "mqttService";
 
+    SessionManager sessionManager = new SessionManager(this);
+
     private MqttAndroidClient client;
-    private String clientID = MqttClient.generateClientId().toString();
+    private String clientID;
     private String mqttAddress = "tcp://129.16.155.22:1883";
 
-    private SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+    private User user;
+    private EventManager eventManager;
+
+
 
     public MQTTService() {
 
@@ -67,33 +74,40 @@ public class MQTTService extends Service implements MqttCallback {
     public void connectMQTT(){
         MemoryPersistence persistence = new MemoryPersistence();
         try {
-            client = new MqttAndroidClient(this, mqttAddress, clientID, persistence);
-            client.setCallback(this);
-            MqttConnectOptions options = new MqttConnectOptions();
-            options.setCleanSession(false);
-            IMqttToken token = client.connect(options);
-            token.setActionCallback(new IMqttActionListener() {
-                @Override
-                public void onSuccess(IMqttToken asyncActionToken) {
-                    subscribeTopics();
-                    Log.d(TAG, "connected");
-                }
+            String clientUUID = sessionManager.getUserID();
+            if (!(clientUUID == null)) {
+                clientID = "hobee-"+clientUUID;
+                client = new MqttAndroidClient(this, mqttAddress, clientID, persistence);
+                client.setCallback(this);
+                MqttConnectOptions options = new MqttConnectOptions();
+                options.setCleanSession(false);
+                IMqttToken token = client.connect(options);
+                token.setActionCallback(new IMqttActionListener() {
+                    @Override
+                    public void onSuccess(IMqttToken asyncActionToken) {
+                        subscribeTopics();
+                        Log.d(TAG, "connected");
+                    }
 
-                @Override
-                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Log.d(TAG, "something went wrong");
-                }
-            });
+                    @Override
+                    public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                        Log.d(TAG, "something went wrong");
+                    }
+                });
+            }
+            else{
+                Log.d(TAG, "preferences not set yet, aborting connection");
+            }
+            }catch(MqttException e){
+                e.printStackTrace();
+            }
 
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
     }
 
 
     @Override
     public void connectionLost(Throwable cause) {
-
+        Log.d(TAG, "service disconnected");
     }
 
     @Override
@@ -108,6 +122,7 @@ public class MQTTService extends Service implements MqttCallback {
     }
 
     private void subscribeTopics(){
+
 
 
     }
