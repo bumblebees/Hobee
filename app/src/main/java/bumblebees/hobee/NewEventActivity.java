@@ -6,14 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -23,6 +20,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.EventDetails;
@@ -61,6 +59,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
     Spinner inputEventGender;
     Spinner eventHobbyChoice;
     Spinner spinnerLocation;
+    Spinner spinnerHobbySkillChoice;
     TextView inputEventNumber;
     MultiSlider ageRangeSlider;
 
@@ -88,16 +87,19 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         maxAge.setText(String.valueOf(ageRangeSlider.getThumb(1).getValue()));
         eventHobbyChoice = (Spinner) findViewById(R.id.eventHobbyChoice);
         spinnerLocation = (Spinner) findViewById(R.id.spinnerLocation);
+        spinnerHobbySkillChoice = (Spinner) findViewById(R.id.spinnerSkillChoice);
 
 
         //set gender spinner options
         ArrayAdapter<String> genderChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{"everyone", "male", "female"});
         inputEventGender.setAdapter(genderChoice);
 
+        //set skill spinner options
+        String[] hobbySkill = getResources().getStringArray(R.array.hobbySkillOptions);
+        ArrayAdapter<String> hobbySkillChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, hobbySkill);
+        spinnerHobbySkillChoice.setAdapter(hobbySkillChoice);
 
-        //TODO: get these from your currently available hobbies
-
-        String[] hobbyChoices = {"basketball", "football", "fishing", "cooking"};
+        String[] hobbyChoices = Profile.getInstance().getHobbyNames().toArray(new String[Profile.getInstance().getHobbyNames().size()]);
 
         ArrayAdapter<String> hobbyChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, hobbyChoices);
 
@@ -115,10 +117,8 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         inputEventTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: open time picker
                 DialogFragment newFragment = new TimePickerFragment();
                 newFragment.show(getSupportFragmentManager(), "timePicker");
-
             }
         });
 
@@ -236,16 +236,19 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         ArrayList<PublicUser> acceptedUsers = new ArrayList<>();
         PublicUser currentUser = Profile.getInstance().getUser().getSimpleUser();
         acceptedUsers.add(currentUser);
+        ArrayList<String> users_unranked = new ArrayList<>();
+        users_unranked.add(Profile.getInstance().getUserID());
+
         try {
-            Hobby hobby = new Hobby();
+            Hobby hobby = new Hobby(eventHobbyChoice.getSelectedItem().toString(), spinnerHobbySkillChoice.getSelectedItem().toString());
             EventDetails eventDetails = new EventDetails(inputEventName.getText().toString(), hostID, currentUser.getName(),
                     Integer.parseInt(minAge.getText().toString()), Integer.parseInt(maxAge.getText().toString()), inputEventGender.getSelectedItem().toString(),
                     timestamp, Integer.parseInt(inputEventNumber.getText().toString()), inputEventLocation.getText().toString(), inputEventDescription.getText().toString(),
-                    new ArrayList<PublicUser>(), acceptedUsers, hobby);
+                    new ArrayList<PublicUser>(), acceptedUsers, hobby, users_unranked);
 
             Event event = new Event(uuid, eventCategory, String.valueOf(timeCreated), eventDetails, areas.get(spinnerLocation.getSelectedItem().toString()));
 
-            Gson g = new Gson();
+            Gson g = new GsonBuilder().setVersion(0.3).create();
 
             MqttMessage msg = new MqttMessage(g.toJson(event, Event.class).getBytes());
             msg.setRetained(true);

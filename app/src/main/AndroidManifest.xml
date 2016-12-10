@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
 
     <application
         android:allowBackup="true"
@@ -16,7 +18,7 @@
         android:label="@string/app_name"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -27,41 +29,41 @@
             android:name=".LoginActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                        <intent-filter>
+                            <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".RegisterUserActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".HomeActivity"
-            android:configChanges="orientation"
-            android:exported="true"
-            android:screenOrientation="portrait" />
-        <activity android:name=".HobbyActivity" />
-        <activity android:name=".SportsHobbyActivity" />
-        <activity android:name=".NewEventActivity" />
-        <activity
-            android:name=".EventViewActivity"
-            android:exported="true"
-            android:parentActivityName=".HomeActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HomeActivity" />
-        </activity>
-        <activity
-            android:name=".SettingsActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".UserProfileActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity android:name=".RankUserActivity">
+                            <category android:name="android.intent.category.LAUNCHER" />
+                        </intent-filter>
+                    </activity>
+                    <activity
+                        android:name=".RegisterUserActivity"
+                        android:configChanges="orientation"
+                        android:screenOrientation="portrait" />
+                    <activity
+                        android:name=".HomeActivity"
+                        android:configChanges="orientation"
+                        android:exported="true"
+                        android:screenOrientation="portrait" />
+                    <activity android:name=".HobbyActivity" />
+                    <activity android:name=".SportsHobbyActivity" />
+                    <activity android:name=".NewEventActivity" />
+                    <activity
+                        android:name=".EventViewActivity"
+                        android:exported="true"
+                        android:parentActivityName=".HomeActivity">
+                        <meta-data
+                            android:name="android.support.PARENT_ACTIVITY"
+                            android:value=".HomeActivity" />
+                    </activity>
+                    <activity
+                        android:name=".SettingsActivity"
+                        android:configChanges="orientation"
+                        android:screenOrientation="portrait" />
+                    <activity
+                        android:name=".UserProfileActivity"
+                        android:configChanges="orientation"
+                        android:screenOrientation="portrait" />
+                    <activity android:name=".RankUserActivity">
 
             <!--
   <intent-filter>
@@ -70,10 +72,10 @@
       <category android:name="android.intent.category.LAUNCHER" />
   </intent-filter>
             -->
-        </activity>
-
-        <service
-            android:name=".utilities.MQTTService"
+</activity>
+        <activity android:name=".hobbycategories.HobbyCategoryListActivity"/>
+        <activity android:name=".hobbycategories.HobbiesActivity"/>
+        <activity android:name=".hobbycategories.HobbiesChoiceActivity"/>
             android:enabled="true"
             android:exported="false" />
 

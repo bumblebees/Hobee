@@ -1,5 +1,7 @@
 package bumblebees.hobee.utilities;
 
+import android.util.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import bumblebees.hobee.objects.Event;
+import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.User;
 
 public class Profile{
@@ -84,6 +87,18 @@ public class Profile{
        return user.getGender();
     }
 
+    public int getGlobalRep(){
+        return user.getRank().getGlobalRep();
+    }
+
+    public int getHostlRep(){
+        return user.getRank().getHostRep();
+    }
+
+    public int getNoShows(){
+        return user.getRank().getNoShows();
+    }
+
     public String getBio(){
         return user.getBio();
     }
@@ -147,11 +162,66 @@ public class Profile{
                 return false;
             }
         }
-
-        //TODO: check hobbies as well
+        // Check if the user has a hobby matching the event,
+        // if true, check if day of week and time of day are matching too
+        if (matchHobby(event) == true) {
+            matchDayOfWeek(event);
+            matchTimeOfDay(event);
+        }
 
         return true;
     }
+
+    /**
+     *
+     * @param event
+     * @return true if hobby matches event, false otherwise
+     */
+    private boolean matchHobby(Event event){
+        for (Hobby hobby : user.getHobbies()){
+            if (hobby.getName().equals(event.getEvent_details().getHobbyName())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param event
+     * @return true if a day matches, false otherwise
+     */
+    private boolean matchDayOfWeek(Event event) {
+        for (Hobby hobby : user.getHobbies()) {
+            if (hobby.getName().equals(event.getEvent_details().getHobbyName())) {
+                for (String day : hobby.getDatePreference()) {
+                    if (day.equals(event.getEvent_details().getDayOfTheWeek())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param event
+     * @return true if time of day matches, false otherwise
+     */
+    private boolean matchTimeOfDay(Event event){
+        for (Hobby hobby : user.getHobbies()){
+            if (hobby.getName().equals(event.getEvent_details().getHobbyName())){
+                double eventTime = Double.parseDouble((event.getEvent_details().getTime()));
+                if (eventTime >= hobby.getTimeFrom() && eventTime <= hobby.getTimeTo()){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
 
     public ArrayList<Event> getAcceptedEvents() {
         return acceptedEvents;
@@ -194,20 +264,24 @@ public class Profile{
 
     public HashMap<String, ArrayList<Event>> getEligibleEventList() {
         if(eligibleEventList.isEmpty()){
-            //we pretend these are the hobbies for now
-            String[] hobbies = {"basketball", "football", "fishing", "cooking"};
-            for(int i=0; i<hobbies.length;i++) {
-                eligibleEventList.put(hobbies[i], new ArrayList<Event>());
+            ArrayList<String> hobbies = Profile.getInstance().getHobbyNames();
+            for(String hobby: hobbies) {
+                eligibleEventList.put(hobby, new ArrayList<Event>());
             }
         }
         return eligibleEventList;
     }
 
-    public void addEligibleEvent(String hobby, Event event){
+    //returns true if the event is new
+    //false otherwise
+    public boolean  addEligibleEvent(String hobby, Event event){
+        boolean res = true;
         if(eligibleEventList.get(hobby).contains(event)){
             eligibleEventList.get(hobby).remove(event);
+            res = false;
         }
         eligibleEventList.get(hobby).add(event);
+        return res;
     }
 
     public void removeEligibleEvent(String hobby, Event event){
@@ -220,5 +294,20 @@ public class Profile{
         if(hostedEvents.contains(event)){
             hostedEvents.remove(event);
         }
+    }
+
+    public void addOrUpdateHobby(Hobby hobby){
+        if(user.getHobbies().contains(hobby)){
+            user.getHobbies().remove(hobby);
+        }
+        user.getHobbies().add(hobby);
+    }
+
+    public ArrayList<String> getHobbyNames(){
+        ArrayList<String> list = new ArrayList<>();
+            for (Hobby hobby : user.getHobbies()) {
+                list.add(hobby.getName().toLowerCase());
+            }
+        return list;
     }
 }

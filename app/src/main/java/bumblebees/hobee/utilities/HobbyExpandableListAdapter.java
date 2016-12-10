@@ -96,7 +96,7 @@ public class HobbyExpandableListAdapter extends BaseExpandableListAdapter {
 
         eventName.setText(event.getEvent_details().getEvent_name());
         eventLocation.setText(event.getEvent_details().getLocation());
-        eventDate.setText(event.getEvent_details().getDateAndTime());
+        eventDate.setText(event.getEvent_details().getDate()+ " "+ event.getEvent_details().getTime());
 
         //check if the logged in user is the host of the event
         if(Profile.getInstance().getUserID().equals(event.getEvent_details().getHost_id())) {

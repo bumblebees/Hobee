@@ -1,5 +1,6 @@
 package bumblebees.hobee.hobbycategories;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import bumblebees.hobee.R;
 import bumblebees.hobee.jsonparser.JSONParser;
 import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.utilities.Profile;
+import bumblebees.hobee.utilities.SocketIO;
 
 import static android.R.id.list;
 
@@ -38,7 +40,6 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
 
     Hobby hobby;
     TextView textView;
-    JSONParser jsonParser;
     CheckBox checkBoxMonday;
     CheckBox checkBoxTuesday;
     CheckBox checkBoxWednesday;
@@ -49,6 +50,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
 
     Button submitBtn;
 
+    //TODO: change the fields if the hobby already has values in the profile
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,15 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         textView.setTypeface(face);
 
         submitBtn = (Button) findViewById(R.id.button_submit);
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                setHobby();
+                Profile.getInstance().addOrUpdateHobby(hobby);
+                SocketIO.getInstance().addHobbyToUser(hobby, Profile.getInstance().getUserID());
+                Intent intent = new Intent(HobbiesActivity.this, HobbiesChoiceActivity.class);
+                HobbiesActivity.this.startActivity(intent);
+            }
+        });
 
         // Spinner element
         spinnerDifficultyLevel = (Spinner) findViewById(R.id.spinner_difficulty_level);
@@ -80,37 +91,34 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
 
 
         // Spinner Drop down elements
-        List<String> difficultyList = new ArrayList<String>();
-        difficultyList.add("Beginner");
-        difficultyList.add("Intermediate");
-        difficultyList.add("Expert");
+        String[] difficultyList = getResources().getStringArray(R.array.hobbySkillOptions);
 
-        List<String> timeListTo = new ArrayList<String>();
-        timeListTo.add("8:00");
-        timeListTo.add("10:00");
-        timeListTo.add("12:00");
-        timeListTo.add("14:00");
-        timeListTo.add("16:00");
-        timeListTo.add("18:00");
-        timeListTo.add("20:00");
-        timeListTo.add("22:00");
-        timeListTo.add("24:00");
+        List<Double> timeListTo = new ArrayList<Double>();
+        timeListTo.add(8.00);
+        timeListTo.add(10.00);
+        timeListTo.add(12.00);
+        timeListTo.add(14.00);
+        timeListTo.add(16.00);
+        timeListTo.add(18.00);
+        timeListTo.add(20.00);
+        timeListTo.add(22.00);
+        timeListTo.add(24.00);
 
-        List<String> timeListFrom = new ArrayList<String>();
-        timeListFrom.add("8:00");
-        timeListFrom.add("10:00");
-        timeListFrom.add("12:00");
-        timeListFrom.add("14:00");
-        timeListFrom.add("16:00");
-        timeListFrom.add("18:00");
-        timeListFrom.add("20:00");
-        timeListFrom.add("22:00");
-        timeListFrom.add("24:00");
+        List<Double> timeListFrom = new ArrayList<Double>();
+        timeListFrom.add(8.00);
+        timeListFrom.add(10.00);
+        timeListFrom.add(12.00);
+        timeListFrom.add(14.00);
+        timeListFrom.add(16.00);
+        timeListFrom.add(18.00);
+        timeListFrom.add(20.00);
+        timeListFrom.add(22.00);
+        timeListFrom.add(24.00);
 
         // Creating adapter for spinner
         ArrayAdapter<String> dataAdapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, difficultyList);
-        ArrayAdapter<String> dataAdapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, timeListFrom);
-        ArrayAdapter<String> dataAdapter3 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, timeListTo);
+        ArrayAdapter<Double> dataAdapter2 = new ArrayAdapter<Double>(this, android.R.layout.simple_spinner_item, timeListFrom);
+        ArrayAdapter<Double> dataAdapter3 = new ArrayAdapter<Double>(this, android.R.layout.simple_spinner_item, timeListTo);
 
         // Drop down layout style - list view with radio button
         dataAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -132,95 +140,71 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         checkBoxSunday = (CheckBox)findViewById(R.id.checkBox_sunday);
     }
 
-    public void onCheckboxClicked(View view) {
+    /**
+     *
+     * @param view
+     */
+    private void onCheckboxClicked(View view) {
 
         boolean checked = ((CheckBox) view).isChecked();
 
         switch(view.getId()) {
             case R.id.checkBox_monday:
-                checkList.add(checkBoxMonday.getTag().toString());
+                hobby.setDatePreference(checkBoxMonday.getTag().toString());
+                //checkList.add(checkBoxMonday.getTag().toString());
                 break;
 
             case R.id.checkBox_tuesday:
-                checkList.add(checkBoxTuesday.getTag().toString());
+                hobby.setDatePreference(checkBoxTuesday.getTag().toString());
+
+                //checkList.add(checkBoxTuesday.getTag().toString());
                 break;
 
             case R.id.checkBox_wednesday:
-                checkList.add(checkBoxWednesday.getTag().toString());
+                hobby.setDatePreference(checkBoxWednesday.getTag().toString());
+
+                //checkList.add(checkBoxWednesday.getTag().toString());
                 break;
 
             case R.id.checkBox_thursday:
-                checkList.add(checkBoxThursday.getTag().toString());
+                hobby.setDatePreference(checkBoxThursday.getTag().toString());
+                //checkList.add(checkBoxThursday.getTag().toString());
                 break;
 
             case R.id.checkBox_friday:
-                checkList.add(checkBoxFriday.getTag().toString());
+                hobby.setDatePreference(checkBoxFriday.getTag().toString());
+                //checkList.add(checkBoxFriday.getTag().toString());
                 break;
 
             case R.id.checkBox_saturday:
-                checkList.add(checkBoxSaturday.getTag().toString());
+                hobby.setDatePreference(checkBoxSaturday.getTag().toString());
+                //checkList.add(checkBoxSaturday.getTag().toString());
                 break;
 
             case R.id.checkBox_sunday:
-                checkList.add(checkBoxSunday.getTag().toString());
+                hobby.setDatePreference(checkBoxSunday.getTag().toString());
+                //checkList.add(checkBoxSunday.getTag().toString());
                 break;
         }
     }
 
+    /**
+     *
+     * @param hobbyName
+     * @return
+     */
     private Hobby createHobbyInstance (String hobbyName) {
         Hobby hobby = new Hobby(hobbyName);
         return hobby;
     }
 
-    private void setBasicHobby(){
-        hobby.setDifficultyLevel("userInput");
-        hobby.setDatePreference("userInput");
-        hobby.setTimePreference("userInput");
-    }
-
-    private void setBallSportHobby(){
-
-    }
-
-    public JSONObject createJsonObject(){
-        JSONObject jsonObject = new JSONObject();
-        try {
-            JSONArray jsonArray = new JSONArray();
-
-            jsonArray.put(spinnerDifficultyLevel.getSelectedItem().toString());
-
-            if (checkBoxMonday.isChecked()) {
-                jsonArray.put(checkBoxMonday.getText().toString());
-            }
-            if (checkBoxTuesday.isChecked()) {
-                jsonArray.put(checkBoxTuesday.getText().toString());
-            }
-            if (checkBoxWednesday.isChecked()) {
-                jsonArray.put(checkBoxWednesday.getText().toString());
-            }
-            if (checkBoxThursday.isChecked()) {
-                jsonArray.put(checkBoxThursday.getText().toString());
-            }
-            if (checkBoxFriday.isChecked()) {
-                jsonArray.put(checkBoxFriday.getText().toString());
-            }
-            if (checkBoxSaturday.isChecked()) {
-                jsonArray.put(checkBoxSaturday.getText().toString());
-            }
-            if (checkBoxSunday.isChecked()) {
-                jsonArray.put(checkBoxSaturday.getText().toString());
-            }
-
-            jsonArray.put(spinnerTimeFrom.getSelectedItem().toString());
-            jsonArray.put(spinnerTimeTo.getSelectedItem().toString());
-
-            jsonObject.put("hobbies", jsonArray);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return jsonObject;
+    /**
+     * Reads all information from user input and populates the hobby with the correct values
+     */
+    private void setHobby(){
+        hobby.setDifficultyLevel(spinnerDifficultyLevel.getSelectedItem().toString());
+        hobby.setTimeFrom(Double.parseDouble(spinnerTimeFrom.getSelectedItem().toString()));
+        hobby.setTimeTo(Double.parseDouble(spinnerTimeTo.getSelectedItem().toString()));
     }
 
     /*
@@ -233,7 +217,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         String item = parent.getItemAtPosition(position).toString();
 
         // Showing selected spinner item
-        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+        //Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
     }
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
@@ -243,9 +227,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                for (String str : checkList) {
-                    //here goes the saving to JSON
-                }
+
             }
         });
     }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.google.gson.Gson;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -38,17 +40,18 @@ import bumblebees.hobee.utilities.SocketIO;
 
 
 public class EventViewActivity extends AppCompatActivity {
-   TextView eventName, eventDescription, eventLocation, eventDate, eventTime,eventPeople,eventGender, eventAge, eventHostName;
+   TextView  eventDescription, eventLocation, eventDate, eventTime,eventPeople,eventGender, eventAge, eventHostName, eventHobbySkill, eventHobby;
     Gson g;
+    String eventString;
     LinearLayout containerUsers, containerPending;
-
+    Event event;
     Button btnJoinEvent;
+    Toolbar toolbarEventView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_view);
-        eventName = (TextView) findViewById(R.id.eventName);
         eventDescription = (TextView) findViewById(R.id.eventDescription);
         eventLocation = (TextView) findViewById(R.id.eventLocation);
         eventDate = (TextView) findViewById(R.id.eventDate);
@@ -57,6 +60,11 @@ public class EventViewActivity extends AppCompatActivity {
         eventGender = (TextView) findViewById(R.id.eventGender);
         eventAge = (TextView) findViewById(R.id.eventAge);
         eventHostName = (TextView) findViewById(R.id.eventHostName);
+        eventHobby = (TextView) findViewById(R.id.eventHobby);
+        eventHobbySkill = (TextView)findViewById(R.id.eventHobbySkill);
+        toolbarEventView = (Toolbar) findViewById(R.id.toolbarViewEvent);
+        setSupportActionBar(toolbarEventView);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         containerUsers = (LinearLayout) findViewById(R.id.containerUsers);
@@ -65,7 +73,8 @@ public class EventViewActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         g = new Gson();
-        final Event event = g.fromJson(intent.getStringExtra("event"), Event.class);
+        eventString = intent.getStringExtra("event");
+        event = g.fromJson(eventString, Event.class);
 
         btnJoinEvent = (Button) findViewById(R.id.btnJoinEvent);
 
@@ -161,7 +170,7 @@ public class EventViewActivity extends AppCompatActivity {
                 }
             });
         }
-        eventName.setText(event.getEvent_details().getEvent_name());
+        getSupportActionBar().setTitle(event.getEvent_details().getEvent_name());
         eventDescription.setText(event.getEvent_details().getDescription());
         eventLocation.setText(event.getEvent_details().getLocation());
 
@@ -177,6 +186,9 @@ public class EventViewActivity extends AppCompatActivity {
         eventPeople.setText(String.valueOf(event.getEvent_details().getMaximum_people()));
         eventAge.setText(event.getEvent_details().getAge_min()+"-"+event.getEvent_details().getAge_max());
         eventHostName.setText(event.getEvent_details().getHost_name());
+
+        eventHobbySkill.setText(event.getEvent_details().getHobbySkill());
+        eventHobby.setText(event.getEvent_details().getHobbyName());
 
         for(final PublicUser publicUser : event.getEvent_details().getUsers_accepted()){
             TextView acceptedUser = new TextView(this.getApplicationContext());
@@ -258,4 +270,10 @@ public class EventViewActivity extends AppCompatActivity {
     public void viewUserProfile(String userID){
         SocketIO.getInstance().getUserAndOpenProfile(userID,getApplicationContext());
     }
+
+    public void rankEvent(View view){
+        SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(eventString, event.getEvent_details().getUsers_unranked(), getApplicationContext());
+    }
+
+
 }

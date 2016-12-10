@@ -1,6 +1,12 @@
 package bumblebees.hobee.objects;
 
+import com.google.gson.Gson;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -23,12 +29,13 @@ public class EventDetails {
     private String description;
     private List<PublicUser> users_pending;
     private List<PublicUser> users_accepted;
+    private List<String> users_unranked;
 
     private Hobby hobby;
 
     public EventDetails(String event_name, String host_id, String host_name, int age_min, int age_max,
                         String gender, String timestamp, int maximum_people, String location, String description,
-                        List<PublicUser> users_pending, List<PublicUser> users_accepted, Hobby hobby) {
+                        List<PublicUser> users_pending, List<PublicUser> users_accepted, Hobby hobby, List<String> users_unranked) {
         this.event_name = event_name;
         this.host_id = host_id;
         this.host_name = host_name;
@@ -41,6 +48,7 @@ public class EventDetails {
         this.description = description;
         this.users_pending = users_pending;
         this.users_accepted = users_accepted;
+        this.users_unranked = users_unranked;
         this.hobby = hobby;
     }
 
@@ -56,6 +64,7 @@ public class EventDetails {
         if (users_pending.contains(user)) {
             users_accepted.add(user);
             users_pending.remove(user);
+            users_unranked.add(user.getUserID());
         }
     }
 
@@ -104,10 +113,17 @@ public class EventDetails {
      * Retrieve a formatted string representing the date and time when the event takes place.
      * @return
      */
-    public String getDateAndTime(){
+    public String getDate(){
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(Long.parseLong(this.timestamp)*1000L);
-        SimpleDateFormat sdfDateTime = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        SimpleDateFormat sdfDateTime = new SimpleDateFormat("dd/MM/yyyy");
+        return String.valueOf(sdfDateTime.format(cal.getTime()));
+    }
+
+    public String getTime(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(Long.parseLong(this.timestamp)*1000L);
+        SimpleDateFormat sdfDateTime = new SimpleDateFormat("HH:mm");
         return String.valueOf(sdfDateTime.format(cal.getTime()));
     }
 
@@ -157,5 +173,29 @@ public class EventDetails {
         return description;
     }
 
+    public String getHobbyName(){
+        return hobby.getName();
+    }
+
+    public String getHobbySkill(){
+        return hobby.getDifficultyLevel();
+    }
+
+    public JSONObject getUsers_unranked() {
+        JSONArray jsonArray = new JSONArray();
+        for (int i=0; i < users_unranked.size(); i++){
+            jsonArray.put(users_unranked.get(i));
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.putOpt("array", jsonArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
 }
+
 

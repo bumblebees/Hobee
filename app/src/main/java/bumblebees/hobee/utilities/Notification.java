@@ -128,9 +128,10 @@ public class Notification {
         //check the user's day of the week preferences
         int dayOfTheWeek = event.getEvent_details().getDayOfTheWeek();
         Set<String> selectedDays = preferences.getStringSet("notification_days", null);
-        if(!selectedDays.contains(String.valueOf(dayOfTheWeek))){
-            return false;
-        }
+        if(!selectedDays.isEmpty())
+            if(!selectedDays.contains(String.valueOf(dayOfTheWeek))){
+                return false;
+            }
         //none of the notification preferences are contradicted
         //check the user's personal preferences
         return Profile.getInstance().matchesPreferences(event);

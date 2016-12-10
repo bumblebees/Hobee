@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import bumblebees.hobee.HobbyActivity;
 import bumblebees.hobee.HomeActivity;
+import bumblebees.hobee.RankUserActivity;
 import bumblebees.hobee.RegisterUserActivity;
 
 import com.facebook.AccessToken;
@@ -21,17 +22,26 @@ import com.google.gson.Gson;
 
 import bumblebees.hobee.UserProfileActivity;
 
+import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
 import bumblebees.hobee.hobbycategories.HobbyCategoryListActivity;
+
+
+import bumblebees.hobee.objects.Hobby;
+
+import bumblebees.hobee.objects.Event;
 
 import bumblebees.hobee.objects.User;
 import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -188,30 +198,10 @@ public class SocketIO {
         socket.emit("save_image", userImage);
         socket.emit("register_user", gson.toJson(user));
 
-        Intent intent = new Intent(packageContext, HobbyCategoryListActivity.class);
+        Intent intent = new Intent(packageContext, HobbiesChoiceActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);
     }
-
-//    public void sendImage(String userId, String imageString){
-//
-//        final JSONObject userImage = new JSONObject();
-//        try {
-//            userImage.put("userId", userId);
-//            userImage.put("imageString", imageString);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-//            @Override
-//            public void call(Object... objects) {
-//                socket.emit("save_image", userImage);
-//                socket.disconnect();
-//            }
-//        });
-//        socket.connect();
-//    }
 
 
     /**
@@ -250,12 +240,58 @@ public class SocketIO {
                 Intent intent = new Intent(context, UserProfileActivity.class);
                 if(userJSON != null) {
                     User user = gson.fromJson(String.valueOf(userJSON), User.class);
+
                     intent.putExtra("User",gson.toJson(user));
+                }
+                else{
+                    intent.putExtra("User", "error");
                 }
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
                 }
         });
+    }
+
+
+    public void addHobbyToUser(Hobby hobby, String userID) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("userID", userID);
+            obj.put("hobby", gson.toJson(hobby));
+            socket.emit("add_update_hobby", obj);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendUserIDArrayAndOpenRankActivity(final String event, final JSONObject userIDList , final Context context){
+
+        Log.d("Getting the user array","");
+        socket.emit("get_user_array", userIDList, new Ack() {
+            @Override
+            public void call(Object... objects) {
+                JSONArray usersArray = (JSONArray) objects[0];
+                ArrayList<String> users = new ArrayList<String>();
+                if(usersArray != null)
+                    for(int i=0;i<usersArray.length();i++)
+                        try {users.add(usersArray.getString(i));
+                        } catch (JSONException e) {e.printStackTrace();}
+
+
+                Intent intent = new Intent(context, RankUserActivity.class);
+                intent.putStringArrayListExtra("userList",users);
+                intent.putExtra("event",event);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        });
+    }
+
+
+    public void sendRanking(JSONObject ranks){
+        System.out.println(ranks.toString());
+        socket.emit("save_ranks", ranks);
+
     }
 }
