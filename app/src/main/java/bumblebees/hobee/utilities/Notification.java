@@ -149,20 +149,27 @@ public class Notification {
         }
     }
 
+    public void checkPendingUsers(String eventManagerString){
+        EventManager eventManager = g.fromJson(eventManagerString, EventManager.class);
+        sendPendingUsersTotal(eventManager);
+    }
+
     /**
      * Inform the host how many users are waiting to join the events they are hosting.
      * Go to the homepage to see the events with pending people.
      */
 
-    public void sendPendingUsersTotal(){
+    private void sendPendingUsersTotal(EventManager eventManager){
         if(preferences.getBoolean("notification_pending", false)) {
             int totalPending = 0;
-            for(Event event:Profile.getInstance().getPendingEvents()) {
+            for(Event event:eventManager.getHostedEvents()) {
                totalPending += event.getEvent_details().getUsers_pending().size();
             }
-            notificationBuilder.setContentTitle("Pending users");
-            notificationBuilder.setContentText(totalPending + " people want to join events you are hosting.");
-            sendGeneralNotification(notificationBuilder);
+            if (totalPending > 0) {
+                notificationBuilder.setContentTitle("Pending users");
+                notificationBuilder.setContentText(totalPending + " people want to join events you are hosting.");
+                sendGeneralNotification(notificationBuilder);
+            }
         }
     }
 

@@ -1,10 +1,14 @@
 package bumblebees.hobee.utilities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -20,11 +24,13 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import bumblebees.hobee.broadcastreceiver.PendingNotificationReceiver;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.User;
 
@@ -93,6 +99,7 @@ public class MQTTService extends Service implements MqttCallback {
     }
 
     public void connectMQTT(){
+
         MemoryPersistence persistence = new MemoryPersistence();
         try {
             String clientUUID = sessionManager.getUserID();
@@ -117,6 +124,7 @@ public class MQTTService extends Service implements MqttCallback {
                 });
                 eventManager = sessionManager.getEventManager();
                 user = sessionManager.getUser();
+                setUpRepeatingTasks();
 
             }
             else{
@@ -132,12 +140,15 @@ public class MQTTService extends Service implements MqttCallback {
     @Override
     public void connectionLost(Throwable cause) {
         Log.d(TAG, "service disconnected");
+        connectMQTT();
+
     }
 
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         Log.d(TAG, "message arrived from: "+topic);
         Gson gson = new Gson();
+
 
         //TODO: simplify
         try {
@@ -147,6 +158,9 @@ public class MQTTService extends Service implements MqttCallback {
                 //user is the host
                 eventManager.addHostedEvent(event);
                 sessionManager.saveEvents(eventManager);
+                Intent intent = new Intent(this, PendingNotificationReceiver.class);
+                intent.putExtra("eventManager", gson.toJson(eventManager));
+                PendingIntent pendingIntentAlarm = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_NO_CREATE);
             }
             else if(event.getEvent_details().getUsers_pending().contains(user.getSimpleUser())){
                 //user is in the pending list
@@ -219,7 +233,19 @@ public class MQTTService extends Service implements MqttCallback {
         return eventManager;
     }
 
-    public void publishOrUpdateEvent(Event event){
+    /**
+     * Set up alarms to trigger events such as notifications.
+     */
+    public void setUpRepeatingTasks(){
+        Gson gson = new Gson();
+        AlarmManager alarmManager;
+        Intent intent = new Intent(this, PendingNotificationReceiver.class);
+        intent.putExtra("eventManager", gson.toJson(eventManager));
+        PendingIntent pendingIntentAlarm = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() +
+                AlarmManager.INTERVAL_FIFTEEN_MINUTES, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntentAlarm);
 
 
     }

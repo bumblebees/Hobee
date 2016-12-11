@@ -207,7 +207,7 @@ public class SocketIO {
                 JSONObject userJSON = (JSONObject) objects[0];
                 User user = gson.fromJson(String.valueOf(userJSON), User.class);
 
-                Profile.getInstance().setUser(user);
+
 
                 Log.d("event", user.toString());
 
