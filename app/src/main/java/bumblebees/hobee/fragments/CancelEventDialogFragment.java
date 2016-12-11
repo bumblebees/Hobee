@@ -62,21 +62,6 @@ public class CancelEventDialogFragment extends DialogFragment{
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         cancelEvent(event, dialogCancelReason.getText().toString());
-                        Intent intent = new Intent(getActivity().getApplicationContext(), MQTTService.class);
-                        ServiceConnection serviceConnection = new ServiceConnection() {
-                            @Override
-                            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                                MQTTService.MQTTBinder binder = (MQTTService.MQTTBinder) iBinder;
-                                MQTTService service = binder.getInstance();
-                                service.getEvents().removeHostedEvent(event);
-                            }
-
-                            @Override
-                            public void onServiceDisconnected(ComponentName componentName) {
-
-                            }
-                        };
-                        getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
                         getActivity().finish();
                     }
                 })

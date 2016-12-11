@@ -31,6 +31,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import bumblebees.hobee.broadcastreceiver.PendingNotificationReceiver;
+import bumblebees.hobee.objects.CancelledEvent;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.User;
 
@@ -149,49 +150,66 @@ public class MQTTService extends Service implements MqttCallback {
         Log.d(TAG, "message arrived from: "+topic);
         Gson gson = new Gson();
 
-
+        if(message.getPayload().length>0) {
         //TODO: simplify
-        try {
-            final Event event = gson.fromJson(message.toString(), Event.class);
-            //check if the user's preferences match the event and if the user is not already a member of it
-            if(event.getEvent_details().getHost_id().equals(user.getUserID())){
-                //user is the host
-                eventManager.addHostedEvent(event);
-                sessionManager.saveEvents(eventManager);
-                Intent intent = new Intent(this, PendingNotificationReceiver.class);
-                intent.putExtra("eventManager", gson.toJson(eventManager));
-                PendingIntent pendingIntentAlarm = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_NO_CREATE);
-            }
-            else if(event.getEvent_details().getUsers_pending().contains(user.getSimpleUser())){
-                //user is in the pending list
-                eventManager.addPendingEvent(event);
-                sessionManager.saveEvents(eventManager);
-            }
-            else if(event.getEvent_details().getUsers_accepted().contains(user.getSimpleUser())){
-                //user is in the accepted list
-                if(eventManager.getPendingEvents().contains(event)){
-                    eventManager.removePendingEvent(event);
+            try {
+                final Event event = gson.fromJson(message.toString(), Event.class);
+                //check if the user's preferences match the event and if the user is not already a member of it
+                if (event.getEvent_details().getHost_id().equals(user.getUserID())) {
+                    //user is the host
+                    eventManager.addHostedEvent(event);
                     sessionManager.saveEvents(eventManager);
-                    new Notification(this).sendUserEventAccepted(event);
-                }
-                eventManager.addAcceptedEvent(event);
-                sessionManager.saveEvents(eventManager);
-            }
-            else if(eventManager.matchesPreferences(event, user)) {
-                //check if user had been pending on the event
-                if(eventManager.getPendingEvents().contains(event)){
-                    eventManager.removePendingEvent(event);
+                    Intent intent = new Intent(this, PendingNotificationReceiver.class);
+                    intent.putExtra("eventManager", gson.toJson(eventManager));
+                    PendingIntent pendingIntentAlarm = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_NO_CREATE);
+                } else if (event.getEvent_details().getUsers_pending().contains(user.getSimpleUser())) {
+                    //user is in the pending list
+                    eventManager.addPendingEvent(event);
                     sessionManager.saveEvents(eventManager);
-                    new Notification(this).sendUserEventRejected(event);
+                } else if (event.getEvent_details().getUsers_accepted().contains(user.getSimpleUser())) {
+                    //user is in the accepted list
+                    if (eventManager.getPendingEvents().contains(event)) {
+                        eventManager.removePendingEvent(event);
+                        sessionManager.saveEvents(eventManager);
+                        new Notification(this).sendUserEventAccepted(event);
+                    }
+                    eventManager.addAcceptedEvent(event);
+                    sessionManager.saveEvents(eventManager);
+                } else if (eventManager.matchesPreferences(event, user)) {
+                    //check if user had been pending on the event
+                    if (eventManager.getPendingEvents().contains(event)) {
+                        eventManager.removePendingEvent(event);
+                        sessionManager.saveEvents(eventManager);
+                        new Notification(this).sendUserEventRejected(event);
+                    }
+                    if (eventManager.addEligibleEvent(event.getType(), event)) {
+                        new Notification(this).sendNewEvent(event);
+                    }
                 }
-                if(eventManager.addEligibleEvent(event.getType(), event)) {
-                    new Notification(this).sendNewEvent(event);
+            } catch (Exception e) {
+                //check if the message received was a cancelled event
+                try {
+                    CancelledEvent cancelledEvent = gson.fromJson(String.valueOf(message), CancelledEvent.class);
+                    if(eventManager.getHostedEvents().contains(cancelledEvent.getBasicEvent())){
+                        //the user is the host
+                        eventManager.removeHostedEvent(cancelledEvent.getBasicEvent());
+                    }
+                    else if(eventManager.getAcceptedEvents().contains(cancelledEvent.getBasicEvent()) || eventManager.getPendingEvents().contains(cancelledEvent.getBasicEvent())){
+                        //the user was participating in the event or waiting to be accepted
+                        new Notification(this).sendCancelledEvent(cancelledEvent);
+                        eventManager.removePendingEvent(cancelledEvent.getBasicEvent());
+                        eventManager.getAcceptedEvents().remove(cancelledEvent.getBasicEvent());
+                    }
+                    sessionManager.saveEvents(eventManager);
                 }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                    catch(Exception ee){
+                        //message was something that could not be processed, ignore it
+                        ee.printStackTrace();
+                    }
 
+
+            }
+        }
     }
 
     @Override

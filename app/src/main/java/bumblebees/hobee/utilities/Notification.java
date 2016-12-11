@@ -19,6 +19,7 @@ import java.util.Set;
 import bumblebees.hobee.EventViewActivity;
 import bumblebees.hobee.HomeActivity;
 import bumblebees.hobee.R;
+import bumblebees.hobee.objects.CancelledEvent;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.User;
 
@@ -196,6 +197,17 @@ public class Notification {
 
         sendEventNotification(notificationBuilder, event);
 
+    }
+
+    /**
+     * Send a notification that an event has been cancelled.
+     * @param event
+     */
+    public void sendCancelledEvent(CancelledEvent event){
+        notificationBuilder.setContentTitle("One of your events has been cancelled.");
+        notificationBuilder.setContentText("Reason :"+event.getReason());
+
+        sendGeneralNotification(notificationBuilder);
     }
 
 
