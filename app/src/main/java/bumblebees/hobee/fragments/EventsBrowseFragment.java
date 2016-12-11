@@ -1,6 +1,11 @@
 package bumblebees.hobee.fragments;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -22,6 +27,7 @@ import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.utilities.HobbyExpandableListAdapter;
 import bumblebees.hobee.utilities.MQTT;
 import bumblebees.hobee.utilities.MQTTMessageReceiver;
+import bumblebees.hobee.utilities.MQTTService;
 import bumblebees.hobee.utilities.Profile;
 
 
@@ -36,6 +42,8 @@ public class EventsBrowseFragment extends Fragment {
     SwipeRefreshLayout refreshLayout;
 
     HobbyExpandableListAdapter adapter;
+    private ServiceConnection serviceConnection;
+    private MQTTService service;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,14 +72,38 @@ public class EventsBrowseFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        Intent intent = new Intent(getContext(), MQTTService.class);
+        serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                MQTTService.MQTTBinder binder = (MQTTService.MQTTBinder) iBinder;
+                service = binder.getInstance();
+
+                for (String hobby : hobbies) {
+
+                    Pair<String, ArrayList<Event>> pair = new Pair<>(hobby.toUpperCase(), service.getEvents().getEligibleEventList().get(hobby));
+                    content.add(pair);
+                }
+
+                adapter = new HobbyExpandableListAdapter(getActivity().getApplicationContext(), content);
+                eventsTabList.setAdapter(adapter);
+
+                //expand all groups by default
+                for(int i=0;i<content.size(); i++){
+                    eventsTabList.expandGroup(i);
+                }
+
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+
+            }
+        };
+        getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
         adapter = new HobbyExpandableListAdapter(getActivity().getApplicationContext(), content);
         eventsTabList.setAdapter(adapter);
-
-        //expand all groups by default
-        for(String hobby: hobbies){
-           // eventsTabList.expandGroup(i);
-            adapter.notifyDataSetChanged();
-        }
 
     }
 
@@ -79,9 +111,8 @@ public class EventsBrowseFragment extends Fragment {
      * Find events that match the user's preferences and add them to the list.
      */
     public void findEvents(){
-      for (String hobby : hobbies) {
-          Pair<String, ArrayList<Event>> pair = new Pair<>(hobby.toUpperCase(), Profile.getInstance().getEligibleEventList().get(hobby));
-          content.add(pair);
-      }
+
+
+
   }
 }

@@ -50,14 +50,31 @@ public class SessionManager {
     }
 
     /**
-     * Save the user data in the preferences.
+     * Save the user and event data in the preferences.
      * @param user - User object
      * @param eventManager - event manager associated with the user
      */
-    public void saveUserData(User user, EventManager eventManager){
+    public void saveDataAndEvents(User user, EventManager eventManager){
+        saveUser(user);
+        saveEvents(eventManager);
+    }
+
+    /**
+     * Save the event data to the preferences.
+     * @param eventManager
+     */
+    public void saveEvents(EventManager eventManager){
+        editor.putString(EVENT_MANAGER, gson.toJson(eventManager));
+        editor.commit();
+    }
+
+    /**
+     * Save the user data to the preferences
+     * @param user
+     */
+    public void saveUser(User user){
         editor.putString(USER, gson.toJson(user));
         editor.putString(USERID, user.getUserID());
-        editor.putString(EVENT_MANAGER, gson.toJson(eventManager));
         editor.commit();
     }
 

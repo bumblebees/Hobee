@@ -3,10 +3,13 @@ package bumblebees.hobee;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -71,6 +74,12 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        Intent mqttServiceIntent = new Intent(this, MQTTService.class);
+        startService(mqttServiceIntent);
+
+
         setContentView(R.layout.activity_home);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
@@ -135,8 +144,13 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-        subscribeTopics();
+
+
+
+
+        //subscribeTopics();
     }
+
 
     /**
      *  When back button is pressed this checks if menu is opened and closes if true.

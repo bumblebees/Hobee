@@ -39,6 +39,9 @@ public class HobbyExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int i) {
+        if(pairArrayList.get(i).second == null){
+            return 0;
+        }
         return pairArrayList.get(i).second.size();
     }
 

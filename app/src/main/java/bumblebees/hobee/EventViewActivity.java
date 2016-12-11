@@ -1,8 +1,11 @@
 package bumblebees.hobee;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
@@ -35,6 +39,7 @@ import bumblebees.hobee.fragments.CancelEventDialogFragment;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.PublicUser;
 import bumblebees.hobee.utilities.MQTT;
+import bumblebees.hobee.utilities.MQTTService;
 import bumblebees.hobee.utilities.Profile;
 import bumblebees.hobee.utilities.SocketIO;
 
@@ -223,9 +228,6 @@ public class EventViewActivity extends AppCompatActivity {
         event.getEvent_details().addUser(currentUser);
 
         updateEvent(event);
-        Profile.getInstance().removeEligibleEvent(event.getType(), event);
-
-        //TODO: add event to user's events
 
         Context context = getApplicationContext();
         CharSequence text = "Event joined!";
@@ -243,12 +245,23 @@ public class EventViewActivity extends AppCompatActivity {
      * Updates the event on the MQTT broker.
      * @param event - event to be updated
      */
-    private void updateEvent(Event event) {
-        String topic = event.getTopic();
-        MqttMessage message = new MqttMessage(g.toJson(event).getBytes());
-        message.setRetained(true);
-        message.setQos(1);
-        MQTT.getInstance().publishMessage(topic, message);
+    private void updateEvent(final Event event) {
+        Intent intent = new Intent(this, MQTTService.class);
+        ServiceConnection serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                MQTTService.MQTTBinder binder = (MQTTService.MQTTBinder) iBinder;
+                MQTTService service = binder.getInstance();
+                service.addOrUpdateEvent(event);
+                service.getEvents().removeEligibleEvent(event.getType(), event);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+
+            }
+        };
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
     }
 
@@ -258,7 +271,7 @@ public class EventViewActivity extends AppCompatActivity {
      */
     private void cancelEvent(Event event){
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setVersion(0.3).create();
         DialogFragment cancelEventDialog = new CancelEventDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString("event", gson.toJson(event));

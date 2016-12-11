@@ -3,8 +3,13 @@ package bumblebees.hobee.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -29,6 +34,7 @@ import java.net.UnknownHostException;
 import bumblebees.hobee.EventViewActivity;
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
+import bumblebees.hobee.utilities.MQTTService;
 import bumblebees.hobee.utilities.Profile;
 
 public class CancelEventDialogFragment extends DialogFragment{
@@ -56,7 +62,21 @@ public class CancelEventDialogFragment extends DialogFragment{
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         cancelEvent(event, dialogCancelReason.getText().toString());
-                        Profile.getInstance().removeHostedEvent(event);
+                        Intent intent = new Intent(getActivity().getApplicationContext(), MQTTService.class);
+                        ServiceConnection serviceConnection = new ServiceConnection() {
+                            @Override
+                            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                                MQTTService.MQTTBinder binder = (MQTTService.MQTTBinder) iBinder;
+                                MQTTService service = binder.getInstance();
+                                service.getEvents().removeHostedEvent(event);
+                            }
+
+                            @Override
+                            public void onServiceDisconnected(ComponentName componentName) {
+
+                            }
+                        };
+                        getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
                         getActivity().finish();
                     }
                 })

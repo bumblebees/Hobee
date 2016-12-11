@@ -1,6 +1,12 @@
 package bumblebees.hobee.fragments;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -19,11 +25,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import bumblebees.hobee.HomeActivity;
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.utilities.HobbyExpandableListAdapter;
 import bumblebees.hobee.utilities.MQTT;
 import bumblebees.hobee.utilities.MQTTMessageReceiver;
+import bumblebees.hobee.utilities.MQTTService;
 import bumblebees.hobee.utilities.Notification;
 import bumblebees.hobee.utilities.Profile;
 import bumblebees.hobee.utilities.SocketIO;
@@ -39,6 +47,9 @@ public class EventsMainFragment extends Fragment {
 
     HobbyExpandableListAdapter adapter;
     private SwipeRefreshLayout refreshLayout;
+    private ServiceConnection serviceConnection;
+    private MQTTService service;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,9 +57,12 @@ public class EventsMainFragment extends Fragment {
 
 
         content = new ArrayList<>();
-        content.add(new Pair<>("Hosted events", Profile.getInstance().getHostedEvents()));
-        content.add(new Pair<>("Joined events", Profile.getInstance().getAcceptedEvents()));
-        content.add(new Pair<>("Pending events", Profile.getInstance().getPendingEvents()));
+        content.add(new Pair<>("Hosted events", new ArrayList<Event>()));
+        content.add(new Pair<>("Joined events", new ArrayList<Event>()));
+        content.add(new Pair<>("Pending events", new ArrayList<Event>()));
+
+
+
     }
 
     @Override
@@ -70,18 +84,43 @@ public class EventsMainFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        adapter = new HobbyExpandableListAdapter(getActivity().getApplicationContext(), content);
-        eventsTabList.setAdapter(adapter);
+        Intent intent = new Intent(getContext(), MQTTService.class);
+        serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                MQTTService.MQTTBinder binder = (MQTTService.MQTTBinder) iBinder;
+                service = binder.getInstance();
 
-        //expand all groups by default
-        for(int i=0;i<3; i++){
-            eventsTabList.expandGroup(i);
-        }
+                content.set(0, new Pair<>("Hosted events", service.getEvents().getHostedEvents()));
+                content.set(1, new Pair<>("Joined events", service.getEvents().getAcceptedEvents()));
+                content.set(2, new Pair<>("Pending events", service.getEvents().getPendingEvents()));
+
+                adapter = new HobbyExpandableListAdapter(getActivity().getApplicationContext(), content);
+                eventsTabList.setAdapter(adapter);
+
+                //expand all groups by default
+                for(int i=0;i<content.size(); i++){
+                  eventsTabList.expandGroup(i);
+                }
+
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+
+            }
+        };
+        getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        adapter.notifyDataSetChanged();
+        if(adapter!= null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 }

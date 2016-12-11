@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         SocketIO.getInstance().start();
         session = new SessionManager(getApplicationContext());
-        MQTT.getInstance().connect(getApplicationContext());
+        //MQTT.getInstance().connect(getApplicationContext());
 
         //initialize the application settings
         PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preferences, false);

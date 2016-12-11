@@ -2,10 +2,13 @@ package bumblebees.hobee;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
@@ -27,6 +30,7 @@ import bumblebees.hobee.objects.EventDetails;
 import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.PublicUser;
 import bumblebees.hobee.utilities.DatePickerFragment;
+import bumblebees.hobee.utilities.MQTTService;
 import bumblebees.hobee.utilities.Profile;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -246,16 +250,26 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
                     timestamp, Integer.parseInt(inputEventNumber.getText().toString()), inputEventLocation.getText().toString(), inputEventDescription.getText().toString(),
                     new ArrayList<PublicUser>(), acceptedUsers, hobby, users_unranked);
 
-            Event event = new Event(uuid, eventCategory, String.valueOf(timeCreated), eventDetails, areas.get(spinnerLocation.getSelectedItem().toString()));
+            final Event event = new Event(uuid, eventCategory, String.valueOf(timeCreated), eventDetails, areas.get(spinnerLocation.getSelectedItem().toString()));
 
-            Gson g = new GsonBuilder().setVersion(0.3).create();
 
-            MqttMessage msg = new MqttMessage(g.toJson(event, Event.class).getBytes());
-            msg.setRetained(true);
-            msg.setQos(1);
-            String topic = event.getTopic();
+            Intent intent = new Intent(this, MQTTService.class);
+            ServiceConnection serviceConnection = new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                    MQTTService.MQTTBinder binder = (MQTTService.MQTTBinder) iBinder;
+                    MQTTService service = binder.getInstance();
+                    service.addOrUpdateEvent(event);
+                }
 
-            MQTT.getInstance().publishMessage(topic, msg);
+                @Override
+                public void onServiceDisconnected(ComponentName componentName) {
+
+                }
+            };
+            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+
 
             Context context = getApplicationContext();
             CharSequence text = "Event created!";

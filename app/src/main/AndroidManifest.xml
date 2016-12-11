@@ -76,8 +76,11 @@
         <activity android:name=".hobbycategories.HobbyCategoryListActivity"/>
         <activity android:name=".hobbycategories.HobbiesActivity"/>
         <activity android:name=".hobbycategories.HobbiesChoiceActivity"/>
+
+        <service
+            android:name=".utilities.MQTTService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"/>
 
         <receiver
             android:name=".broadcastreceiver.MQTTBootReceiver"
