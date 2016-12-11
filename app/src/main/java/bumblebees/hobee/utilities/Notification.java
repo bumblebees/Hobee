@@ -203,8 +203,8 @@ public class Notification {
      * Send a notification that an event has been cancelled.
      * @param event
      */
-    public void sendCancelledEvent(CancelledEvent event){
-        notificationBuilder.setContentTitle("One of your events has been cancelled.");
+    public void sendCancelledEvent(CancelledEvent event, String type){
+        notificationBuilder.setContentTitle("One of your "+ type +" events has been cancelled.");
         notificationBuilder.setContentText("Reason :"+event.getReason());
 
         sendGeneralNotification(notificationBuilder);

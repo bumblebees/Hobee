@@ -10,6 +10,11 @@ import bumblebees.hobee.objects.User;
 
 public class EventManager {
 
+
+    public enum UserStatus {HOST, NEW_ACCEPTED, OLD_ACCEPTED, PENDING, REJECTED, NEW_MATCH, OLD_MATCH, NONE};
+    public enum EventStatus {HOSTED_EVENT, ACCEPTED_EVENT, PENDING_EVENT, EVENT_NOT_FOUND};
+
+
     private ArrayList<Event> hostedEvents = new ArrayList<>();
     private ArrayList<Event> acceptedEvents = new ArrayList<>();
     private ArrayList<Event> pendingEvents = new ArrayList<>();
@@ -30,6 +35,68 @@ public class EventManager {
         return pendingEvents;
     }
 
+    /**
+     * Check if the user belongs to the event, or if the user is eligible for the event.
+     * @param user
+     * @param event
+     * @return enum corresponding to the user's position in the event
+     * NEW_MATCH - the event is new for the user
+     * OLD_MATCH - the user has been notified about the event already
+     * NONE - the user does not match the event
+     */
+    public UserStatus processEvent(User user, Event event){
+        if(event.getEvent_details().getHost_id().equals(user.getUserID())){
+            addHostedEvent(event);
+            return UserStatus.HOST;
+        }
+        if(event.getEvent_details().getUsers_accepted().contains(user.getSimpleUser())){
+            if(acceptedEvents.contains(event)){
+                return UserStatus.OLD_ACCEPTED;
+            }
+            else{
+                removePendingEvent(event);
+                acceptedEvents.add(event);
+                return UserStatus.NEW_ACCEPTED;
+            }
+        }
+        if(event.getEvent_details().getUsers_pending().contains(user.getSimpleUser())){
+            addPendingEvent(event);
+            return UserStatus.PENDING;
+        }
+        if(pendingEvents.contains(event)){
+            removePendingEvent(event);
+            return UserStatus.REJECTED;
+        }
+        if(matchesPreferences(event, user)){
+            if(addEligibleEvent(event.getType(), event)){
+                return UserStatus.NEW_MATCH;
+            }
+            else return UserStatus.OLD_MATCH;
+        }
+        return UserStatus.NONE;
+    }
+
+    /**
+     * Cancel an event, if it exists in the Manager.
+     * @param event
+     * @return
+     */
+    public EventStatus cancelEvent(Event event){
+        if(hostedEvents.contains(event)){
+            hostedEvents.remove(event);
+            return EventStatus.HOSTED_EVENT;
+        }
+        if(acceptedEvents.contains(event)){
+            acceptedEvents.remove(event);
+            return EventStatus.ACCEPTED_EVENT;
+        }
+        if(pendingEvents.contains(event)){
+            pendingEvents.remove(event);
+            return EventStatus.PENDING_EVENT;
+        }
+        return EventStatus.EVENT_NOT_FOUND;
+    }
+
     public void addHostedEvent(Event event){
         if(hostedEvents.contains(event)){
             hostedEvents.remove(event);
@@ -37,12 +104,7 @@ public class EventManager {
         hostedEvents.add(event);
     }
 
-    public void addAcceptedEvent(Event event){
-        if(acceptedEvents.contains(event)){
-            acceptedEvents.remove(event);
-        }
-        acceptedEvents.add(event);
-    }
+
 
     public void addPendingEvent(Event event){
         if(pendingEvents.contains(event)){
