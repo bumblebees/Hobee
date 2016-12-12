@@ -22,9 +22,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.EventDetails;
 import bumblebees.hobee.objects.Hobby;
@@ -32,8 +29,6 @@ import bumblebees.hobee.objects.PublicUser;
 import bumblebees.hobee.utilities.DatePickerFragment;
 import bumblebees.hobee.utilities.MQTTService;
 import bumblebees.hobee.utilities.Profile;
-
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,7 +40,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import bumblebees.hobee.utilities.MQTT;
 import bumblebees.hobee.utilities.TimePickerFragment;
 import io.apptik.widget.MultiSlider;
 

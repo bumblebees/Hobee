@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,24 +16,12 @@ import android.widget.ExpandableListView;
 
 import com.google.gson.Gson;
 
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
-import bumblebees.hobee.HomeActivity;
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.utilities.HobbyExpandableListAdapter;
-import bumblebees.hobee.utilities.MQTT;
-import bumblebees.hobee.utilities.MQTTMessageReceiver;
 import bumblebees.hobee.utilities.MQTTService;
-import bumblebees.hobee.utilities.Notification;
-import bumblebees.hobee.utilities.Profile;
-import bumblebees.hobee.utilities.SocketIO;
-import io.socket.client.Ack;
 
 
 public class EventsMainFragment extends Fragment {

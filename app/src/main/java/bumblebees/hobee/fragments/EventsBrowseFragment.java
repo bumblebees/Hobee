@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,16 +16,12 @@ import android.widget.ExpandableListView;
 
 import com.google.gson.Gson;
 
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-
 
 import java.util.ArrayList;
 
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.utilities.HobbyExpandableListAdapter;
-import bumblebees.hobee.utilities.MQTT;
-import bumblebees.hobee.utilities.MQTTMessageReceiver;
 import bumblebees.hobee.utilities.MQTTService;
 import bumblebees.hobee.utilities.Profile;
 
