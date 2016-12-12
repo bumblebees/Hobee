@@ -48,7 +48,8 @@ public class MQTTService extends Service implements MqttCallback {
 
     private User user;
     private EventManager eventManager;
-
+    private HashSet<String> subscribedTopics = new HashSet<>();
+    private HashSet<String> possibleTopics = new HashSet<>();
 
 
     public MQTTService() {
@@ -108,8 +109,10 @@ public class MQTTService extends Service implements MqttCallback {
                 clientID = "hobee-"+clientUUID;
                 client = new MqttAndroidClient(this, mqttAddress, clientID, persistence);
                 client.setCallback(this);
+
                 MqttConnectOptions options = new MqttConnectOptions();
                 options.setCleanSession(false);
+
                 IMqttToken token = client.connect(options);
                 token.setActionCallback(new IMqttActionListener() {
                     @Override
@@ -218,33 +221,72 @@ public class MQTTService extends Service implements MqttCallback {
 
     }
 
-    private void updateData(){
+    public void updateData(){
         sessionManager.saveDataAndEvents(user, eventManager);
+        subscribeTopics();
     }
 
     private void subscribeTopics(){
-        final Gson gson = new Gson();
+
+        possibleTopics = getPossibleTopics();
+        Log.d(TAG, "sub:"+subscribedTopics.size());
+        Log.d(TAG, "pos:"+possibleTopics.size());
+        if (possibleTopics.equals(subscribedTopics)) { //nothing has changed
+            //do nothing
+        } else { //something has changed in the topics
+            //copy the original topic sets to modify
+            HashSet<String> cSubscribedTopics = (HashSet<String>) subscribedTopics.clone();
+            HashSet<String> cPossibleTopics = (HashSet<String>) possibleTopics.clone();
+
+            //subscribe to the additional topics
+            cPossibleTopics.removeAll(subscribedTopics);
+            for(String topic : cPossibleTopics){
+                try {
+                    if(subscribedTopics.add(topic)) {
+                        client.subscribe(topic, 1);
+                    }
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //unsubscribe from the topics
+            cSubscribedTopics.removeAll(possibleTopics);
+            HashSet<String> removedTopics = new HashSet<>();
+            for(String topic : cSubscribedTopics){
+                try {
+                    client.unsubscribe(topic);
+                    removedTopics.add(topic);
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }
+            }
+            eventManager.findAndRemoveEvents(removedTopics, user.getHobbyNames());
+            subscribedTopics = possibleTopics;
+            sessionManager.saveEvents(eventManager);
+        }
+
+    }
+
+    private HashSet<String> getPossibleTopics(){
+        HashSet<String> topics = new HashSet<>();
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         Set<String> emptyLocation = new HashSet<>(); //to prevent null pointer exception
         Set<String> preferencesStringSet = preferences.getStringSet("location_topics", emptyLocation);
 
+        user = sessionManager.getUser();
         ArrayList<String> hobbies = user.getHobbyNames();
-
-        if(!preferencesStringSet.isEmpty()){
-            for(String location:preferencesStringSet){
-                for(final String hobby : hobbies){
-                    //subscribe to all topics that match the location and the hobby
-                    String topic = "geo/"+location+"/event/hobby/"+hobby+"/#";
-                    try {
-                        client.subscribe(topic, 1);
-                    } catch (MqttException e) {
-                        e.printStackTrace();
-                    }
+        if(!preferencesStringSet.isEmpty()) {
+            //create the product of the location and the available hobbies
+            for (String location : preferencesStringSet) {
+                for (final String hobby : hobbies) {
+                    String topic = "geo/" + location + "/event/hobby/" + hobby + "/#";
+                    topics.add(topic);
                 }
             }
         }
-
-
+        return topics;
 
     }
 

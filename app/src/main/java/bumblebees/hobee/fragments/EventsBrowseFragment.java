@@ -64,7 +64,6 @@ public class EventsBrowseFragment extends Fragment {
                 refreshLayout.setRefreshing(false);
             }
         });
-        findEvents();
         return view;
     }
 
@@ -85,13 +84,11 @@ public class EventsBrowseFragment extends Fragment {
                     content.add(pair);
                 }
 
-                adapter = new HobbyExpandableListAdapter(getActivity().getApplicationContext(), content);
-                eventsTabList.setAdapter(adapter);
-
                 //expand all groups by default
                 for(int i=0;i<content.size(); i++){
                     eventsTabList.expandGroup(i);
                 }
+                adapter.notifyDataSetChanged();
 
             }
 
@@ -107,12 +104,12 @@ public class EventsBrowseFragment extends Fragment {
 
     }
 
-    /**
-     * Find events that match the user's preferences and add them to the list.
-     */
-    public void findEvents(){
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(adapter!= null) {
+            adapter.notifyDataSetChanged();
 
-
-
-  }
+        }
+    }
 }

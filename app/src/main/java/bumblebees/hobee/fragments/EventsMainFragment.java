@@ -73,6 +73,9 @@ public class EventsMainFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                if(service!=null){
+                    service.updateData();
+                }
                 adapter.notifyDataSetChanged();
                 refreshLayout.setRefreshing(false);
             }
@@ -95,13 +98,13 @@ public class EventsMainFragment extends Fragment {
                 content.set(1, new Pair<>("Joined events", service.getEvents().getAcceptedEvents()));
                 content.set(2, new Pair<>("Pending events", service.getEvents().getPendingEvents()));
 
-                adapter = new HobbyExpandableListAdapter(getActivity().getApplicationContext(), content);
-                eventsTabList.setAdapter(adapter);
+
 
                 //expand all groups by default
                 for(int i=0;i<content.size(); i++){
                   eventsTabList.expandGroup(i);
                 }
+                adapter.notifyDataSetChanged();
 
             }
 
@@ -111,8 +114,8 @@ public class EventsMainFragment extends Fragment {
             }
         };
         getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-
-
+        adapter = new HobbyExpandableListAdapter(getActivity().getApplicationContext(), content);
+        eventsTabList.setAdapter(adapter);
 
     }
 
@@ -121,6 +124,11 @@ public class EventsMainFragment extends Fragment {
         super.onResume();
         if(adapter!= null) {
             adapter.notifyDataSetChanged();
+
         }
+        if(service!=null){
+            service.updateData();
+        }
+
     }
 }

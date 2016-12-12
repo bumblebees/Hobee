@@ -134,8 +134,7 @@ public class Notification {
                 return false;
             }
         //none of the notification preferences are contradicted
-        //check the user's personal preferences
-        return Profile.getInstance().matchesPreferences(event);
+        return true;
     }
 
     /**

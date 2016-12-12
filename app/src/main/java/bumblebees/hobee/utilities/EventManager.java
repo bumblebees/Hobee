@@ -1,14 +1,20 @@
 package bumblebees.hobee.utilities;
 
 
+import android.util.Log;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.User;
 
 public class EventManager {
+
 
 
     public enum UserStatus {HOST, NEW_ACCEPTED, OLD_ACCEPTED, PENDING, REJECTED, NEW_MATCH, OLD_MATCH, NONE};
@@ -19,9 +25,6 @@ public class EventManager {
     private ArrayList<Event> acceptedEvents = new ArrayList<>();
     private ArrayList<Event> pendingEvents = new ArrayList<>();
     private HashMap<String, ArrayList<Event>> eligibleEventList = new HashMap<>();
-
-
-
 
     public ArrayList<Event> getAcceptedEvents() {
         return acceptedEvents;
@@ -237,5 +240,51 @@ public class EventManager {
         }
         return false;
     }
+
+
+    public void findAndRemoveEvents(HashSet<String> topics, ArrayList<String> hobbies) {
+        //TODO: this is complicated, maybe replace with a HashMap or something easier to search in
+
+
+        ArrayList<Event> removedEvents = new ArrayList<>();
+        for(Event event : hostedEvents){
+            if(topics.contains(event.getSubscribeTopic())){
+                removedEvents.add(event);
+            }
+        }
+        hostedEvents.removeAll(removedEvents);
+        removedEvents.clear();
+        for(Event event : acceptedEvents){
+            if(topics.contains(event.getSubscribeTopic())){
+                removedEvents.add(event);
+            }
+        }
+        acceptedEvents.removeAll(removedEvents);
+        removedEvents.clear();
+        for(Event event : pendingEvents){
+            if(topics.contains(event.getSubscribeTopic())){
+                removedEvents.add(event);
+            }
+        }
+        pendingEvents.removeAll(removedEvents);
+        removedEvents.clear();
+        for(String hobby : hobbies) {
+            if (eligibleEventList.get(hobby) != null) {
+                for (Event event : eligibleEventList.get(hobby)) {
+                    if (topics.contains(event.getSubscribeTopic())) {
+                        removedEvents.add(event);
+                    }
+                }
+                eligibleEventList.get(hobby).removeAll(removedEvents);
+                removedEvents.clear();
+            }
+        }
+
+
+
+
+    }
+
+
 
 }
