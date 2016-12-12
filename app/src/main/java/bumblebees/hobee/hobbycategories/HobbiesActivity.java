@@ -65,6 +65,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         Typeface face= Typeface.createFromAsset(getAssets(), "font/Proxima.ttf");
         textView.setTypeface(face);
 
+        // When the submit button is clicked, all information from user input is added to the hobby
         submitBtn = (Button) findViewById(R.id.button_submit);
         submitBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -88,6 +89,14 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         spinnerTimeFrom.setOnItemSelectedListener(this);
         spinnerTimeTo.setOnItemSelectedListener(this);
 
+        // Checkbox element
+        checkBoxMonday = (CheckBox)findViewById(R.id.checkBox_monday);
+        checkBoxTuesday = (CheckBox)findViewById(R.id.checkBox_tuesday);
+        checkBoxWednesday = (CheckBox)findViewById(R.id.checkBox_wednesday);
+        checkBoxThursday = (CheckBox)findViewById(R.id.checkBox_thursday);
+        checkBoxFriday = (CheckBox)findViewById(R.id.checkBox_friday);
+        checkBoxSaturday = (CheckBox)findViewById(R.id.checkBox_saturday);
+        checkBoxSunday = (CheckBox)findViewById(R.id.checkBox_sunday);
 
         // Spinner Drop down elements
         List<String> difficultyList = new ArrayList<String>();
@@ -131,19 +140,12 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         spinnerDifficultyLevel.setAdapter(dataAdapter1);
         spinnerTimeFrom.setAdapter(dataAdapter2);
         spinnerTimeTo.setAdapter(dataAdapter3);
-
-        // Checkbox element
-        checkBoxMonday = (CheckBox)findViewById(R.id.checkBox_monday);
-        checkBoxTuesday = (CheckBox)findViewById(R.id.checkBox_tuesday);
-        checkBoxWednesday = (CheckBox)findViewById(R.id.checkBox_wednesday);
-        checkBoxThursday = (CheckBox)findViewById(R.id.checkBox_thursday);
-        checkBoxFriday = (CheckBox)findViewById(R.id.checkBox_friday);
-        checkBoxSaturday = (CheckBox)findViewById(R.id.checkBox_saturday);
-        checkBoxSunday = (CheckBox)findViewById(R.id.checkBox_sunday);
     }
 
-
-    public void onItemChecked(){
+    /**
+     * Reads from the selcted checkboxes and adds the checked strings to Hobby.DatePreference
+     */
+    private void readDayOfWeek(){
         if (checkBoxMonday.isChecked()){
             hobby.setDatePreference(checkBoxMonday.getTag().toString());
         }
@@ -167,56 +169,9 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         }
         else {
             // TODO: ERROR HANDLING SHOULD BE DONE HERE! - Day must be selected
+            // Pop up to promt user to choose a date?
         }
     }
-    /**
-     *
-     * @param view
-
-    private void onCheckboxClicked(View view) {
-
-        boolean checked = ((CheckBox) view).isChecked();
-
-        switch(View view) {
-            case R.id.checkBox_monday:
-                hobby.setDatePreference(checkBoxMonday.getTag().toString());
-                //checkList.add(checkBoxMonday.getTag().toString());
-                break;
-
-            case R.id.checkBox_tuesday:
-                hobby.setDatePreference(checkBoxTuesday.getTag().toString());
-
-                //checkList.add(checkBoxTuesday.getTag().toString());
-                break;
-
-            case R.id.checkBox_wednesday:
-                hobby.setDatePreference(checkBoxWednesday.getTag().toString());
-
-                //checkList.add(checkBoxWednesday.getTag().toString());
-                break;
-
-            case R.id.checkBox_thursday:
-                hobby.setDatePreference(checkBoxThursday.getTag().toString());
-                //checkList.add(checkBoxThursday.getTag().toString());
-                break;
-
-            case R.id.checkBox_friday:
-                hobby.setDatePreference(checkBoxFriday.getTag().toString());
-                //checkList.add(checkBoxFriday.getTag().toString());
-                break;
-
-            case R.id.checkBox_saturday:
-                hobby.setDatePreference(checkBoxSaturday.getTag().toString());
-                //checkList.add(checkBoxSaturday.getTag().toString());
-                break;
-
-            case R.id.checkBox_sunday:
-                hobby.setDatePreference(checkBoxSunday.getTag().toString());
-                //checkList.add(checkBoxSunday.getTag().toString());
-                break;
-        }
-    }
-    */
 
     /**
      *
@@ -235,7 +190,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         hobby.setDifficultyLevel(spinnerDifficultyLevel.getSelectedItem().toString());
         hobby.setTimeFrom(spinnerTimeFrom.getSelectedItem().toString());
         hobby.setTimeTo(spinnerTimeTo.getSelectedItem().toString());
-        onItemChecked();
+        readDayOfWeek();
     }
 
     /*
