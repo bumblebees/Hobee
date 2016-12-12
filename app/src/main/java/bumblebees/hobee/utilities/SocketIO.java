@@ -22,9 +22,7 @@ import bumblebees.hobee.UserProfileActivity;
 import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
 
 
-import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.Hobby;
-
 import bumblebees.hobee.objects.User;
 import io.socket.client.Ack;
 import io.socket.client.IO;
@@ -208,6 +206,7 @@ public class SocketIO {
             public void call(Object... objects) {
                 JSONObject userJSON = (JSONObject) objects[0];
                 User user = gson.fromJson(String.valueOf(userJSON), User.class);
+
                 SessionManager session = new SessionManager(context);
                 session.saveDataAndEvents(user, new EventManager());
                 session.setPreferences(user.getLoginId(), user.getOrigin());

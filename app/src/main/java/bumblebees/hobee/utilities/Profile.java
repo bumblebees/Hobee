@@ -132,7 +132,6 @@ public class Profile{
         return age;
     }
 
-
     public void addOrUpdateHobby(Hobby hobby){
         if(user.getHobbies().contains(hobby)){
             user.getHobbies().remove(hobby);

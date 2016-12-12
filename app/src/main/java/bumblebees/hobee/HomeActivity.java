@@ -147,7 +147,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-
         for(final Event event:Profile.getInstance().getHistoryEvents()){
             if(event.checkUnranked(Profile.getInstance().getUser())){
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -167,7 +166,6 @@ public class HomeActivity extends AppCompatActivity {
                 alert.show();
             }
         }
-
         }
 
 
