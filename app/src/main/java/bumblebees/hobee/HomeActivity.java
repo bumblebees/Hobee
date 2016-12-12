@@ -13,12 +13,18 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -49,10 +55,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 public class HomeActivity extends AppCompatActivity {
 
     SessionManager session;
-    Button btnNewEvent;
-    Button btnGetEvents;
-    TextView textView;
-    LinearLayout eventList;
     RelativeLayout drawerPane;
     DrawerLayout drawerLayout;
     DrawerListAdapter adapter;
@@ -62,7 +64,7 @@ public class HomeActivity extends AppCompatActivity {
     ListView drawerList;
     TabLayout tabLayout;
     ViewPager viewPager;
-    Button hobbyChange;
+    Toolbar appToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,8 @@ public class HomeActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         session = new SessionManager(getApplicationContext());
 
+        appToolbar = (Toolbar) findViewById(R.id.homeToolbar);
+        setSupportActionBar(appToolbar);
 
         FragmentAdapter tabAdapter = new FragmentAdapter(getSupportFragmentManager());
         viewPager.setAdapter(tabAdapter);
@@ -92,12 +96,14 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
+
+
+
         session = new SessionManager(getApplicationContext());
 
         // Add options to the menu (empty strings can be replaced with some additional info)
         navItems.add(new NavItem("Profile", R.drawable.profile));
         navItems.add(new NavItem("Settings", R.drawable.settings));
-        navItems.add(new NavItem("New Event", 0));
         navItems.add(new NavItem("Logout", R.drawable.logout));
 
         // DrawerLayout
@@ -124,6 +130,8 @@ public class HomeActivity extends AppCompatActivity {
                 selectItemFromDrawer(position);
             }
         });
+
+
 
         subscribeTopics();
     }
@@ -172,11 +180,6 @@ public class HomeActivity extends AppCompatActivity {
                 drawerLayout.closeDrawers();
                 Intent settingsIntent = new Intent(HomeActivity.this, SettingsActivity.class);
                 startActivity(settingsIntent);
-                break;
-            case 2:
-                //TODO: move this somewhere else
-                Intent newEventIntent = new Intent(HomeActivity.this, NewEventActivity.class);
-                HomeActivity.this.startActivity(newEventIntent);
                 break;
             case 3:
                 if (session.getOrigin().equals("facebook")){
@@ -257,6 +260,26 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.home_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menuBtnAddEvent:
+                Intent newEventIntent = new Intent(HomeActivity.this, NewEventActivity.class);
+                HomeActivity.this.startActivity(newEventIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     /**
      * Subscribe to the MQTT topics and fill in the list of events that the user is participating in.
      */
@@ -266,8 +289,7 @@ public class HomeActivity extends AppCompatActivity {
         Set<String> emptyLocation = new HashSet<>(); //to prevent null pointer exception
         Set<String> preferencesStringSet = preferences.getStringSet("location_topics", emptyLocation);
 
-        //we pretend these are the hobbies for now
-        String[] hobbies = {"basketball", "football", "fishing", "cooking"};
+        ArrayList<String> hobbies = Profile.getInstance().getHobbyNames();
 
         if(!preferencesStringSet.isEmpty()){
             for(String location:preferencesStringSet){
@@ -303,8 +325,9 @@ public class HomeActivity extends AppCompatActivity {
                                         Profile.getInstance().removePendingEvent(event);
                                         new Notification(HomeActivity.this).sendUserEventRejected(event);
                                     }
-                                    Profile.getInstance().addEligibleEvent(hobby, event);
-                                    new Notification(HomeActivity.this).sendNewEvent(event);
+                                    if(Profile.getInstance().addEligibleEvent(hobby, event)) {
+                                        new Notification(HomeActivity.this).sendNewEvent(event);
+                                    }
                                 }
                                 else{
                                     //drop it

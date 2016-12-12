@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 
 import bumblebees.hobee.UserProfileActivity;
 
+import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
 import bumblebees.hobee.hobbycategories.HobbyCategoryListActivity;
 
 
@@ -197,7 +198,7 @@ public class SocketIO {
         socket.emit("save_image", userImage);
         socket.emit("register_user", gson.toJson(user));
 
-        Intent intent = new Intent(packageContext, HobbyCategoryListActivity.class);
+        Intent intent = new Intent(packageContext, HobbiesChoiceActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);
     }
@@ -239,6 +240,9 @@ public class SocketIO {
 
                     intent.putExtra("User",gson.toJson(user));
                 }
+                else{
+                    intent.putExtra("User", "error");
+                }
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
@@ -247,14 +251,12 @@ public class SocketIO {
     }
 
 
-    public void addHobbyToUser(Hobby hobby) {
-        JSONObject newHobby = new JSONObject();
+    public void addHobbyToUser(Hobby hobby, String userID) {
+        JSONObject obj = new JSONObject();
         try {
-            newHobby.put("hobby_name", hobby.getName());
-            newHobby.put("difficulty_level", hobby.getDifficultyLevel());
-            newHobby.put("date_preferencce", hobby.getDatePreference());
-            newHobby.put("time_from", hobby.getTimeFrom());
-            newHobby.put("time_to", hobby.getTimeTo());
+            obj.put("userID", userID);
+            obj.put("hobby", gson.toJson(hobby));
+            socket.emit("add_update_hobby", obj);
         } catch (JSONException e) {
             e.printStackTrace();
         }

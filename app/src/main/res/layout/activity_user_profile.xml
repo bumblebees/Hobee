@@ -10,6 +10,15 @@
               tools:context="bumblebees.hobee.UserProfileActivity" android:weightSum="1"
               android:background="@color/Bee_color_3">
 
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/Bee_color_4"
+        android:theme="?attr/actionBarTheme"
+        android:minHeight="?attr/actionBarSize"
+        android:id="@+id/profileToolbar"
+        android:elevation="4dp" />
+
     <LinearLayout
             android:orientation="vertical"
 
@@ -86,7 +95,7 @@
                 <TextView
                         android:text="+3"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/textView7" android:gravity="center"
+                        android:layout_height="wrap_content" android:id="@+id/globalRank" android:gravity="center"
                         android:textColor="@color/Bee_color_1" android:textSize="14sp"/>
                 <TextView
                         android:text="Global rank"
@@ -101,7 +110,7 @@
                 <TextView
                         android:text="+1"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/textView9" android:gravity="center"
+                        android:layout_height="wrap_content" android:id="@+id/hostRank" android:gravity="center"
                         android:textColor="@color/Bee_color_1" android:textSize="14sp"/>
                 <TextView
                         android:text="Host rank"
@@ -117,7 +126,7 @@
                 <TextView
                         android:text="0"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/textView11" android:gravity="center"
+                        android:layout_height="wrap_content" android:id="@+id/noShows" android:gravity="center"
                         android:textColor="@color/Bee_color_1" android:textSize="14sp"/>
                 <TextView
                         android:text="No shows"

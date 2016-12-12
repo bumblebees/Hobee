@@ -30,8 +30,7 @@ public class EventsBrowseFragment extends Fragment {
     Gson gson = new Gson();
     ArrayList<Pair<String, ArrayList<Event>>> content;
 
-    //we pretend these are the hobbies for now
-    String[] hobbies = {"basketball", "football", "fishing", "cooking"};
+    ArrayList<String> hobbies = Profile.getInstance().getHobbyNames();
 
     ExpandableListView eventsTabList;
     SwipeRefreshLayout refreshLayout;
@@ -69,7 +68,7 @@ public class EventsBrowseFragment extends Fragment {
         eventsTabList.setAdapter(adapter);
 
         //expand all groups by default
-        for(int i=0;i<hobbies.length; i++){
+        for(String hobby: hobbies){
            // eventsTabList.expandGroup(i);
             adapter.notifyDataSetChanged();
         }

@@ -40,7 +40,6 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
 
     Hobby hobby;
     TextView textView;
-    JSONParser jsonParser;
     CheckBox checkBoxMonday;
     CheckBox checkBoxTuesday;
     CheckBox checkBoxWednesday;
@@ -51,6 +50,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
 
     Button submitBtn;
 
+    //TODO: change the fields if the hobby already has values in the profile
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,8 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         submitBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 setHobby();
-                SocketIO.getInstance().addHobbyToUser(hobby);
+                Profile.getInstance().addOrUpdateHobby(hobby);
+                SocketIO.getInstance().addHobbyToUser(hobby, Profile.getInstance().getUserID());
                 Intent intent = new Intent(HobbiesActivity.this, HobbiesChoiceActivity.class);
                 HobbiesActivity.this.startActivity(intent);
             }
@@ -99,10 +100,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         checkBoxSunday = (CheckBox)findViewById(R.id.checkBox_sunday);
 
         // Spinner Drop down elements
-        List<String> difficultyList = new ArrayList<String>();
-        difficultyList.add("Beginner");
-        difficultyList.add("Intermediate");
-        difficultyList.add("Expert");
+        String[] difficultyList = getResources().getStringArray(R.array.hobbySkillOptions);
 
         List<String> timeListTo = new ArrayList<String>();
         timeListTo.add("8.00");
@@ -205,7 +203,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         String item = parent.getItemAtPosition(position).toString();
 
         // Showing selected spinner item
-        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+        //Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
     }
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
