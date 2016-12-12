@@ -95,32 +95,32 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         difficultyList.add("Intermediate");
         difficultyList.add("Expert");
 
-        List<Double> timeListTo = new ArrayList<Double>();
-        timeListTo.add(8.00);
-        timeListTo.add(10.00);
-        timeListTo.add(12.00);
-        timeListTo.add(14.00);
-        timeListTo.add(16.00);
-        timeListTo.add(18.00);
-        timeListTo.add(20.00);
-        timeListTo.add(22.00);
-        timeListTo.add(24.00);
+        List<String> timeListTo = new ArrayList<String>();
+        timeListTo.add("8.00");
+        timeListTo.add("10.00");
+        timeListTo.add("12.00");
+        timeListTo.add("14.00");
+        timeListTo.add("16.00");
+        timeListTo.add("18.00");
+        timeListTo.add("20.00");
+        timeListTo.add("22.00");
+        timeListTo.add("24.00");
 
-        List<Double> timeListFrom = new ArrayList<Double>();
-        timeListFrom.add(8.00);
-        timeListFrom.add(10.00);
-        timeListFrom.add(12.00);
-        timeListFrom.add(14.00);
-        timeListFrom.add(16.00);
-        timeListFrom.add(18.00);
-        timeListFrom.add(20.00);
-        timeListFrom.add(22.00);
-        timeListFrom.add(24.00);
+        List<String> timeListFrom = new ArrayList<String>();
+        timeListFrom.add("8.00");
+        timeListFrom.add("10.00");
+        timeListFrom.add("12.00");
+        timeListFrom.add("14.00");
+        timeListFrom.add("16.00");
+        timeListFrom.add("18.00");
+        timeListFrom.add("20.00");
+        timeListFrom.add("22.00");
+        timeListFrom.add("24.00");
 
         // Creating adapter for spinner
         ArrayAdapter<String> dataAdapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, difficultyList);
-        ArrayAdapter<Double> dataAdapter2 = new ArrayAdapter<Double>(this, android.R.layout.simple_spinner_item, timeListFrom);
-        ArrayAdapter<Double> dataAdapter3 = new ArrayAdapter<Double>(this, android.R.layout.simple_spinner_item, timeListTo);
+        ArrayAdapter<String> dataAdapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, timeListFrom);
+        ArrayAdapter<String> dataAdapter3 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, timeListTo);
 
         // Drop down layout style - list view with radio button
         dataAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -142,15 +142,42 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         checkBoxSunday = (CheckBox)findViewById(R.id.checkBox_sunday);
     }
 
+
+    public void onItemChecked(){
+        if (checkBoxMonday.isChecked()){
+            hobby.setDatePreference(checkBoxMonday.getTag().toString());
+        }
+        if (checkBoxTuesday.isChecked()){
+            hobby.setDatePreference(checkBoxTuesday.getTag().toString());
+        }
+        if (checkBoxWednesday.isChecked()){
+            hobby.setDatePreference(checkBoxWednesday.getTag().toString());
+        }
+        if (checkBoxThursday.isChecked()){
+            hobby.setDatePreference(checkBoxThursday.getTag().toString());
+        }
+        if (checkBoxFriday.isChecked()){
+            hobby.setDatePreference(checkBoxFriday.getTag().toString());
+        }
+        if (checkBoxSaturday.isChecked()){
+            hobby.setDatePreference(checkBoxSaturday.getTag().toString());
+        }
+        if (checkBoxSunday.isChecked()){
+            hobby.setDatePreference(checkBoxSunday.getTag().toString());
+        }
+        else {
+            // TODO: ERROR HANDLING SHOULD BE DONE HERE! - Day must be selected
+        }
+    }
     /**
      *
      * @param view
-     */
+
     private void onCheckboxClicked(View view) {
 
         boolean checked = ((CheckBox) view).isChecked();
 
-        switch(view.getId()) {
+        switch(View view) {
             case R.id.checkBox_monday:
                 hobby.setDatePreference(checkBoxMonday.getTag().toString());
                 //checkList.add(checkBoxMonday.getTag().toString());
@@ -189,6 +216,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
                 break;
         }
     }
+    */
 
     /**
      *
@@ -205,13 +233,16 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
      */
     private void setHobby(){
         hobby.setDifficultyLevel(spinnerDifficultyLevel.getSelectedItem().toString());
-        hobby.setTimeFrom(Double.parseDouble(spinnerTimeFrom.getSelectedItem().toString()));
-        hobby.setTimeTo(Double.parseDouble(spinnerTimeTo.getSelectedItem().toString()));
+        hobby.setTimeFrom(spinnerTimeFrom.getSelectedItem().toString());
+        hobby.setTimeTo(spinnerTimeTo.getSelectedItem().toString());
+        onItemChecked();
     }
 
     /*
     * Toast
     */
+
+    //public void onItemClicked()
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

@@ -198,8 +198,8 @@ public class Profile{
     private boolean matchTimeOfDay(Event event){
         for (Hobby hobby : user.getHobbies()){
             if (hobby.getName().equals(event.getEvent_details().getHobbyName())){
-                double eventTime = Double.parseDouble((event.getEvent_details().getTime()));
-                if (eventTime >= hobby.getTimeFrom() && eventTime <= hobby.getTimeTo()){
+                String eventTime = event.getEvent_details().getTime();
+                if (eventTime.equals(hobby.getTimeFrom()) && eventTime.equals(hobby.getTimeTo())){
                     return true;
                 }
             }
