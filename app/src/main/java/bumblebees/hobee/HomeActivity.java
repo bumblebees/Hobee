@@ -1,11 +1,16 @@
 package bumblebees.hobee;
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.IBinder;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.TabLayout;
@@ -71,11 +76,20 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        Intent mqttServiceIntent = new Intent(this, MQTTService.class);
+        startService(mqttServiceIntent);
+
+
+
+
         setContentView(R.layout.activity_home);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         session = new SessionManager(getApplicationContext());
         gson = new Gson();
+        Profile.getInstance().setUser(session.getUser());
         appToolbar = (Toolbar) findViewById(R.id.homeToolbar);
         setSupportActionBar(appToolbar);
 
@@ -134,9 +148,6 @@ public class HomeActivity extends AppCompatActivity {
         });
 
 
-
-        subscribeTopics();
-
         for(final Event event:Profile.getInstance().getHistoryEvents()){
             if(event.checkUnranked(Profile.getInstance().getUser())){
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -158,6 +169,7 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         }
+
 
 
 
@@ -304,67 +316,4 @@ public class HomeActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    /**
-     * Subscribe to the MQTT topics and fill in the list of events that the user is participating in.
-     */
-    public void subscribeTopics(){
-        final Gson gson = new Gson();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        Set<String> emptyLocation = new HashSet<>(); //to prevent null pointer exception
-        Set<String> preferencesStringSet = preferences.getStringSet("location_topics", emptyLocation);
-
-        ArrayList<String> hobbies = Profile.getInstance().getHobbyNames();
-
-        if(!preferencesStringSet.isEmpty()){
-            for(String location:preferencesStringSet){
-                for(final String hobby : hobbies){
-                    //subscribe to all topics that match the location and the hobby
-                    String topic = "geo/"+location+"/event/hobby/"+hobby+"/#";
-                    MQTT.getInstance().subscribe(topic, 1, new MQTTMessageReceiver() {
-                        @Override
-                        public void onMessageReceive(MqttMessage message) {
-                            try {
-                                Log.d("eventFrag", "got an event");
-                                final Event event = gson.fromJson(message.toString(), Event.class);
-                                //check if the user's preferences match the event and if the user is not already a member of it
-                                if(event.getEvent_details().getHost_id().equals(Profile.getInstance().getUserID())){
-                                    //user is the host
-                                    Profile.getInstance().addHostedEvent(event);
-                                }
-                                else if(event.getEvent_details().getUsers_pending().contains(Profile.getInstance().getUser().getSimpleUser())){
-                                    //user is in the pending list
-                                    Profile.getInstance().addPendingEvent(event);
-                                }
-                                else if(event.getEvent_details().getUsers_accepted().contains(Profile.getInstance().getUser().getSimpleUser())){
-                                    //user is in the accepted list
-                                    if(Profile.getInstance().getPendingEvents().contains(event)){
-                                        Profile.getInstance().removePendingEvent(event);
-                                        new Notification(HomeActivity.this).sendUserEventAccepted(event);
-                                    }
-                                    Profile.getInstance().addAcceptedEvent(event);
-                                }
-                                else if(Profile.getInstance().matchesPreferences(event)) {
-                                    //check if user had been pending on the event
-                                    if(Profile.getInstance().getPendingEvents().contains(event)){
-                                        Profile.getInstance().removePendingEvent(event);
-                                        new Notification(HomeActivity.this).sendUserEventRejected(event);
-                                    }
-                                    if(Profile.getInstance().addEligibleEvent(hobby, event)) {
-                                        new Notification(HomeActivity.this).sendNewEvent(event);
-                                    }
-                                }
-                                else{
-                                    //drop it
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
-            }
-        }
-    }
-
 }

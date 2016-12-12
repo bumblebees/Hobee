@@ -1,14 +1,11 @@
 package bumblebees.hobee.utilities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
-import bumblebees.hobee.HobbyActivity;
 import bumblebees.hobee.HomeActivity;
 import bumblebees.hobee.RankUserActivity;
 import bumblebees.hobee.RegisterUserActivity;
@@ -23,12 +20,10 @@ import com.google.gson.Gson;
 import bumblebees.hobee.UserProfileActivity;
 
 import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
-import bumblebees.hobee.hobbycategories.HobbyCategoryListActivity;
 
-
-import bumblebees.hobee.objects.Hobby;
 
 import bumblebees.hobee.objects.Event;
+import bumblebees.hobee.objects.Hobby;
 
 import bumblebees.hobee.objects.User;
 import io.socket.client.Ack;
@@ -41,9 +36,6 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.List;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class SocketIO {
 
@@ -216,13 +208,14 @@ public class SocketIO {
             public void call(Object... objects) {
                 JSONObject userJSON = (JSONObject) objects[0];
                 User user = gson.fromJson(String.valueOf(userJSON), User.class);
-
-                Profile.getInstance().setUser(user);
-                Log.d("event", user.toString());
-
                 SessionManager session = new SessionManager(context);
+                session.saveDataAndEvents(user, new EventManager());
                 session.setPreferences(user.getLoginId(), user.getOrigin());
+                Profile.getInstance().setUser(user);
+
                 getEventHistory();
+
+
                 Intent intent = new Intent(context, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);

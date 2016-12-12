@@ -58,6 +58,14 @@ public class Event {
         return "geo/"+location+"/event/hobby/"+type+"/"+eventID;
     }
 
+    /**
+     * Retrieves the topic where the event will be found when subscribing with a wildcard (#) instead of the ID.
+     * @return
+     */
+    public String getSubscribeTopic(){
+        return "geo/"+location+"/event/hobby/"+type+"/#";
+    }
+
     //equals method overwritten for use when adding and removing events from ArrayLists
     //an event is considered equal with another when its ID, type and timestamp match
     @Override
