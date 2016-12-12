@@ -22,9 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import android.widget.AdapterView.OnItemSelectedListener;
 
+import com.google.gson.Gson;
+
 import bumblebees.hobee.R;
 import bumblebees.hobee.jsonparser.JSONParser;
 import bumblebees.hobee.objects.Hobby;
+import bumblebees.hobee.objects.User;
 import bumblebees.hobee.utilities.Profile;
 import bumblebees.hobee.utilities.SocketIO;
 
@@ -49,6 +52,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
     CheckBox checkBoxSunday;
 
     Button submitBtn;
+    private Gson gson = new Gson();
 
     //TODO: change the fields if the hobby already has values in the profile
 
@@ -57,7 +61,10 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hobbies);
         String hobbyName = getIntent().getExtras().getString("HobbyName");
-        hobby = createHobbyInstance(hobbyName);
+       // hobby = createHobbyInstance(hobbyName);
+        hobby = gson.fromJson(getIntent().getStringExtra("HobbyName"), Hobby.class);
+
+        getHobbyFields(hobbyName);
 
         textView = (TextView) findViewById(R.id.name);
         textView.setText(hobby.getName());
@@ -138,6 +145,25 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         spinnerDifficultyLevel.setAdapter(dataAdapter1);
         spinnerTimeFrom.setAdapter(dataAdapter2);
         spinnerTimeTo.setAdapter(dataAdapter3);
+    }
+
+    /**
+     * If this hobby already exists, populate the fields with already existing info
+     * @param hobbyName
+     */
+    private void getHobbyFields(String hobbyName){
+        for (Hobby hobby : user.getHobbies){
+            if (hobby.getName().equals(hobbyName)){
+                spinnerDifficultyLevel.setSelection(hobby.getDifficultyLevel());
+                hobby.getTimeFrom();
+                hobby.getTimeTo();
+
+            }
+        }
+    }
+
+    private int setSpinnerDifficultyLevel(String difficultyLevel){
+        if (difficultyLevel.equals(""))
     }
 
     /**
