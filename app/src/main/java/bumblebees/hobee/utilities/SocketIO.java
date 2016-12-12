@@ -285,6 +285,17 @@ public class SocketIO {
         });
     }
 
+    public void getEventHistory(String userID){
+        socket.emit("get_event_history", userID, new Ack() {
+            @Override
+            public void call(Object... objects) {
+                JSONArray eventArray = (JSONArray) objects[0];
+
+                //complete with what is needed
+            }
+        });
+    }
+
 
     public void sendRanking(JSONObject ranks){
         System.out.println(ranks.toString());
