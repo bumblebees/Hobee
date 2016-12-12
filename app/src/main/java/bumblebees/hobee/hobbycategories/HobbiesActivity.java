@@ -42,6 +42,8 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
     Spinner spinnerTimeTo;
 
     Hobby hobby;
+    User user;
+
     TextView textView;
     CheckBox checkBoxMonday;
     CheckBox checkBoxTuesday;
@@ -61,10 +63,8 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hobbies);
         String hobbyName = getIntent().getExtras().getString("HobbyName");
-       // hobby = createHobbyInstance(hobbyName);
-        hobby = gson.fromJson(getIntent().getStringExtra("HobbyName"), Hobby.class);
-
-        getHobbyFields(hobbyName);
+        user = Profile.getInstance().getUser();
+        createHobby(hobbyName);
 
         textView = (TextView) findViewById(R.id.name);
         textView.setText(hobby.getName());
@@ -147,27 +147,46 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         spinnerTimeTo.setAdapter(dataAdapter3);
     }
 
-    /**
-     * If this hobby already exists, populate the fields with already existing info
-     * @param hobbyName
-     */
-    private void getHobbyFields(String hobbyName){
-        for (Hobby hobby : user.getHobbies){
-            if (hobby.getName().equals(hobbyName)){
-                spinnerDifficultyLevel.setSelection(hobby.getDifficultyLevel());
-                hobby.getTimeFrom();
-                hobby.getTimeTo();
-
-            }
-        }
-    }
-
     private int setSpinnerDifficultyLevel(String difficultyLevel){
-        if (difficultyLevel.equals(""))
+        if (difficultyLevel.equals("Beginner")){
+            return 0;
+        }
+        if (difficultyLevel.equals("Intermediate")){
+            return 1;
+        }
+        return 3;
+    }
+
+    private int setSpinnerTime(String time){
+        if (time.equals("08.00")){
+            return 0;
+        }
+        if (time.equals("10.00")){
+            return 1;
+        }
+        if (time.equals("12.00")){
+            return 2;
+        }
+        if (time.equals("14.00")){
+            return 3;
+        }
+        if (time.equals("16.00")){
+            return 4;
+        }
+        if (time.equals("18.00")){
+            return 5;
+        }
+        if (time.equals("20.00")){
+            return 6;
+        }
+        if (time.equals("22.00")){
+            return 7;
+        }
+        return 8;
     }
 
     /**
-     * Reads from the selcted checkboxes and adds the checked strings to Hobby.DatePreference
+     * Reads from the selected checkboxes and adds the checked strings to Hobby.DatePreference
      */
     private void readDayOfWeek(){
         if (checkBoxMonday.isChecked()){
@@ -199,13 +218,39 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
     }
 
     /**
-     *
-     * @param hobbyName
-     * @return
+     * If this hobby already exists, populate the fields with already existing info
+     * @param hobby
      */
-    private Hobby createHobbyInstance (String hobbyName) {
-        Hobby hobby = new Hobby(hobbyName);
-        return hobby;
+    private void getHobbyFields(Hobby hobby){
+        //for (Hobby hobby : user.getHobbies()){
+        if (user.getHobbies().contains(hobby)){
+            spinnerDifficultyLevel.setSelection(setSpinnerDifficultyLevel(hobby.getDifficultyLevel()));
+            spinnerTimeFrom.setSelection(setSpinnerTime(hobby.getTimeFrom()));
+            spinnerTimeTo.setSelection(setSpinnerTime(hobby.getTimeTo()));
+        }
+
+    }
+
+    /**
+     * creates a hobby depedning on if it already exists or not
+     * @param hobbyName
+     */
+    private void createHobby(String hobbyName){
+        hobby = gson.fromJson(getIntent().getStringExtra("HobbyName"), Hobby.class);
+        if (!hobby.equals(null)) {
+            getHobbyFields(hobby);
+        } else {
+            createHobbyInstanceFromNull(hobbyName);
+        }
+    }
+
+
+    /**
+     * If this hobby doesnt exist, create new instance
+     * @param hobbyName
+     */
+    private void createHobbyInstanceFromNull(String hobbyName) {
+        hobby = new Hobby(hobbyName);
     }
 
     /**
