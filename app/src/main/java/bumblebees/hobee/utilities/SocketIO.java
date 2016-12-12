@@ -210,6 +210,7 @@ public class SocketIO {
      * @param loginId google or fb login
      */
     public void getUserAndLogin(final String loginId, final Context context) {
+
         socket.emit("get_user", loginId, new Ack() {
             @Override
             public void call(Object... objects) {
@@ -221,7 +222,7 @@ public class SocketIO {
 
                 SessionManager session = new SessionManager(context);
                 session.setPreferences(user.getLoginId(), user.getOrigin());
-
+                getEventHistory();
                 Intent intent = new Intent(context, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
@@ -285,21 +286,29 @@ public class SocketIO {
         });
     }
 
-    public void getEventHistory(String userID){
-        socket.emit("get_event_history", userID, new Ack() {
+
+    public void getEventHistory(){
+        socket.emit("get_event_history", Profile.getInstance().getUserID(), new Ack(){
             @Override
-            public void call(Object... objects) {
+            public void call(Object...objects){
                 JSONArray eventArray = (JSONArray) objects[0];
 
-                //complete with what is needed
+                ArrayList<Event> eventHistory = new ArrayList<Event>();
+                if(eventArray != null)
+                    for(int i=0;i<eventArray.length();i++)
+                        try {
+                            eventHistory.add(gson.fromJson(eventArray.getString(i),Event.class));
+                        } catch (JSONException e) {e.printStackTrace();}
+
+                Profile.getInstance().setHistoryEvents(eventHistory);
             }
         });
     }
-
 
     public void sendRanking(JSONObject ranks){
         System.out.println(ranks.toString());
         socket.emit("save_ranks", ranks);
 
     }
+
 }

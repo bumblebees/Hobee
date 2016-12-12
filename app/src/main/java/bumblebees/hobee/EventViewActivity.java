@@ -272,7 +272,6 @@ public class EventViewActivity extends AppCompatActivity {
     }
 
     public void rankEvent(View view){
-        SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(eventString, event.getEvent_details().getUsers_unranked(), getApplicationContext());
     }
 
 

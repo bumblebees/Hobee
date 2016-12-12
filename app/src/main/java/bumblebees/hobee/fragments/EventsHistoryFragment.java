@@ -18,11 +18,12 @@ import java.util.ArrayList;
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.utilities.HobbyExpandableListAdapter;
+import bumblebees.hobee.utilities.Profile;
+import bumblebees.hobee.utilities.SocketIO;
 
 
 public class EventsHistoryFragment extends Fragment {
 
-    Gson gson = new Gson();
     ArrayList<Pair<String, ArrayList<Event>>> content;
 
 
@@ -30,12 +31,25 @@ public class EventsHistoryFragment extends Fragment {
     SwipeRefreshLayout refreshLayout;
 
     HobbyExpandableListAdapter adapter;
+    ArrayList<Event> hostedEvents = new ArrayList<>();
+    ArrayList<Event> joinedEvents = new ArrayList<>();
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         content = new ArrayList<>();
+        SocketIO.getInstance().getEventHistory();
 
+        for(Event event: Profile.getInstance().getHistoryEvents()){
+            if(event.getEvent_details().getHost_id().equals(Profile.getInstance().getUserID()))
+                hostedEvents.add(event);
+            else
+                joinedEvents.add(event);
+        }
+
+        content.add(new Pair<>("Hosted events", hostedEvents));
+        content.add(new Pair<>("Joined events", joinedEvents));
     }
 
     @Override

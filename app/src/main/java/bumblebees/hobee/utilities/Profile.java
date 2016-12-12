@@ -22,6 +22,7 @@ public class Profile{
     private ArrayList<Event> hostedEvents = new ArrayList<>();
     private ArrayList<Event> acceptedEvents = new ArrayList<>();
     private ArrayList<Event> pendingEvents = new ArrayList<>();
+    private ArrayList<Event> historyEvents = new ArrayList<>();
     private HashMap<String, ArrayList<Event>> eligibleEventList = new HashMap<>();
 
 
@@ -309,5 +310,13 @@ public class Profile{
                 list.add(hobby.getName().toLowerCase());
             }
         return list;
+    }
+
+    public ArrayList<Event> getHistoryEvents() {
+        return historyEvents;
+    }
+
+    public void setHistoryEvents(ArrayList<Event> historyEvents) {
+        this.historyEvents = historyEvents;
     }
 }

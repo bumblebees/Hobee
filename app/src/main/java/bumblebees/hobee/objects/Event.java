@@ -1,6 +1,10 @@
 package bumblebees.hobee.objects;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.security.Timestamp;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import bumblebees.hobee.utilities.Profile;
@@ -78,8 +82,11 @@ public class Event {
     }
 
     public boolean isCurrentUserHost(){
-        if (event_details.getHost_id().equals(Profile.getInstance().getUserID())) return true;
-        return false;
+        return (event_details.getHost_id().equals(Profile.getInstance().getUserID())) ;
+     }
+
+    public Boolean checkUnranked(User user){
+       return (this.getEvent_details().getUsers_unranked().contains(user.getUserID()));
     }
 
 }

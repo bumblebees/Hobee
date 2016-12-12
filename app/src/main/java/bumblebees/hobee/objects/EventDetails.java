@@ -1,5 +1,7 @@
 package bumblebees.hobee.objects;
 
+import android.content.Context;
+
 import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,6 +11,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import bumblebees.hobee.utilities.SocketIO;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class EventDetails {
@@ -181,7 +187,9 @@ public class EventDetails {
         return hobby.getDifficultyLevel();
     }
 
-    public JSONObject getUsers_unranked() {
+    public List<String> getUsers_unranked () { return users_unranked;}
+
+    public JSONObject getUsers_unrankedJson() {
         JSONArray jsonArray = new JSONArray();
         for (int i=0; i < users_unranked.size(); i++){
             jsonArray.put(users_unranked.get(i));
@@ -195,6 +203,8 @@ public class EventDetails {
         }
         return jsonObject;
     }
+
+
 
 }
 

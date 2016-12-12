@@ -38,6 +38,7 @@ import android.widget.TextView;
 import bumblebees.hobee.fragments.FragmentAdapter;
 import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
 import bumblebees.hobee.objects.Event;
+import bumblebees.hobee.objects.User;
 import bumblebees.hobee.utilities.*;
 import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
@@ -65,6 +66,7 @@ public class HomeActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager viewPager;
     Toolbar appToolbar;
+    Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +75,7 @@ public class HomeActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         session = new SessionManager(getApplicationContext());
-
+        gson = new Gson();
         appToolbar = (Toolbar) findViewById(R.id.homeToolbar);
         setSupportActionBar(appToolbar);
 
@@ -134,7 +136,30 @@ public class HomeActivity extends AppCompatActivity {
 
 
         subscribeTopics();
-    }
+
+        for(final Event event:Profile.getInstance().getHistoryEvents()){
+            if(event.checkUnranked(Profile.getInstance().getUser())){
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("You have unranked events, Would you like to rank them now?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(gson.toJson(event), event.getEvent_details().getUsers_unrankedJson(), getApplicationContext());
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        }
+
+        }
+
+
 
     /**
      *  When back button is pressed this checks if menu is opened and closes if true.
