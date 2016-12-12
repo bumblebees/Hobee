@@ -103,7 +103,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         String[] difficultyList = getResources().getStringArray(R.array.hobbySkillOptions);
 
         List<String> timeListTo = new ArrayList<String>();
-        timeListTo.add("8.00");
+        timeListTo.add("08.00");
         timeListTo.add("10.00");
         timeListTo.add("12.00");
         timeListTo.add("14.00");
@@ -114,7 +114,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         timeListTo.add("24.00");
 
         List<String> timeListFrom = new ArrayList<String>();
-        timeListFrom.add("8.00");
+        timeListFrom.add("08.00");
         timeListFrom.add("10.00");
         timeListFrom.add("12.00");
         timeListFrom.add("14.00");
@@ -168,6 +168,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         else {
             // TODO: ERROR HANDLING SHOULD BE DONE HERE! - Day must be selected
             // Pop up to promt user to choose a date?
+            // Not prio, can be done after 16
         }
     }
 
