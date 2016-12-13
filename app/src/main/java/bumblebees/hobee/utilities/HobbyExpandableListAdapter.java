@@ -3,6 +3,7 @@ package bumblebees.hobee.utilities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.provider.CalendarContract;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,8 @@ public class HobbyExpandableListAdapter extends BaseExpandableListAdapter {
         this.pairArrayList = pairArrayList;
     }
 
+
+
     @Override
     public int getGroupCount() {
         return pairArrayList.size();
@@ -39,6 +42,9 @@ public class HobbyExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int i) {
+        if(pairArrayList.get(i).second == null){
+            return 0;
+        }
         return pairArrayList.get(i).second.size();
     }
 
@@ -50,6 +56,7 @@ public class HobbyExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public Object getChild(int i, int i1) {
         return pairArrayList.get(i).second.get(i1);
+
     }
 
     @Override
@@ -75,6 +82,7 @@ public class HobbyExpandableListAdapter extends BaseExpandableListAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.hobby_header_item, viewGroup, false);
         }
         TextView textView = (TextView)view.findViewById(R.id.eventTabHeader);
+
         textView.setText(pair.first);
 
         return view;

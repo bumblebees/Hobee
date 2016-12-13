@@ -1,6 +1,10 @@
 package bumblebees.hobee.objects;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.security.Timestamp;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import bumblebees.hobee.utilities.Profile;
@@ -54,6 +58,14 @@ public class Event {
         return "geo/"+location+"/event/hobby/"+type+"/"+eventID;
     }
 
+    /**
+     * Retrieves the topic where the event will be found when subscribing with a wildcard (#) instead of the ID.
+     * @return
+     */
+    public String getSubscribeTopic(){
+        return "geo/"+location+"/event/hobby/"+type+"/#";
+    }
+
     //equals method overwritten for use when adding and removing events from ArrayLists
     //an event is considered equal with another when its ID, type and timestamp match
     @Override
@@ -78,8 +90,11 @@ public class Event {
     }
 
     public boolean isCurrentUserHost(){
-        if (event_details.getHost_id().equals(Profile.getInstance().getUserID())) return true;
-        return false;
+        return (event_details.getHost_id().equals(Profile.getInstance().getUserID())) ;
+     }
+
+    public Boolean checkUnranked(User user){
+       return (this.getEvent_details().getUsers_unranked().contains(user.getUserID()));
     }
 
 }

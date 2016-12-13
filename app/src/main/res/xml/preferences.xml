@@ -11,29 +11,41 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="Notifications">
         <SwitchPreference
+            android:defaultValue="false"
+            android:title="Enable notifications"
+            android:key="notification_general"
+            android:disableDependentsState="false"
+            android:summaryOff="Off: Hobee will not run in the background."
+            android:summaryOn="On: Hobee will run in the background." />
+        <SwitchPreference
             android:defaultValue="true"
             android:title="Notification light"
-            android:key="notification_light" />
+            android:key="notification_light"
+            android:elevation="0dp"
+            android:dependency="notification_general" />
         <SwitchPreference
             android:defaultValue="true"
             android:title="Notification vibration"
-            android:key="notification_vibration" />
+            android:key="notification_vibration"
+            android:dependency="notification_general" />
         <SwitchPreference
             android:defaultValue="true"
             android:title="Notification sound"
-            android:key="notification_sound" />
+            android:key="notification_sound"
+            android:dependency="notification_general" />
         <MultiSelectListPreference
             android:title="Available days"
             android:entries="@array/daysOfTheWeek"
             android:entryValues="@array/daysOfTheWeekCalendarValues"
             android:key="notification_days"
-             />
+            android:dependency="notification_general" />
         <SwitchPreference
             android:defaultValue="false"
             android:title="Pending users"
             android:key="notification_pending"
             android:summaryOn="Receive a notification when users are waiting to join an event."
-            android:summaryOff="Do not receive notifications when users are waiting to join an event." />
+            android:summaryOff="Do not receive notifications when users are waiting to join an event."
+            android:dependency="notification_general" />
 
     </PreferenceCategory>
 </PreferenceScreen>

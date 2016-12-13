@@ -2,6 +2,7 @@ package bumblebees.hobee.objects;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -169,6 +170,14 @@ public class User {
 
     public void addHobby(Hobby hobby) {
         this.hobbies.add(hobby);
+    }
+
+    public ArrayList<String> getHobbyNames(){
+        ArrayList<String> list = new ArrayList<>();
+        for (Hobby hobby : hobbies) {
+            list.add(hobby.getName().toLowerCase());
+        }
+        return list;
     }
 
 }

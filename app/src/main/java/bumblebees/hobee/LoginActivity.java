@@ -8,9 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import bumblebees.hobee.utilities.MQTT;
-import bumblebees.hobee.utilities.SessionManager;
-import bumblebees.hobee.utilities.SocketIO;
+import bumblebees.hobee.utilities.*;
+import bumblebees.hobee.utilities.Profile;
+
 import com.facebook.*;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -40,14 +40,23 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         SocketIO.getInstance().start();
         session = new SessionManager(getApplicationContext());
-        MQTT.getInstance().connect(getApplicationContext());
+        //MQTT.getInstance().connect(getApplicationContext());
 
         //initialize the application settings
         PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preferences, false);
 
         // If user has already logged in, just get his data from the server and go to homepage
-        if (session.getId() != null){
-            SocketIO.getInstance().getUserAndLogin(session.getId(), getApplicationContext());
+//        if (session.getId() != null){
+//            SocketIO.getInstance().getUserAndLogin(session.getId(), getApplicationContext());
+//        }
+
+        //If user has already logged in, retrieve data from the preferences and go to homepage
+        if(session.isLoggedIn()){
+            Profile.getInstance().setUser(session.getUser());
+
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(intent);
         }
 
 
