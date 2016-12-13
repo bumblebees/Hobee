@@ -22,6 +22,7 @@ import bumblebees.hobee.UserProfileActivity;
 import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
 
 
+import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.User;
 import io.socket.client.Ack;

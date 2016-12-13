@@ -145,25 +145,25 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
      */
     private void readDayOfWeek(){
         if (checkBoxMonday.isChecked()){
-            hobby.setDatePreference(checkBoxMonday.getTag().toString());
+            hobby.setDatePreference(checkBoxMonday.getText().toString());
         }
         if (checkBoxTuesday.isChecked()){
-            hobby.setDatePreference(checkBoxTuesday.getTag().toString());
+            hobby.setDatePreference(checkBoxTuesday.getText().toString());
         }
         if (checkBoxWednesday.isChecked()){
-            hobby.setDatePreference(checkBoxWednesday.getTag().toString());
+            hobby.setDatePreference(checkBoxWednesday.getText().toString());
         }
         if (checkBoxThursday.isChecked()){
-            hobby.setDatePreference(checkBoxThursday.getTag().toString());
+            hobby.setDatePreference(checkBoxThursday.getText().toString());
         }
         if (checkBoxFriday.isChecked()){
-            hobby.setDatePreference(checkBoxFriday.getTag().toString());
+            hobby.setDatePreference(checkBoxFriday.getText().toString());
         }
         if (checkBoxSaturday.isChecked()){
-            hobby.setDatePreference(checkBoxSaturday.getTag().toString());
+            hobby.setDatePreference(checkBoxSaturday.getText().toString());
         }
         if (checkBoxSunday.isChecked()){
-            hobby.setDatePreference(checkBoxSunday.getTag().toString());
+            hobby.setDatePreference(checkBoxSunday.getText().toString());
         }
         else {
             // TODO: ERROR HANDLING SHOULD BE DONE HERE! - Day must be selected
@@ -218,8 +218,5 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
             }
         });
     }
-
-
-
 }
 
