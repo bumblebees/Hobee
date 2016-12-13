@@ -25,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="258dp" android:elevation="1dp"
             android:layout_weight="0.09" android:weightSum="1" android:background="@color/Bee_color_4">
+
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="220dp" android:layout_weight="1.62">
@@ -77,9 +78,18 @@
                     android:layout_marginStart="32dp" android:layout_width="40dp" android:layout_height="40dp"
                     android:layout_centerVertical="true" android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                app:srcCompat="@android:drawable/ic_menu_edit"
+                android:id="@+id/userEditBtn"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:adjustViewBounds="true"
+                android:layout_alignLeft="@+id/userAge"
+                android:layout_alignStart="@+id/userAge" />
         </RelativeLayout>
-
-
 
 
         <LinearLayout
