@@ -79,8 +79,8 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
                 setHobby();
                 Profile.getInstance().addOrUpdateHobby(hobby);
                 SocketIO.getInstance().addHobbyToUser(hobby, Profile.getInstance().getUserID());
-                Intent intent = new Intent(HobbiesActivity.this, HobbiesChoiceActivity.class);
-                HobbiesActivity.this.startActivity(intent);
+                Intent saveAndGoBackIntent = new Intent(HobbiesActivity.this, HobbiesChoiceActivity.class);
+                HobbiesActivity.this.startActivity(saveAndGoBackIntent);
             }
         });
 
@@ -218,21 +218,17 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
     }
 
     /**
-     * If this hobby already exists, populate the fields with already existing info
+     * When this hobby already exists, populate the fields with already existing info
      * @param hobby
      */
     private void getHobbyFields(Hobby hobby){
-        //for (Hobby hobby : user.getHobbies()){
-        if (user.getHobbies().contains(hobby)){
             spinnerDifficultyLevel.setSelection(setSpinnerDifficultyLevel(hobby.getDifficultyLevel()));
             spinnerTimeFrom.setSelection(setSpinnerTime(hobby.getTimeFrom()));
             spinnerTimeTo.setSelection(setSpinnerTime(hobby.getTimeTo()));
-        }
-
     }
 
     /**
-     * creates a hobby depedning on if it already exists or not
+     * TODO: Write description
      * @param hobbyName
      */
     private void createHobby(String hobbyName){
