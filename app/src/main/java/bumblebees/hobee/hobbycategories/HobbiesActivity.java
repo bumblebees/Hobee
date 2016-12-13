@@ -22,9 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import android.widget.AdapterView.OnItemSelectedListener;
 
+import com.google.gson.Gson;
+
 import bumblebees.hobee.R;
 import bumblebees.hobee.jsonparser.JSONParser;
 import bumblebees.hobee.objects.Hobby;
+import bumblebees.hobee.objects.User;
 import bumblebees.hobee.utilities.Profile;
 import bumblebees.hobee.utilities.SocketIO;
 
@@ -39,6 +42,8 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
     Spinner spinnerTimeTo;
 
     Hobby hobby;
+    User user;
+
     TextView textView;
     CheckBox checkBoxMonday;
     CheckBox checkBoxTuesday;
@@ -49,6 +54,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
     CheckBox checkBoxSunday;
 
     Button submitBtn;
+    private Gson gson = new Gson();
 
     //TODO: change the fields if the hobby already has values in the profile
 
@@ -57,7 +63,8 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hobbies);
         String hobbyName = getIntent().getExtras().getString("HobbyName");
-        hobby = createHobbyInstance(hobbyName);
+        user = Profile.getInstance().getUser();
+        createHobby(hobbyName);
 
         textView = (TextView) findViewById(R.id.name);
         textView.setText(hobby.getName());
@@ -72,8 +79,8 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
                 setHobby();
                 Profile.getInstance().addOrUpdateHobby(hobby);
                 SocketIO.getInstance().addHobbyToUser(hobby, Profile.getInstance().getUserID());
-                Intent intent = new Intent(HobbiesActivity.this, HobbiesChoiceActivity.class);
-                HobbiesActivity.this.startActivity(intent);
+                Intent saveAndGoBackIntent = new Intent(HobbiesActivity.this, HobbiesChoiceActivity.class);
+                HobbiesActivity.this.startActivity(saveAndGoBackIntent);
             }
         });
 
@@ -140,8 +147,46 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         spinnerTimeTo.setAdapter(dataAdapter3);
     }
 
+    private int setSpinnerDifficultyLevel(String difficultyLevel){
+        if (difficultyLevel.equals("Beginner")){
+            return 0;
+        }
+        if (difficultyLevel.equals("Intermediate")){
+            return 1;
+        }
+        return 3;
+    }
+
+    private int setSpinnerTime(String time){
+        if (time.equals("08.00")){
+            return 0;
+        }
+        if (time.equals("10.00")){
+            return 1;
+        }
+        if (time.equals("12.00")){
+            return 2;
+        }
+        if (time.equals("14.00")){
+            return 3;
+        }
+        if (time.equals("16.00")){
+            return 4;
+        }
+        if (time.equals("18.00")){
+            return 5;
+        }
+        if (time.equals("20.00")){
+            return 6;
+        }
+        if (time.equals("22.00")){
+            return 7;
+        }
+        return 8;
+    }
+
     /**
-     * Reads from the selcted checkboxes and adds the checked strings to Hobby.DatePreference
+     * Reads from the selected checkboxes and adds the checked strings to Hobby.DatePreference
      */
     private void readDayOfWeek(){
         if (checkBoxMonday.isChecked()){
@@ -173,13 +218,35 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
     }
 
     /**
-     *
-     * @param hobbyName
-     * @return
+     * When this hobby already exists, populate the fields with already existing info
+     * @param hobby
      */
-    private Hobby createHobbyInstance (String hobbyName) {
-        Hobby hobby = new Hobby(hobbyName);
-        return hobby;
+    private void getHobbyFields(Hobby hobby){
+            spinnerDifficultyLevel.setSelection(setSpinnerDifficultyLevel(hobby.getDifficultyLevel()));
+            spinnerTimeFrom.setSelection(setSpinnerTime(hobby.getTimeFrom()));
+            spinnerTimeTo.setSelection(setSpinnerTime(hobby.getTimeTo()));
+    }
+
+    /**
+     * TODO: Write description
+     * @param hobbyName
+     */
+    private void createHobby(String hobbyName){
+        hobby = gson.fromJson(getIntent().getStringExtra("HobbyName"), Hobby.class);
+        if (!hobby.equals(null)) {
+            getHobbyFields(hobby);
+        } else {
+            createHobbyInstanceFromNull(hobbyName);
+        }
+    }
+
+
+    /**
+     * If this hobby doesnt exist, create new instance
+     * @param hobbyName
+     */
+    private void createHobbyInstanceFromNull(String hobbyName) {
+        hobby = new Hobby(hobbyName);
     }
 
     /**
