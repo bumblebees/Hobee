@@ -2,6 +2,7 @@ package bumblebees.hobee.hobbycategories;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -232,12 +233,20 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
      * @param hobbyName
      */
     private void createHobby(String hobbyName){
-        hobby = gson.fromJson(getIntent().getStringExtra("HobbyName"), Hobby.class);
-        if (!hobby.equals(null)) {
+        if (hobbyExists(hobbyName)) {
             getHobbyFields(hobby);
         } else {
             createHobbyInstanceFromNull(hobbyName);
         }
+    }
+
+    private boolean hobbyExists(String hobbyName){
+        for (Hobby hobby : Profile.getInstance().getUser().getHobbies()){
+            if (hobby.getName().equals(hobbyName)){
+               return true;
+            }
+        }
+        return false;
     }
 
 
