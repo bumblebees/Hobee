@@ -24,14 +24,19 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import bumblebees.hobee.broadcastreceiver.PendingNotificationReceiver;
 import bumblebees.hobee.objects.CancelledEvent;
+import bumblebees.hobee.objects.Deal;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.User;
 
@@ -44,12 +49,20 @@ public class MQTTService extends Service implements MqttCallback {
 
     private MqttAndroidClient client;
     private String clientID;
+
+    //HOBEE BROKER
     private String mqttAddress = "tcp://129.16.155.22:1883";
+
+    //PRATA BROKER
+     //private String mqttAddress = "tcp://prata.technocreatives.com:1883";
 
     private User user;
     private EventManager eventManager;
     private HashSet<String> subscribedTopics = new HashSet<>();
     private HashSet<String> possibleTopics = new HashSet<>();
+    SharedPreferences preferences;
+
+    private ArrayList<Deal> deals = new ArrayList<Deal>();
 
 
     public MQTTService() {
@@ -68,6 +81,7 @@ public class MQTTService extends Service implements MqttCallback {
     public void onCreate() {
         super.onCreate();
         sessionManager = new SessionManager(this);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     @Override
@@ -145,7 +159,6 @@ public class MQTTService extends Service implements MqttCallback {
     public void connectionLost(Throwable cause) {
         Log.d(TAG, "service disconnected");
         connectMQTT();
-
     }
 
     @Override
@@ -154,64 +167,76 @@ public class MQTTService extends Service implements MqttCallback {
         Gson gson = new Gson();
 
         if(message.getPayload().length>0) {
-            try {
-                final Event event = gson.fromJson(message.toString(), Event.class);
-
-                switch(eventManager.processEvent(user, event)){
-                    case HOST:
-                        Intent intent = new Intent(this, PendingNotificationReceiver.class);
-                        intent.putExtra("eventManager", gson.toJson(eventManager));
-                        PendingIntent pendingIntentAlarm = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_NO_CREATE);
-                        break;
-                    case NEW_ACCEPTED:
-                        new Notification(this).sendUserEventAccepted(event);
-                        break;
-                    case OLD_ACCEPTED:
-                        //do nothing
-                        break;
-                    case PENDING:
-                        //do nothing
-                        break;
-                    case REJECTED:
-                        new Notification(this).sendUserEventRejected(event);
-                        break;
-                    case NEW_MATCH:
-                        new Notification(this).sendNewEvent(event);
-                        break;
-                    case OLD_MATCH:
-                        //do nothing
-                        break;
-                    case NONE:
-                        //do nothing
-                       break;
+            if (topic.equals("deal/gogodeals/database/deals")) {
+                JSONObject msg = new JSONObject(message.toString());
+                //only look for messages that were sent to the requester
+                if(msg.getString("id").equals(user.getUserID())) {
+                    JSONArray dealArray = msg.getJSONArray("data");
+                    for (int i = 0; i < dealArray.length(); i++) {
+                        Deal deal = gson.fromJson(dealArray.get(i).toString(), Deal.class);
+                        deals.add(deal);
+                    }
                 }
-                sessionManager.saveEvents(eventManager);
-            } catch (Exception e) {
-                //check if the message received was a cancelled event
-                try {
-                    CancelledEvent cancelledEvent = gson.fromJson(String.valueOf(message), CancelledEvent.class);
 
-                    switch(eventManager.cancelEvent(cancelledEvent.getBasicEvent())){
-                        case HOSTED_EVENT:
+            } else { //topic is an event topic
+                try {
+                    Event event = gson.fromJson(message.toString(), Event.class);
+
+                    switch (eventManager.processEvent(user, event)) {
+                        case HOST:
+                            Intent intent = new Intent(this, PendingNotificationReceiver.class);
+                            intent.putExtra("eventManager", gson.toJson(eventManager));
+                            PendingIntent pendingIntentAlarm = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_NO_CREATE);
+                            break;
+                        case NEW_ACCEPTED:
+                            new Notification(this).sendUserEventAccepted(event);
+                            break;
+                        case OLD_ACCEPTED:
                             //do nothing
                             break;
-                        case ACCEPTED_EVENT:
-                            new Notification(this).sendCancelledEvent(cancelledEvent, "joined");
+                        case PENDING:
+                            //do nothing
                             break;
-                        case PENDING_EVENT:
-                            new Notification(this).sendCancelledEvent(cancelledEvent, "pending");
+                        case REJECTED:
+                            new Notification(this).sendUserEventRejected(event);
                             break;
-                        case EVENT_NOT_FOUND:
-                            //the cancelled event does not concern us
+                        case NEW_MATCH:
+                            new Notification(this).sendNewEvent(event);
+                            break;
+                        case OLD_MATCH:
+                            //do nothing
+                            break;
+                        case NONE:
                             //do nothing
                             break;
                     }
                     sessionManager.saveEvents(eventManager);
-                }
-                    catch(Exception ee){
+                } catch (Exception e) {
+                    //check if the message received was a cancelled event
+                    try {
+                        CancelledEvent cancelledEvent = gson.fromJson(String.valueOf(message), CancelledEvent.class);
+
+                        switch (eventManager.cancelEvent(cancelledEvent.getBasicEvent())) {
+                            case HOSTED_EVENT:
+                                //do nothing
+                                break;
+                            case ACCEPTED_EVENT:
+                                new Notification(this).sendCancelledEvent(cancelledEvent, "joined");
+                                break;
+                            case PENDING_EVENT:
+                                new Notification(this).sendCancelledEvent(cancelledEvent, "pending");
+                                break;
+                            case EVENT_NOT_FOUND:
+                                //the cancelled event does not concern us
+                                //do nothing
+                                break;
+                        }
+                        sessionManager.saveEvents(eventManager);
+                    } catch (Exception ee) {
                         //message was something that could not be processed, ignore it
                         ee.printStackTrace();
                     }
+                }
             }
         }
     }
@@ -221,12 +246,77 @@ public class MQTTService extends Service implements MqttCallback {
 
     }
 
+    /**
+     * Save data to the shared preferences and refresh the subscribed topics.
+     */
     public void updateData(){
         sessionManager.saveDataAndEvents(user, eventManager);
         subscribeTopics();
     }
 
+    /**
+     * Retrieve deals from GoGoDeals.
+     */
+    private void getNewDeals(){
+        //try to unsubscribe from the topic first, to prevent duplicates
+        try {
+            client.unsubscribe("deal/gogodeals/database/deals");
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+        JSONObject data = new JSONObject();
+        JSONObject msg = new JSONObject();
+        JSONArray filters = new JSONArray();
+
+        try {
+            //location is set to Lindholmen by default
+            data.put("longitude", 11.938287);
+            data.put("latitude", 57.707760);
+            filters.put(new JSONObject().put("filter", "random"));
+            filters.put(new JSONObject().put("filter", "clothes"));
+            filters.put(new JSONObject().put("filter", "stuff"));
+            //check if the user is interesting in culinary hobbies before offering food
+            if(user.getHobbyNames().contains("cooking") || user.getHobbyNames().contains("baking")){
+                filters.put(new JSONObject().put("filter", "food"));
+            }
+            data.put("filters", filters);
+            msg.put("id", user.getUserID());
+            msg.put("data", data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        MqttMessage message = new MqttMessage(msg.toString().getBytes());
+        message.setQos(1);
+        try {
+            client.publish("deal/gogodeals/deal/fetch", message);
+            client.subscribe("deal/gogodeals/database/deals", 1);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Retrieves a random deal from the list of available deal.
+     * After a deal has been shown, it is removed from the pool.
+     * @return random Deal
+     */
+    public Deal getRandomDeal(){
+        if(deals.size() == 0){
+            return null;
+        }
+        int number = new Random().nextInt(deals.size());
+        Deal deal = deals.remove(number);
+        return deal;
+    }
+
     private void subscribeTopics(){
+
+        //also update the available deals, if the preferences allow it and if there are no more old deals to show
+        boolean seeDeals = preferences.getBoolean("deals_preference", false);
+        if(seeDeals && deals.size()>0) {
+            getNewDeals();
+        }
 
         possibleTopics = getPossibleTopics();
         if (possibleTopics.equals(subscribedTopics)) { //nothing has changed
@@ -266,10 +356,12 @@ public class MQTTService extends Service implements MqttCallback {
 
     }
 
+    /**
+     * Get a list of all possible combination of topics and hobbies.
+     * @return list of topics
+     */
     private HashSet<String> getPossibleTopics(){
         HashSet<String> topics = new HashSet<>();
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         Set<String> emptyLocation = new HashSet<>(); //to prevent null pointer exception
         Set<String> preferencesStringSet = preferences.getStringSet("location_topics", emptyLocation);
 
@@ -285,7 +377,6 @@ public class MQTTService extends Service implements MqttCallback {
             }
         }
         return topics;
-
     }
 
     public EventManager getEvents(){
