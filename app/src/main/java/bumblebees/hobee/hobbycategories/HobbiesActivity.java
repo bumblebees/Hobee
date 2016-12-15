@@ -15,10 +15,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -26,7 +22,6 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import com.google.gson.Gson;
 
 import bumblebees.hobee.R;
-import bumblebees.hobee.jsonparser.JSONParser;
 import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.User;
 import bumblebees.hobee.utilities.Profile;
