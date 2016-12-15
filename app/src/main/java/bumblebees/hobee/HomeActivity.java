@@ -17,6 +17,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,6 +40,11 @@ import com.google.gson.Gson;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import com.squareup.picasso.Picasso;
 
@@ -136,25 +142,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        for(final Event event:Profile.getInstance().getHistoryEvents()){
-            if(event.checkUnranked(Profile.getInstance().getUser())){
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("You have unranked events, Would you like to rank them now?")
-                        .setCancelable(false)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(gson.toJson(event), event.getEvent_details().getUsers_unrankedJson(), getApplicationContext());
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                alert.show();
-            }
-        }
+        SocketIO.getInstance().getEventHistory();
+        rankUsers();
 
         Intent intent = new Intent(this, MQTTService.class);
         ServiceConnection serviceConnection = new ServiceConnection() {
@@ -171,7 +160,80 @@ public class HomeActivity extends AppCompatActivity {
         };
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
+
+
+        }
+
+
+    /**
+     * Checks if the user can rank an event and prompts him to do so.
+     */
+
+    public void rankUsers(){
+        final ArrayList<Event> unRankedEvents = new ArrayList<>();
+        final ArrayList<Event> hostedUnrankedEvents = new ArrayList<>();
+        Log.d("getHistoryEvents" ,String.valueOf(Profile.getInstance().getHistoryEvents().isEmpty()));
+        System.out.println("getHistoryEvents is empty " + Profile.getInstance().getHistoryEvents().isEmpty());
+        for(final Event event:Profile.getInstance().getHistoryEvents()){
+
+            if(event.isCurrentUserHost()){
+                if(!event.checkRanked(Profile.getInstance().getUser())){
+                    hostedUnrankedEvents.add(event);
+                }
+
+            if(!event.isCurrentUserHost()) {
+                if (event.checkHostranked()) {
+                    if (!event.checkRanked(Profile.getInstance().getUser())) {
+                        unRankedEvents.add(event);
+                    }
+                }
+            }
+
+
+            }
+        }
+
+        if(!hostedUnrankedEvents.isEmpty()){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("You have " + hostedUnrankedEvents.size() + " hosted events pending ranking. Would you like to rank them now?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            for(Event event:hostedUnrankedEvents)
+                            SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(gson.toJson(event), event.getEvent_details().getUsers_unrankedJson(), getApplicationContext());
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+        if(!unRankedEvents.isEmpty()){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("You have " + unRankedEvents.size() + " attended events pending ranking. Would you like to rank them now?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            for(Event event: unRankedEvents)
+                            SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(gson.toJson(event), event.getEvent_details().getUsers_unrankedJson(), getApplicationContext());
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+
+
     }
+
+
 
 
 
