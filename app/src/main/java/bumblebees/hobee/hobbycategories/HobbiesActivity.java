@@ -218,6 +218,8 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
      * @param hobby
      */
     private void getHobbyFields(Hobby hobby){
+          //  System.out.println(">>>>> getHobbyFields "  );
+        //System.out.println(hobby.getDifficultyLevel().toString());
             spinnerDifficultyLevel.setSelection(setSpinnerDifficultyLevel(hobby.getDifficultyLevel()));
             spinnerTimeFrom.setSelection(setSpinnerTime(hobby.getTimeFrom()));
             spinnerTimeTo.setSelection(setSpinnerTime(hobby.getTimeTo()));
@@ -228,17 +230,19 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
      * @param hobbyName
      */
     private void createHobby(String hobbyName){
-        if (hobbyExists(hobbyName)) {
-            getHobbyFields(hobby);
-        } else {
+        //if (hobbyExists(hobbyName)) {
+        //    System.out.println(">>>>>>>>>>>>>>>>>>>>>>HOBBY EXISTS!!");
+       //     getHobbyFields(hobby);
+      //  } else {
             createHobbyInstanceFromNull(hobbyName);
-        }
+       // }
     }
 
     private boolean hobbyExists(String hobbyName){
         for (Hobby hobby : Profile.getInstance().getUser().getHobbies()){
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>HOBB EXISTS!" + hobby.getName());
             if (hobby.getName().equals(hobbyName)){
-               return true;
+                return true;
             }
         }
         return false;
@@ -258,6 +262,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
      */
     private void setHobby(){
         hobby.setDifficultyLevel(spinnerDifficultyLevel.getSelectedItem().toString());
+       // System.out.println(hobby.getDifficultyLevel().toString());
         hobby.setTimeFrom(spinnerTimeFrom.getSelectedItem().toString());
         hobby.setTimeTo(spinnerTimeTo.getSelectedItem().toString());
         readDayOfWeek();
