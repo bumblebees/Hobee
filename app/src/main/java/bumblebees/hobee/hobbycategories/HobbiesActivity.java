@@ -2,6 +2,7 @@ package bumblebees.hobee.hobbycategories;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,10 +15,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -25,7 +22,6 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import com.google.gson.Gson;
 
 import bumblebees.hobee.R;
-import bumblebees.hobee.jsonparser.JSONParser;
 import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.User;
 import bumblebees.hobee.utilities.Profile;
@@ -232,12 +228,20 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
      * @param hobbyName
      */
     private void createHobby(String hobbyName){
-        hobby = gson.fromJson(getIntent().getStringExtra("HobbyName"), Hobby.class);
-        if (!hobby.equals(null)) {
+        if (hobbyExists(hobbyName)) {
             getHobbyFields(hobby);
         } else {
             createHobbyInstanceFromNull(hobbyName);
         }
+    }
+
+    private boolean hobbyExists(String hobbyName){
+        for (Hobby hobby : Profile.getInstance().getUser().getHobbies()){
+            if (hobby.getName().equals(hobbyName)){
+               return true;
+            }
+        }
+        return false;
     }
 
 
