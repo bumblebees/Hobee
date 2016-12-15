@@ -5,4 +5,5 @@
     <string name="female">female</string>
     <string name="set">Set</string>
     <string name="name_lastname">Name Lastname</string>
+    <string name="gogodeals_url">http://gogodeals.se/</string>
 </resources>

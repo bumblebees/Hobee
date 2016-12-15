@@ -8,6 +8,16 @@
             android:entries="@array/locationTopicSpinner"
             android:entryValues="@array/locationTopicValues"
             android:key="location_topics" />
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Deals">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="deals_preference"
+            android:title="Display related deals"
+            android:summaryOn="Deals will be shown when browsing events."
+            android:summaryOff="Deals will never be shown." />
     </PreferenceCategory>
     <PreferenceCategory android:title="Notifications">
         <SwitchPreference

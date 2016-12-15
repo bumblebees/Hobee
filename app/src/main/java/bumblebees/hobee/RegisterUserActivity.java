@@ -142,8 +142,10 @@ public class RegisterUserActivity extends AppCompatActivity {
                 JSONObject userJSON = createJSON();
                 // Set shared preferences
                 session.setPreferences(userData.getString("loginId"), userData.getString("origin"));
+
                 // Set user instance
                 user = createUser();
+                session.saveUser(user);
                 Profile.getInstance().setUser(user);
                 // Save user in database
                 SocketIO.getInstance().register(user, getImageBase64(), RegisterUserActivity.this);

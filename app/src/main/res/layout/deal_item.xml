@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Bee_color_2"
+    android:elevation="10dp"
+    android:padding="3dp">
+
+    <Button
+        android:text="Check it out!"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dealGo"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="Sponsored by GoGoDeals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView12"
+        android:textSize="12sp"
+        android:textColor="@color/Bee_color_5"
+        android:padding="3dp"
+        android:layout_alignBottom="@+id/dealDetails"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="10 \nleft!"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dealCount"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/dealGo"
+        android:padding="8dp"
+        android:textColor="@color/Bee_color_3"
+        android:textStyle="normal|bold"
+        android:textAlignment="center"
+        android:layout_marginLeft="5dp" />
+
+    <TextView
+        android:text="Deal Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dealName"
+        android:textColor="@color/Bee_color_3"
+        android:padding="5dp"
+        android:textSize="18sp"
+        android:textStyle="normal|bold"
+        android:layout_alignBaseline="@+id/dealCount"
+        android:layout_alignBottom="@+id/dealCount"
+        android:layout_toRightOf="@+id/dealCount"
+        android:layout_toEndOf="@+id/dealCount" />
+
+    <TextView
+        android:text="Deal Details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dealDetails"
+        android:textColor="@color/Bee_color_3"
+        android:padding="5dp"
+        android:layout_alignBottom="@+id/dealCount"
+        android:layout_toRightOf="@+id/dealCount"
+        android:layout_toEndOf="@+id/dealCount" />
+
+</RelativeLayout>
