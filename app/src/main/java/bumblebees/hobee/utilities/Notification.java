@@ -13,15 +13,11 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-import java.util.Calendar;
-import java.util.Set;
-
 import bumblebees.hobee.EventViewActivity;
 import bumblebees.hobee.HomeActivity;
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.CancelledEvent;
 import bumblebees.hobee.objects.Event;
-import bumblebees.hobee.objects.User;
 
 /**
  * Class to create and send notifications notifications.
@@ -58,7 +54,7 @@ public class Notification {
      */
     public void sendNewEvent(Event event){
         //check if the notification should be sent or not
-        if(matchesPreferences(event)){
+        if(isEventNotFull(event)){
 
             notificationBuilder.setContentTitle("New event: "+event.getEvent_details().getEvent_name());
             notificationBuilder.setContentText(event.getEvent_details().getDescription());
@@ -115,25 +111,14 @@ public class Notification {
 
 
     /**
-     * Checks if the event matches the preferences of the currently logged in user
+     * Check if the event is full
      * @param event - event to be checked
-     * @return true if they match, false otherwise
+     * @return true if it is not full, false otherwise
      */
-    public boolean matchesPreferences(Event event){
-
-        //check if the event is full
+    public boolean isEventNotFull(Event event){
         if(event.getEvent_details().getUsers_accepted().size()==event.getEvent_details().getMaximum_people()){
             return false;
         }
-
-        //check the user's day of the week preferences
-        int dayOfTheWeek = event.getEvent_details().getDayOfTheWeek();
-        Set<String> selectedDays = preferences.getStringSet("notification_days", null);
-        if(!selectedDays.isEmpty())
-            if(!selectedDays.contains(String.valueOf(dayOfTheWeek))){
-                return false;
-            }
-        //none of the notification preferences are contradicted
         return true;
     }
 

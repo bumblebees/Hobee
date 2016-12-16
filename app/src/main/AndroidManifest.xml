@@ -43,7 +43,6 @@
             android:configChanges="orientation"
             android:exported="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".HobbyActivity" />
         <activity android:name=".NewEventActivity" />
         <activity android:name=".TermsOfServiceActivity" />
         <activity

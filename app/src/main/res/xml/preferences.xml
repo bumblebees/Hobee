@@ -43,12 +43,6 @@
             android:title="Notification sound"
             android:key="notification_sound"
             android:dependency="notification_general" />
-        <MultiSelectListPreference
-            android:title="Available days"
-            android:entries="@array/daysOfTheWeek"
-            android:entryValues="@array/daysOfTheWeekCalendarValues"
-            android:key="notification_days"
-            android:dependency="notification_general" />
         <SwitchPreference
             android:defaultValue="false"
             android:title="Pending users"

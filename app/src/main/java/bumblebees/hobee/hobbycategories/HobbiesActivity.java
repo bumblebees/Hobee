@@ -25,6 +25,7 @@ import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.User;
 import bumblebees.hobee.utilities.Profile;
+import bumblebees.hobee.utilities.SessionManager;
 import bumblebees.hobee.utilities.SocketIO;
 
 import static android.R.id.list;
@@ -74,6 +75,8 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
             public void onClick(View v) {
                 setHobby();
                 Profile.getInstance().addOrUpdateHobby(hobby);
+                SessionManager sessionManager = new SessionManager(HobbiesActivity.this);
+                sessionManager.saveUser(Profile.getInstance().getUser());
                 SocketIO.getInstance().addHobbyToUser(hobby, Profile.getInstance().getUserID());
                 Intent saveAndGoBackIntent = new Intent(HobbiesActivity.this, HobbiesChoiceActivity.class);
                 HobbiesActivity.this.startActivity(saveAndGoBackIntent);
