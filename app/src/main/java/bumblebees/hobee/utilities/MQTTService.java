@@ -51,7 +51,7 @@ public class MQTTService extends Service implements MqttCallback {
     private String clientID;
 
     //HOBEE BROKER
-    private String mqttAddress = "tcp://129.16.155.22:1883";
+   private String mqttAddress = "tcp://129.16.155.22:1883";
 
     //PRATA BROKER
      //private String mqttAddress = "tcp://prata.technocreatives.com:1883";
@@ -125,7 +125,7 @@ public class MQTTService extends Service implements MqttCallback {
                 client.setCallback(this);
 
                 MqttConnectOptions options = new MqttConnectOptions();
-                options.setCleanSession(false);
+                options.setCleanSession(true);
 
                 IMqttToken token = client.connect(options);
                 token.setActionCallback(new IMqttActionListener() {
@@ -176,6 +176,13 @@ public class MQTTService extends Service implements MqttCallback {
                         Deal deal = gson.fromJson(dealArray.get(i).toString(), Deal.class);
                         deals.add(deal);
                     }
+                }
+
+                //deals are received, unsubscribe
+                try {
+                    client.unsubscribe("deal/gogodeals/database/deals");
+                } catch (MqttException e) {
+                    e.printStackTrace();
                 }
 
             } else { //topic is an event topic
@@ -258,12 +265,6 @@ public class MQTTService extends Service implements MqttCallback {
      * Retrieve deals from GoGoDeals.
      */
     private void getNewDeals(){
-        //try to unsubscribe from the topic first, to prevent duplicates
-        try {
-            client.unsubscribe("deal/gogodeals/database/deals");
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
         JSONObject data = new JSONObject();
         JSONObject msg = new JSONObject();
         JSONArray filters = new JSONArray();
@@ -275,10 +276,7 @@ public class MQTTService extends Service implements MqttCallback {
             filters.put(new JSONObject().put("filter", "random"));
             filters.put(new JSONObject().put("filter", "clothes"));
             filters.put(new JSONObject().put("filter", "stuff"));
-            //check if the user is interesting in culinary hobbies before offering food
-            if(user.getHobbyNames().contains("cooking") || user.getHobbyNames().contains("baking")){
-                filters.put(new JSONObject().put("filter", "food"));
-            }
+            filters.put(new JSONObject().put("filter", "food"));
             data.put("filters", filters);
             msg.put("id", user.getUserID());
             msg.put("data", data);
