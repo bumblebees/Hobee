@@ -57,7 +57,9 @@ public class UserProfileActivity extends AppCompatActivity {
                 this.startActivity(intent);
                 return true;
             case R.id.menuEditProfile:
-                //TODO: open edit profile activity here
+                Intent editProfileIntent = new Intent(this, RegisterUserActivity.class);
+                editProfileIntent.putExtra("Source", "UserProfileActivity");
+                startActivity(editProfileIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -155,6 +157,13 @@ public class UserProfileActivity extends AppCompatActivity {
         if (reputation > 2500 && reputation <= 7000){return "+2";}
         if (reputation > 7000){return "+3";}
         else {return "err";}
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent backPressIntent = new Intent(UserProfileActivity.this, HomeActivity.class);
+        startActivity(backPressIntent);
+
     }
 
 

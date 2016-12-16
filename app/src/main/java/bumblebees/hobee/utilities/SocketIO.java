@@ -22,6 +22,7 @@ import bumblebees.hobee.UserProfileActivity;
 import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
 
 
+import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.User;
 import io.socket.client.Ack;
@@ -189,6 +190,24 @@ public class SocketIO {
         socket.emit("register_user", gson.toJson(user));
 
         Intent intent = new Intent(packageContext, HobbiesChoiceActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        packageContext.startActivity(intent);
+    }
+
+    public void updateProfile(final User user, String imageString, final Context packageContext) {
+
+        final JSONObject userImage = new JSONObject();
+        try {
+            userImage.put("userId", user.getUserID());
+            userImage.put("imageString", imageString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        socket.emit("save_image", userImage);
+        socket.emit("update_user", gson.toJson(user));
+
+        Intent intent = new Intent(packageContext, UserProfileActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         packageContext.startActivity(intent);
     }

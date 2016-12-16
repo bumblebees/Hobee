@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:background="#ffe36b"
+    android:background="@color/Bee_color_3"
     tools:context="bumblebees.hobee.RegisterUserActivity">
 
 
@@ -39,17 +39,6 @@
         android:padding="10dp"
         android:layout_marginLeft="1dp"
         android:layout_margin="10dp" />
-    <ImageView
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/userImage"
-        app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
-        android:adjustViewBounds="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/submitBtn"
-        android:layout_alignStart="@+id/submitBtn"
-        android:layout_marginLeft="133dp"
-        android:layout_marginStart="133dp" />
 
     <RadioGroup
         android:id="@+id/gender"
@@ -63,50 +52,64 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/male"
-            android:checked="false" />
+            android:checked="false"
+            android:layout_alignBottom="@+id/chooseImageBtn"
+            android:layout_alignLeft="@+id/gender"
+            android:layout_alignStart="@+id/gender" />
+
         <RadioButton
             android:id="@+id/radioFemale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/female" android:checked="false"/>
+            android:text="@string/female" android:checked="false"
+            android:layout_alignBaseline="@+id/radioMale"
+            android:layout_alignBottom="@+id/radioMale"
+            android:layout_alignLeft="@+id/submitBtn"
+            android:layout_alignStart="@+id/submitBtn" />
     </RadioGroup>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="date"
-        android:ems="10"
-        android:id="@+id/birthday"
-        android:background="#60FFFFFF"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:padding="10dp"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp"
-        android:layout_toStartOf="@+id/setBirthdayBtn"
-        android:layout_toLeftOf="@+id/setBirthdayBtn" android:text="birthday"/>
+
     <Button
         android:text="@string/set"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_centerVertical="true"
-        android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
-        android:id="@+id/setBirthdayBtn"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/setBirthdayBtn"
+        android:layout_alignBaseline="@+id/birthday"
+        android:layout_alignBottom="@+id/birthday"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
-    <EditText
+    <Button
+        android:text="Done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:id="@+id/email" android:hint="E-mail"
-        android:background="#60FFFFFF"
-        android:padding="10dp"
-        android:layout_above="@+id/info"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/lastName"
+        android:layout_alignEnd="@+id/lastName"
+        android:layout_marginRight="25dp"
+        android:layout_marginEnd="25dp"
+        android:id="@+id/submitBtn" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/termsOfServiceCheckBox"
+        android:layout_alignBottom="@+id/termsOfServiceBtn"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp" />
+        android:layout_alignTop="@+id/termsOfServiceBtn" />
+
+    <Button
+        android:text="I HAVE READ AND ACCEPTED THE TERMS OF SERVICE"
+        android:textColor="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/termsOfServiceBtn"
+        android:background="@color/Bee_color_3"
+        android:backgroundTint="@color/Bee_color_3"
+        android:layout_above="@+id/submitBtn"
+        android:layout_toRightOf="@+id/termsOfServiceCheckBox"
+        android:layout_toEndOf="@+id/termsOfServiceCheckBox" />
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -116,28 +119,63 @@
         android:background="#60FFFFFF"
         android:id="@+id/info" android:hint="Tell us a bit about yourself."
         android:inputType="textMultiLine"
-        android:layout_marginBottom="4dp"
-        android:layout_above="@+id/submitBtn"
+        android:padding="10dp"
+        android:layout_above="@+id/termsOfServiceCheckBox"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:padding="10dp"
+        android:layout_marginBottom="18dp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="4dp" />
-    <ImageButton
-        app:srcCompat="@drawable/letgetstarted"
-        android:id="@+id/submitBtn"
-        android:background="#0000"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:scaleType="fitCenter"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/email" android:hint="E-mail"
+        android:background="#60FFFFFF"
+        android:padding="10dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/birthday"
+        android:background="#60FFFFFF"
+        android:padding="10dp"
+        android:text="birthday"
+        android:layout_marginBottom="13dp"
+        android:layout_above="@+id/email"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/chooseImageBtn"
+        android:layout_toStartOf="@+id/chooseImageBtn" />
+
     <Button
         android:text="Choose image"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_below="@+id/userImage"
-        android:layout_alignLeft="@+id/userImage" android:layout_alignStart="@+id/userImage"
-        android:id="@+id/chooseImageBtn" android:layout_alignParentRight="true" android:layout_alignParentEnd="true"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/chooseImageBtn"
+        android:layout_above="@+id/setBirthdayBtn"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_height="wrap_content"
+        android:id="@+id/userImage"
+        app:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
+        android:adjustViewBounds="true"
+        android:layout_width="180dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/chooseImageBtn" />
+
 
 </RelativeLayout>
