@@ -6,4 +6,6 @@
     <string name="set">Set</string>
     <string name="name_lastname">Name Lastname</string>
     <string name="gogodeals_url">http://gogodeals.se/</string>
+    <string name="hobee_main_server">129.16.155.22</string>
+    <string name="hobee_reserver_server">129.16.155.25</string>
 </resources>

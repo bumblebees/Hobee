@@ -34,13 +34,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     static GoogleApiClient googleApiClient;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SocketIO.getInstance().start(this);
 
-        SocketIO.getInstance().start();
         session = new SessionManager(getApplicationContext());
-        //MQTT.getInstance().connect(getApplicationContext());
 
         //initialize the application settings
         PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preferences, false);
@@ -58,6 +58,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.startActivity(intent);
         }
+
 
 
         /*
@@ -82,6 +83,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             public void onError(FacebookException error) {
             }
         });
+
+
+
+
 
 
         /*

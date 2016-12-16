@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import bumblebees.hobee.HomeActivity;
+import bumblebees.hobee.LoginActivity;
+import bumblebees.hobee.R;
 import bumblebees.hobee.RankUserActivity;
 import bumblebees.hobee.RegisterUserActivity;
 
@@ -28,6 +31,7 @@ import bumblebees.hobee.objects.User;
 import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,12 +72,47 @@ public class SocketIO {
     /**
      * Setup socket connection
      */
-    public void start() {
+    public void start(final Context context) {
         if (socket == null) {
             try {
-                socket = IO.socket("http://129.16.155.22:3001");
-                socket.connect();
                 gson = new Gson();
+
+                IO.Options opts = new IO.Options();
+                opts.reconnection = false;
+                opts.timeout = 100;
+                opts.forceNew = true;
+                String server = "http://"+context.getResources().getString(R.string.hobee_main_server)+":3001";
+                socket = IO.socket(server);
+                socket.connect();
+
+                socket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
+                    @Override
+                    public void call(Object... objects) {
+                        try {
+                            IO.Options opts = new IO.Options();
+                            opts.reconnection = false;
+                            opts.timeout = 100;
+                            socket = IO.socket("http://"+context.getResources().getString(R.string.hobee_reserver_server)+":3001");
+                            socket.connect();
+                            socket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
+                                @Override
+                                public void call(Object... objects) {
+                               //     Toast toast = Toast.makeText(context, "Hobee cannot be reached right now. Please try again later.", Toast.LENGTH_LONG);
+                               //     toast.show();
+                                }
+                            });
+                        }catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                socket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+                    @Override
+                    public void call(Object... objects) {
+                        Log.d("socket", "disconnect");
+                        start(context);
+                    }
+                });
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }

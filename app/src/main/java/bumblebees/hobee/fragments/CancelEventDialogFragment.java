@@ -86,12 +86,11 @@ public class CancelEventDialogFragment extends DialogFragment{
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                String serverIP = "129.16.155.22";
+                String serverIP = getResources().getString(R.string.hobee_main_server);
                 int port = 3002;
                 try {
                     InetAddress serverAdress = InetAddress.getByName(serverIP);
                     Socket socket = new Socket(serverAdress, port);
-
                     JSONObject cancelJson = new JSONObject();
                     cancelJson.put("topic", event.getTopic());
                     cancelJson.put("reason", reason);
