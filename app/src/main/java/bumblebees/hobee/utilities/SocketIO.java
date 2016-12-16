@@ -309,9 +309,12 @@ public class SocketIO {
                     for(int i=0;i<eventArray.length();i++)
                         try {
                             eventHistory.add(gson.fromJson(eventArray.getString(i),Event.class));
+
+                            Profile.getInstance().setHistoryEvents(eventHistory);
+
                         } catch (JSONException e) {e.printStackTrace();}
 
-                Profile.getInstance().setHistoryEvents(eventHistory);
+
             }
         });
     }

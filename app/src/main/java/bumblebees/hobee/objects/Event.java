@@ -3,8 +3,9 @@ package bumblebees.hobee.objects;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import bumblebees.hobee.utilities.Profile;
@@ -93,9 +94,32 @@ public class Event {
         return (event_details.getHost_id().equals(Profile.getInstance().getUserID())) ;
      }
 
-    public Boolean checkUnranked(User user){
-       return (this.getEvent_details().getUsers_unranked().contains(user.getUserID()));
+
+    /**
+     * Returns true if user has ranked an event
+     * @param user
+     * @return
+     */
+    public Boolean checkRanked(User user){
+       return (!this.getEvent_details().getUsers_unranked().contains(user.getUserID()));
     }
+
+    /**
+     * checkHostranked() returns true if the host of the event has ranked an event and false otherwise.
+     * It works by checking if the host is in the userUnrankedList
+     * @return
+     */
+
+    public Boolean checkHostranked(){
+        List<String> userUnrankedList = this.getEvent_details().getUsers_unranked();
+        String hostID = this.getEvent_details().getHost_id();
+        for(String userID: userUnrankedList){
+            if(userID.equals(hostID)) return false;
+        }
+        return true;
+    }
+
+
 
 }
 

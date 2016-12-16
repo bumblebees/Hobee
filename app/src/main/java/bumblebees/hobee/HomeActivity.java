@@ -1,29 +1,21 @@
 package bumblebees.hobee;
 
-import android.app.AlarmManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,14 +28,12 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import bumblebees.hobee.fragments.FragmentAdapter;
-import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
+import bumblebees.hobee.objects.Deal;
 import bumblebees.hobee.objects.Event;
-import bumblebees.hobee.objects.User;
 import bumblebees.hobee.utilities.*;
 import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
@@ -53,10 +43,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.squareup.picasso.Picasso;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -72,26 +62,31 @@ public class HomeActivity extends AppCompatActivity {
     ViewPager viewPager;
     Toolbar appToolbar;
     Gson gson;
+    SharedPreferences preferences;
+    MQTTService service;
+
+    View dealContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         Intent mqttServiceIntent = new Intent(this, MQTTService.class);
         startService(mqttServiceIntent);
-
-
-
 
         setContentView(R.layout.activity_home);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
+
+        dealContainer = findViewById(R.id.dealContainer);
+
         session = new SessionManager(getApplicationContext());
         gson = new Gson();
         Profile.getInstance().setUser(session.getUser());
         appToolbar = (Toolbar) findViewById(R.id.homeToolbar);
         setSupportActionBar(appToolbar);
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         FragmentAdapter tabAdapter = new FragmentAdapter(getSupportFragmentManager());
         viewPager.setAdapter(tabAdapter);
@@ -148,26 +143,98 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        SocketIO.getInstance().getEventHistory();
+        rankUsers();
+
+        Intent intent = new Intent(this, MQTTService.class);
+        ServiceConnection serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                MQTTService.MQTTBinder binder = (MQTTService.MQTTBinder) iBinder;
+                service = binder.getInstance();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+
+            }
+        };
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+
+
+        }
+
+
+    /**
+     * Checks if the user can rank an event and prompts him to do so.
+     */
+
+    public void rankUsers(){
+        final ArrayList<Event> unRankedEvents = new ArrayList<>();
+        final ArrayList<Event> hostedUnrankedEvents = new ArrayList<>();
+        Log.d("getHistoryEvents" ,String.valueOf(Profile.getInstance().getHistoryEvents().isEmpty()));
+        System.out.println("getHistoryEvents is empty " + Profile.getInstance().getHistoryEvents().isEmpty());
         for(final Event event:Profile.getInstance().getHistoryEvents()){
-            if(event.checkUnranked(Profile.getInstance().getUser())){
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("You have unranked events, Would you like to rank them now?")
-                        .setCancelable(false)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(gson.toJson(event), event.getEvent_details().getUsers_unrankedJson(), getApplicationContext());
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                alert.show();
+
+            if(event.isCurrentUserHost()){
+                if(!event.checkRanked(Profile.getInstance().getUser())){
+                    hostedUnrankedEvents.add(event);
+                }
+
+            if(!event.isCurrentUserHost()) {
+                if (event.checkHostranked()) {
+                    if (!event.checkRanked(Profile.getInstance().getUser())) {
+                        unRankedEvents.add(event);
+                    }
+                }
+            }
+
+
             }
         }
+
+        if(!hostedUnrankedEvents.isEmpty()){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("You have " + hostedUnrankedEvents.size() + " hosted events pending ranking. Would you like to rank them now?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            for(Event event:hostedUnrankedEvents)
+                            SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(gson.toJson(event), event.getEvent_details().getUsers_unrankedJson(), getApplicationContext());
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
         }
+        if(!unRankedEvents.isEmpty()){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("You have " + unRankedEvents.size() + " attended events pending ranking. Would you like to rank them now?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            for(Event event: unRankedEvents)
+                            SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(gson.toJson(event), event.getEvent_details().getUsers_unrankedJson(), getApplicationContext());
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+
+
+    }
+
+
 
 
 
@@ -314,5 +381,48 @@ public class HomeActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        boolean seeDeals = preferences.getBoolean("deals_preference", false);
+        if(seeDeals){
+            if(service!=null){
+                try {
+                    Deal deal = service.getRandomDeal();
+                    setDeal(deal);
+                    dealContainer.setVisibility(View.VISIBLE);
+                }
+                catch(NullPointerException e){
+                    //hide the deals container, something is not working properly
+                    dealContainer.setVisibility(View.GONE);
+                }
+            }
+        }
+        else{
+            dealContainer.setVisibility(View.GONE);
+        }
+    }
+
+    public void setDeal(Deal deal){
+        TextView dealDescription = (TextView) dealContainer.findViewById(R.id.dealDetails);
+        TextView dealName = (TextView) dealContainer.findViewById(R.id.dealName);
+        Button btnDeal = (Button) dealContainer.findViewById(R.id.dealGo);
+        TextView dealCount = (TextView) dealContainer.findViewById(R.id.dealCount);
+
+        dealName.setText(deal.getName());
+        dealDescription.setText(deal.getPrice()+" SEK");
+        dealCount.setText(deal.getCount()+"\nleft!");
+
+        btnDeal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = getResources().getString(R.string.gogodeals_url);
+                Intent dealIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(dealIntent);
+            }
+        });
+
     }
 }

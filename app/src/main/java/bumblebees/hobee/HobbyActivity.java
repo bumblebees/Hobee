@@ -36,14 +36,16 @@ public class HobbyActivity extends AppCompatActivity {
             }
         });
 
-        // for demo: Only sports can be selected!
+       /* // for demo: Only sports can be selected!
         showSports.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent profileIntent = new Intent(HobbyActivity.this, SportsHobbyActivity.class);
                 HobbyActivity.this.startActivity(profileIntent);
+
             }
         });
+        */
     }
 
 

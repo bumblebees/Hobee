@@ -242,6 +242,7 @@ public class RegisterUserActivity extends AppCompatActivity {
      */
     public JSONObject createJSON() {
         JSONObject object = new JSONObject();
+        selectedGender = (RadioButton) findViewById(gender.getCheckedRadioButtonId());
         try {
             object.put("loginId", userData.getString("loginId"));
             object.put("origin", userData.get("origin"));

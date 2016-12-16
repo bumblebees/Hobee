@@ -2,6 +2,7 @@ package bumblebees.hobee.hobbycategories;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,10 +15,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -25,7 +22,6 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import com.google.gson.Gson;
 
 import bumblebees.hobee.R;
-import bumblebees.hobee.jsonparser.JSONParser;
 import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.User;
 import bumblebees.hobee.utilities.Profile;
@@ -190,25 +186,25 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
      */
     private void readDayOfWeek(){
         if (checkBoxMonday.isChecked()){
-            hobby.setDatePreference(checkBoxMonday.getTag().toString());
+            hobby.setDatePreference(checkBoxMonday.getText().toString());
         }
         if (checkBoxTuesday.isChecked()){
-            hobby.setDatePreference(checkBoxTuesday.getTag().toString());
+            hobby.setDatePreference(checkBoxTuesday.getText().toString());
         }
         if (checkBoxWednesday.isChecked()){
-            hobby.setDatePreference(checkBoxWednesday.getTag().toString());
+            hobby.setDatePreference(checkBoxWednesday.getText().toString());
         }
         if (checkBoxThursday.isChecked()){
-            hobby.setDatePreference(checkBoxThursday.getTag().toString());
+            hobby.setDatePreference(checkBoxThursday.getText().toString());
         }
         if (checkBoxFriday.isChecked()){
-            hobby.setDatePreference(checkBoxFriday.getTag().toString());
+            hobby.setDatePreference(checkBoxFriday.getText().toString());
         }
         if (checkBoxSaturday.isChecked()){
-            hobby.setDatePreference(checkBoxSaturday.getTag().toString());
+            hobby.setDatePreference(checkBoxSaturday.getText().toString());
         }
         if (checkBoxSunday.isChecked()){
-            hobby.setDatePreference(checkBoxSunday.getTag().toString());
+            hobby.setDatePreference(checkBoxSunday.getText().toString());
         }
         else {
             // TODO: ERROR HANDLING SHOULD BE DONE HERE! - Day must be selected
@@ -222,6 +218,8 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
      * @param hobby
      */
     private void getHobbyFields(Hobby hobby){
+          //  System.out.println(">>>>> getHobbyFields "  );
+        //System.out.println(hobby.getDifficultyLevel().toString());
             spinnerDifficultyLevel.setSelection(setSpinnerDifficultyLevel(hobby.getDifficultyLevel()));
             spinnerTimeFrom.setSelection(setSpinnerTime(hobby.getTimeFrom()));
             spinnerTimeTo.setSelection(setSpinnerTime(hobby.getTimeTo()));
@@ -232,12 +230,22 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
      * @param hobbyName
      */
     private void createHobby(String hobbyName){
-        hobby = gson.fromJson(getIntent().getStringExtra("HobbyName"), Hobby.class);
-        if (!hobby.equals(null)) {
-            getHobbyFields(hobby);
-        } else {
+        //if (hobbyExists(hobbyName)) {
+        //    System.out.println(">>>>>>>>>>>>>>>>>>>>>>HOBBY EXISTS!!");
+       //     getHobbyFields(hobby);
+      //  } else {
             createHobbyInstanceFromNull(hobbyName);
+       // }
+    }
+
+    private boolean hobbyExists(String hobbyName){
+        for (Hobby hobby : Profile.getInstance().getUser().getHobbies()){
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>HOBB EXISTS!" + hobby.getName());
+            if (hobby.getName().equals(hobbyName)){
+                return true;
+            }
         }
+        return false;
     }
 
 
@@ -254,6 +262,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
      */
     private void setHobby(){
         hobby.setDifficultyLevel(spinnerDifficultyLevel.getSelectedItem().toString());
+       // System.out.println(hobby.getDifficultyLevel().toString());
         hobby.setTimeFrom(spinnerTimeFrom.getSelectedItem().toString());
         hobby.setTimeTo(spinnerTimeTo.getSelectedItem().toString());
         readDayOfWeek();
@@ -285,8 +294,5 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
             }
         });
     }
-
-
-
 }
 
