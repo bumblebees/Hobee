@@ -45,6 +45,7 @@
             android:screenOrientation="portrait" />
         <activity android:name=".HobbyActivity" />
         <activity android:name=".NewEventActivity" />
+        <activity android:name=".TermsOfServiceActivity" />
         <activity
             android:name=".EventViewActivity"
             android:exported="true"

@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:title="Edit profile"
-        android:icon="@drawable/profile"
+        android:icon="@drawable/editicon"
         android:id="@+id/menuEditProfile"
         android:visible="true"
         android:enabled="true"
         app:showAsAction="always" />
     <item android:title="EditHobbies"
         android:id="@+id/menuEditHobbies"
-        android:icon="@drawable/chess"
+        android:icon="@drawable/addhobby"
         android:visible="true"
         android:enabled="true"
         app:showAsAction="always" />

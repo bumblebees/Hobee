@@ -25,6 +25,8 @@ import android.widget.*;
 import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.Rank;
 import bumblebees.hobee.objects.User;
+import bumblebees.hobee.utilities.CropSquareTransformation;
+import bumblebees.hobee.utilities.EventManager;
 import bumblebees.hobee.utilities.SessionManager;
 import bumblebees.hobee.utilities.SocketIO;
 import bumblebees.hobee.utilities.Profile;
@@ -56,11 +58,14 @@ public class RegisterUserActivity extends AppCompatActivity {
     RadioButton genderMale;
     RadioButton genderFemale;
     RadioButton selectedGender;
+    CheckBox termsOfServiceCheckBox;
+    Button termsOfServiceBtn;
     EditText bio;
     ImageView userImage;
-    ImageButton submitBtn;
+    Button submitBtn;
     Button setBirthdayBtn;
     Button chooseImageBtn;
+    String source;
     Bundle userData;
     User user;
     Gson gson;
@@ -80,6 +85,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         userData = intent.getBundleExtra("userData");
+        source   = intent.getStringExtra("Source");
 
 
         try {
@@ -103,54 +109,109 @@ public class RegisterUserActivity extends AppCompatActivity {
         genderFemale = (RadioButton) findViewById(R.id.radioFemale);
         bio = (EditText) findViewById(R.id.info);
         userImage = (ImageView) findViewById(R.id.userImage);
-        submitBtn = (ImageButton) findViewById(R.id.submitBtn);
+        submitBtn = (Button) findViewById(R.id.submitBtn);
         setBirthdayBtn = (Button) findViewById(R.id.setBirthdayBtn);
         chooseImageBtn = (Button) findViewById(R.id.chooseImageBtn);
+        termsOfServiceBtn = (Button) findViewById(R.id.termsOfServiceBtn);
+        termsOfServiceCheckBox = (CheckBox) findViewById(R.id.termsOfServiceCheckBox);
 
+        if (userData == null) {
+            termsOfServiceBtn.setVisibility(View.INVISIBLE);
+            termsOfServiceCheckBox.setVisibility(View.INVISIBLE);
+            submitBtn.setEnabled(true);
+        } else {
+            submitBtn.setEnabled(false);
 
-        // Set fields with extracted user data
-        firstName.setText(userData.getString("firstName"));
-        lastName.setText(userData.getString("lastName"));
-        email.setText(userData.getString("email"));
-        if (userGender == null){
-            // nothing
-        } else if (userGender.equals("male")) {
-            genderMale.setChecked(true);
-        } else if (userGender.equals("female")) {
-            genderFemale.setChecked(true);
+            termsOfServiceCheckBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (termsOfServiceCheckBox.isChecked()) {
+                        submitBtn.setEnabled(true);
+                    } else {
+                        submitBtn.setEnabled(false);
+                    }
+                }
+
+            });
         }
-        if (userBirthday != null) {
-            try {
-                Date date = new SimpleDateFormat("MM/dd/yyyy").parse(userBirthday);
-                String formattedDate = new SimpleDateFormat("yyyy/MM/dd").format(date);
-                birthday.setText(formattedDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
+
+        if (userData == null) {
+            firstName.setText(Profile.getInstance().getFirstName());
+            lastName.setText(Profile.getInstance().getLastName());
+            birthday.setText(Profile.getInstance().getBirthday());
+            termsOfServiceCheckBox.setChecked(true);
+            if (Profile.getInstance().getGender().equals("male")) {
+                genderMale.setChecked(true);
+            } else {
+                genderFemale.setChecked(true);
+            }
+            email.setText(Profile.getInstance().getEmail());
+            bio.setText(Profile.getInstance().getBio());
+            Picasso.with(this).load(Profile.getInstance().getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
+
+        } else {
+            // Set fields with extracted user data
+            firstName.setText(userData.getString("firstName"));
+            lastName.setText(userData.getString("lastName"));
+            email.setText(userData.getString("email"));
+            if (userGender == null) {
+                genderMale.setChecked(true);
+            } else if (userGender.equals("male")) {
+                genderMale.setChecked(true);
+            } else if (userGender.equals("female")) {
+                genderFemale.setChecked(true);
+            }
+            if (userBirthday != null) {
+                try {
+                    Date date = new SimpleDateFormat("MM/dd/yyyy").parse(userBirthday);
+                    String formattedDate = new SimpleDateFormat("yyyy/MM/dd").format(date);
+                    birthday.setText(formattedDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (userData.getString("origin").equals("facebook")) {
+                Picasso.with(this)
+                        .load("https://graph.facebook.com/" + userData.getString("loginId") + "/picture?width=200&height=200")
+                        .into(userImage);
             }
         }
-        if (userData.getString("origin").equals("facebook")) {
-            Picasso.with(this)
-                    .load("https://graph.facebook.com/" + userData.getString("loginId") + "/picture?width=200&height=200")
-                    .into(userImage);
-        }
 
+
+        termsOfServiceBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent tOSIntent = new Intent(RegisterUserActivity.this, TermsOfServiceActivity.class);
+                startActivity(tOSIntent);
+            }
+        });
 
         // submit button does magic?
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                JSONObject userJSON = createJSON();
-                // Set shared preferences
-                session.setPreferences(userData.getString("loginId"), userData.getString("origin"));
+                //Updating
+                if (userData == null) {
+                    user = createUser();
+                    Profile.getInstance().setUser(user);
+                    SocketIO.getInstance().updateProfile(user, getImageBase64(), RegisterUserActivity.this);
+                    session.saveUser(user);
 
-                // Set user instance
-                user = createUser();
-                session.saveUser(user);
-                Profile.getInstance().setUser(user);
-                // Save user in database
-                SocketIO.getInstance().register(user, getImageBase64(), RegisterUserActivity.this);
+                    //Creating user
+                } else {
+                    //JSONObject userJSON = createJSON();
+                    // Set shared preferences
+                    session.setPreferences(userData.getString("loginId"), userData.getString("origin"));
+                    session.saveDataAndEvents(user, new EventManager());
+                    // Set user instance
+                    user = createUser();
+                    Profile.getInstance().setUser(user);
+                    // Save user in database
+                    SocketIO.getInstance().register(user, getImageBase64(), RegisterUserActivity.this);
+
 //                // Save user image on server
 //                SocketIO.getInstance().sendImage(userData.getString("loginId"), getImageBase64());
+                }
 
             }
         });
@@ -201,10 +262,25 @@ public class RegisterUserActivity extends AppCompatActivity {
         UUID uuid = UUID.randomUUID();
         Calendar cal = Calendar.getInstance();
         String createdTimestamp = String.valueOf(cal.getTimeInMillis()/1000L);
-        User user = new User(uuid.toString(), userData.getString("loginId"), userData.getString("origin"), firstName.getText().toString(), lastName.getText().toString(),
-                birthday.getText().toString(), email.getText().toString(), selectedGender.getText().toString(), bio.getText().toString(), createdTimestamp,
-                new Rank(), new ArrayList<Hobby>());
-        return user;
+        selectedGender = (RadioButton) findViewById(gender.getCheckedRadioButtonId());
+        if (selectedGender == null) {
+            System.out.println("NULL");
+        }
+        if (userData == null) {
+            User user = new User(uuid.toString(), Profile.getInstance().getLoginId(), Profile.getInstance().getOrigin(), firstName.getText().toString(), lastName.getText().toString(),
+                    birthday.getText().toString(), email.getText().toString(),
+                    selectedGender.getText().toString(),
+                    bio.getText().toString(), createdTimestamp,
+                    new Rank(), new ArrayList<Hobby>());
+            return user;
+        } else {
+            User user = new User(uuid.toString(), userData.getString("loginId"), userData.getString("origin"), firstName.getText().toString(), lastName.getText().toString(),
+                    birthday.getText().toString(), email.getText().toString(),
+                    selectedGender.getText().toString(),
+                    bio.getText().toString(), createdTimestamp,
+                    new Rank(), new ArrayList<Hobby>());
+            return user;
+        }
     }
 
 

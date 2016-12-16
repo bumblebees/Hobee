@@ -111,6 +111,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
         session = new SessionManager(getApplicationContext());
+        Profile.getInstance().setUser(session.getUser());
 
         // Add options to the menu (empty strings can be replaced with some additional info)
         navItems.add(new NavItem("Profile", R.drawable.profile));

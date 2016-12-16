@@ -233,6 +233,24 @@ public class SocketIO {
         packageContext.startActivity(intent);
     }
 
+    public void updateProfile(final User user, String imageString, final Context packageContext) {
+
+        final JSONObject userImage = new JSONObject();
+        try {
+            userImage.put("userId", user.getUserID());
+            userImage.put("imageString", imageString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        socket.emit("save_image", userImage);
+        socket.emit("update_user", gson.toJson(user));
+
+        Intent intent = new Intent(packageContext, UserProfileActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        packageContext.startActivity(intent);
+    }
+
 
     /**
      * Get user data from database and save it to user class
