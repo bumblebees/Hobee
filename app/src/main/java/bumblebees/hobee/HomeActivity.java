@@ -143,8 +143,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        SocketIO.getInstance().getEventHistory();
-        rankUsers();
 
         Intent intent = new Intent(this, MQTTService.class);
         ServiceConnection serviceConnection = new ServiceConnection() {
@@ -162,7 +160,7 @@ public class HomeActivity extends AppCompatActivity {
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
 
-
+        rankUsers();
         }
 
 
@@ -173,26 +171,23 @@ public class HomeActivity extends AppCompatActivity {
     public void rankUsers(){
         final ArrayList<Event> unRankedEvents = new ArrayList<>();
         final ArrayList<Event> hostedUnrankedEvents = new ArrayList<>();
-        Log.d("getHistoryEvents" ,String.valueOf(Profile.getInstance().getHistoryEvents().isEmpty()));
-        System.out.println("getHistoryEvents is empty " + Profile.getInstance().getHistoryEvents().isEmpty());
-        for(final Event event:Profile.getInstance().getHistoryEvents()){
+        ArrayList<Event> historyEvents= Profile.getInstance().getHistoryEvents();
+        Log.d("historyEvents empty" ,String.valueOf(historyEvents.isEmpty()));
+        for(final Event event:historyEvents) {
 
-            if(event.isCurrentUserHost()){
-                if(!event.checkRanked(Profile.getInstance().getUser())){
+            if (event.isCurrentUserHost()) {
+                if (!event.checkRanked(Profile.getInstance().getUser())) {
                     hostedUnrankedEvents.add(event);
                 }
-
-            if(!event.isCurrentUserHost()) {
+            } else {
                 if (event.checkHostranked()) {
                     if (!event.checkRanked(Profile.getInstance().getUser())) {
                         unRankedEvents.add(event);
                     }
                 }
             }
-
-
-            }
         }
+
 
         if(!hostedUnrankedEvents.isEmpty()){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);

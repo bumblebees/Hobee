@@ -257,6 +257,7 @@ public class SocketIO {
      *
      * @param loginId google or fb login
      */
+
     public void getUserAndLogin(final String loginId, final Context context) {
 
         socket.emit("get_user", loginId, new Ack() {
@@ -270,15 +271,15 @@ public class SocketIO {
                 session.setPreferences(user.getLoginId(), user.getOrigin());
                 Profile.getInstance().setUser(user);
 
-                getEventHistory();
-
-
                 Intent intent = new Intent(context, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                SocketIO.getInstance().getEventHistory();
+                Log.d("getUserAndLogin","Running");
                 context.startActivity(intent);
             }
         });
     }
+
 
     public void getUserAndOpenProfile(final String UUID, final Context context){
         socket.emit("get_userUUID", UUID, new Ack() {
@@ -290,6 +291,7 @@ public class SocketIO {
                     User user = gson.fromJson(String.valueOf(userJSON), User.class);
 
                     intent.putExtra("User",gson.toJson(user));
+
                 }
                 else{
                     intent.putExtra("User", "error");
@@ -338,22 +340,22 @@ public class SocketIO {
 
 
     public void getEventHistory(){
+        Log.d("get_event_history","is happening");
         socket.emit("get_event_history", Profile.getInstance().getUserID(), new Ack(){
             @Override
             public void call(Object...objects){
-                JSONArray eventArray = (JSONArray) objects[0];
-
                 ArrayList<Event> eventHistory = new ArrayList<Event>();
+                JSONArray eventArray = (JSONArray) objects[0];
+                if(eventArray == null)
+                    Log.d("eventArray","is Null");
                 if(eventArray != null)
-                    for(int i=0;i<eventArray.length();i++)
+                    for(int i=0;i<eventArray.length();i++){
                         try {
                             eventHistory.add(gson.fromJson(eventArray.getString(i),Event.class));
 
-                            Profile.getInstance().setHistoryEvents(eventHistory);
-
                         } catch (JSONException e) {e.printStackTrace();}
-
-
+                    }
+                Profile.getInstance().setHistoryEvents(eventHistory);
             }
         });
     }

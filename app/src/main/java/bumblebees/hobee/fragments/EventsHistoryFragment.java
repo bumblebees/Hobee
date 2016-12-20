@@ -39,9 +39,8 @@ public class EventsHistoryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         content = new ArrayList<>();
-        SocketIO.getInstance().getEventHistory();
-
-        for(Event event: Profile.getInstance().getHistoryEvents()){
+        ArrayList<Event> eventHistory = Profile.getInstance().getHistoryEvents();
+        for(Event event: eventHistory){
             if(event.getEvent_details().getHost_id().equals(Profile.getInstance().getUserID()))
                 hostedEvents.add(event);
             else

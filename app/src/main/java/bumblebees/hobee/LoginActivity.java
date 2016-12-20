@@ -1,5 +1,6 @@
 package bumblebees.hobee;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -52,11 +53,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         //If user has already logged in, retrieve data from the preferences and go to homepage
         if(session.isLoggedIn()){
+            SocketIO.getInstance().getUserAndLogin(session.getUser().getLoginId(), getApplicationContext());
+
+           /*
             Profile.getInstance().setUser(session.getUser());
 
             Intent intent = new Intent(this, HomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.startActivity(intent);
+            */
         }
 
 

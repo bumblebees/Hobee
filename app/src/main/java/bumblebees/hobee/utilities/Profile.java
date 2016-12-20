@@ -19,7 +19,7 @@ public class Profile{
     static private Profile instance;
     private User user;
 
-     private ArrayList<Event> historyEvents = new ArrayList<>();
+    private ArrayList<Event> historyEvents = new ArrayList<>();
 
     public static Profile getInstance(){
         if (instance == null){
