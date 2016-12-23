@@ -8,10 +8,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.*;
 
 import com.google.gson.Gson;
 
@@ -96,15 +93,17 @@ public class HobbyExpandableListAdapter extends BaseExpandableListAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.event_item, viewGroup, false);
         }
         TextView eventName = (TextView) view.findViewById(R.id.eventName);
-        TextView eventLocation = (TextView) view.findViewById(R.id.eventLocation);
+        TextView eventHost = (TextView) view.findViewById(R.id.eventHost);
         TextView eventDate = (TextView) view.findViewById(R.id.eventDate);
+        TextView eventTime = (TextView) view.findViewById(R.id.eventTime);
         ImageView eventIcon = (ImageView) view.findViewById(R.id.eventIcon);
-        RelativeLayout eventItemLayout = (RelativeLayout) view.findViewById(R.id.eventItemLayout);
+        LinearLayout eventItemLayout = (LinearLayout) view.findViewById(R.id.eventItemLayout);
         TextView eventPendingCount = (TextView) view.findViewById(R.id.eventPendingCount);
 
         eventName.setText(event.getEvent_details().getEvent_name());
-        eventLocation.setText(event.getEvent_details().getLocation());
-        eventDate.setText(event.getEvent_details().getDate()+ " "+ event.getEvent_details().getTime());
+        eventHost.setText("Hosted by: " + event.getEvent_details().getHost_name());
+        eventDate.setText(event.getEvent_details().getDate());
+        eventTime.setText(event.getEvent_details().getTime());
 
         //check if the logged in user is the host of the event
         if(Profile.getInstance().getUserID().equals(event.getEvent_details().getHost_id())) {

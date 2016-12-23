@@ -6,14 +6,7 @@ import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.RadioButton;
-import android.widget.CheckBox;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,18 +35,18 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
     User user;
 
     TextView textView;
-    CheckBox checkBoxMonday;
-    CheckBox checkBoxTuesday;
-    CheckBox checkBoxWednesday;
-    CheckBox checkBoxThursday;
-    CheckBox checkBoxFriday;
-    CheckBox checkBoxSaturday;
-    CheckBox checkBoxSunday;
+    ToggleButton checkBoxMonday;
+    ToggleButton checkBoxTuesday;
+    ToggleButton checkBoxWednesday;
+    ToggleButton checkBoxThursday;
+    ToggleButton checkBoxFriday;
+    ToggleButton checkBoxSaturday;
+    ToggleButton checkBoxSunday;
 
     Button submitBtn;
     private Gson gson = new Gson();
 
-    //TODO: change the fields if the hobby already has values in the profile
+    //TODO: change the fields if the hobby already has values in the profile_img
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,13 +90,13 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         spinnerTimeTo.setOnItemSelectedListener(this);
 
         // Checkbox element
-        checkBoxMonday = (CheckBox)findViewById(R.id.checkBox_monday);
-        checkBoxTuesday = (CheckBox)findViewById(R.id.checkBox_tuesday);
-        checkBoxWednesday = (CheckBox)findViewById(R.id.checkBox_wednesday);
-        checkBoxThursday = (CheckBox)findViewById(R.id.checkBox_thursday);
-        checkBoxFriday = (CheckBox)findViewById(R.id.checkBox_friday);
-        checkBoxSaturday = (CheckBox)findViewById(R.id.checkBox_saturday);
-        checkBoxSunday = (CheckBox)findViewById(R.id.checkBox_sunday);
+        checkBoxMonday = (ToggleButton)findViewById(R.id.checkBox_monday);
+        checkBoxTuesday = (ToggleButton)findViewById(R.id.checkBox_tuesday);
+        checkBoxWednesday = (ToggleButton)findViewById(R.id.checkBox_wednesday);
+        checkBoxThursday = (ToggleButton)findViewById(R.id.checkBox_thursday);
+        checkBoxFriday = (ToggleButton)findViewById(R.id.checkBox_friday);
+        checkBoxSaturday = (ToggleButton)findViewById(R.id.checkBox_saturday);
+        checkBoxSunday = (ToggleButton)findViewById(R.id.checkBox_sunday);
 
         // Spinner Drop down elements
         String[] difficultyList = getResources().getStringArray(R.array.hobbySkillOptions);

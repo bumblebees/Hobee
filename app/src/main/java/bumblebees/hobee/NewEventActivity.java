@@ -47,7 +47,7 @@ import io.apptik.widget.MultiSlider;
 
 public class NewEventActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
-    Button btnAddEvent;
+    Button btnAddEvent, setDateBtn, setTimeBtn;
     TextView maxAge;
     TextView minAge;
     TextView inputEventName;
@@ -87,10 +87,12 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         eventHobbyChoice = (Spinner) findViewById(R.id.eventHobbyChoice);
         spinnerLocation = (Spinner) findViewById(R.id.spinnerLocation);
         spinnerHobbySkillChoice = (Spinner) findViewById(R.id.spinnerSkillChoice);
+        setDateBtn = (Button) findViewById(R.id.setDateBtn);
+        setTimeBtn = (Button) findViewById(R.id.setTimeBtn);
 
 
         //set gender spinner options
-        ArrayAdapter<String> genderChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{"everyone", "male", "female"});
+        ArrayAdapter<String> genderChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{"everyone", "gender_male", "gender_female"});
         inputEventGender.setAdapter(genderChoice);
 
         //set skill spinner options
@@ -113,7 +115,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
             }
         });
 
-        inputEventTime.setOnClickListener(new View.OnClickListener() {
+        setTimeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DialogFragment newFragment = new TimePickerFragment();
@@ -121,7 +123,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
             }
         });
 
-        inputEventDate.setOnClickListener(new View.OnClickListener() {
+        setDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DialogFragment newFragment = new DatePickerFragment();

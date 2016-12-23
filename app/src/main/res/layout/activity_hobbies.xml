@@ -1,167 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_hobbies"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="#fff8d2"
+    android:background="@drawable/bg_pattern"
     tools:context="bumblebees.hobee.hobbycategories.HobbiesActivity">
 
-
-    <CheckBox
-        android:text="Tuesday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkBox_tuesday"
-        android:layout_below="@+id/checkBox_monday" />
-
-    <CheckBox
-        android:text="Wednesday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkBox_wednesday"
-        android:layout_below="@+id/checkBox_tuesday" />
-
-    <CheckBox
-        android:text="Thursday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkBox_thursday"
-        android:layout_below="@+id/checkBox_wednesday" />
-
-    <CheckBox
-        android:text="Friday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkBox_friday"
-        android:layout_below="@+id/checkBox_thursday" />
-
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" android:layout_weight="0" android:background="@drawable/header_pattern">
+        <TextView
+                android:text="Add hobby"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:id="@+id/textView26" android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal" android:textSize="24sp"
+                android:textStyle="bold" android:textColor="@color/Bee_color_4"/>
+    </LinearLayout>
     <TextView
-        android:text="Time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView9"
-        android:layout_marginBottom="17dp"
-        android:layout_above="@+id/globalRank"
-        android:layout_alignLeft="@+id/globalRank"
-        android:layout_alignStart="@+id/globalRank"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/name"
+            android:contentDescription="Name"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textSize="30sp" android:textColor="@color/Bee_color_1" android:layout_weight="0"
+            android:gravity="center_vertical|center_horizontal"/>
     <TextView
-        android:text="From"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/globalRank"
-        android:layout_alignLeft="@+id/name"
-        android:layout_alignStart="@+id/name"
-        android:layout_above="@+id/spinner_time_to" />
+            android:text="Days I'm available"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/Bee_color_1" android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp" android:textSize="18sp"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp">
+        <ToggleButton
+                android:id="@+id/checkBox_monday"
+                android:singleLine="false" android:textOff="Mo" android:textOn="Mo"
+                android:layout_weight="1" android:layout_height="40dp"
+                android:textSize="11sp" android:layout_width="40dp" android:textStyle="bold"
+                android:textColor="@color/Bee_color_1"/>
+        <ToggleButton
+                android:id="@+id/checkBox_tuesday"
+                android:textColor="@color/Bee_color_1" android:layout_weight="1" android:textOff="Tu"
+                android:textOn="Tu" android:layout_height="40dp" android:textSize="11sp" android:layout_width="40dp"
+                android:textStyle="bold"/>
+        <ToggleButton
+                android:id="@+id/checkBox_wednesday"
+                android:textColor="@color/Bee_color_1" android:layout_weight="1" android:textOff="We"
+                android:textOn="We" android:layout_height="40dp" android:textSize="11sp" android:layout_width="40dp"
+                android:textStyle="bold"/>
+        <ToggleButton
+                android:id="@+id/checkBox_thursday"
+                android:textColor="@color/Bee_color_1" android:layout_weight="1" android:textOff="Th"
+                android:textOn="Th" android:layout_height="40dp" android:textSize="11sp" android:layout_width="40dp"
+                android:textStyle="bold"/>
+        <ToggleButton
+                android:id="@+id/checkBox_friday"
+                android:textColor="@color/Bee_color_1" android:layout_weight="1" android:textOff="Fr"
+                android:textOn="Fr" android:layout_height="40dp" android:textSize="11sp" android:layout_width="40dp"
+                android:textStyle="bold"/>
+        <ToggleButton
+                android:id="@+id/checkBox_saturday"
+                android:textColor="@color/Bee_color_1" android:layout_weight="1" android:textOff="Sa"
+                android:textOn="Sa" android:layout_height="40dp" android:textSize="11sp" android:layout_width="40dp"
+                android:textStyle="bold"/>
+        <ToggleButton
+                android:id="@+id/checkBox_sunday"
+                android:textColor="@color/Bee_color_1" android:layout_weight="1" android:textOff="Su"
+                android:textOn="Su" android:layout_height="40dp" android:textSize="11sp" android:layout_width="40dp"
+                android:textStyle="bold"/>
+    </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView8"
-        android:text="To"
-        android:layout_alignBottom="@+id/spinner_time_to"
-        android:layout_alignLeft="@+id/globalRank"
-        android:layout_alignStart="@+id/globalRank" />
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" android:layout_weight="0" android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" android:layout_marginTop="10dp">
+        <TextView
+                android:text="From"
+                android:layout_height="wrap_content"
+                android:textColor="@color/Bee_color_1" android:layout_weight="0"
+                android:textSize="18sp" android:layout_width="60dp"/>
+        <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner_time_from"/>
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" android:layout_weight="0" android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" android:layout_marginTop="10dp">
+        <TextView
+                android:layout_height="wrap_content"
+                android:id="@+id/textView8"
+                android:text="To"
+                android:textColor="@color/Bee_color_1" android:layout_weight="0"
+                android:textSize="18sp" android:layout_width="60dp"/>
+        <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner_time_to" android:layout_weight="1"/>
+    </LinearLayout>
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/name"
-        android:contentDescription="Name"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="30sp" />
-
-    <TextView
-        android:text="Day"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/noShows"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/spinner_difficulty_level"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner_difficulty_level"
-        android:layout_below="@+id/name"
-        android:layout_alignLeft="@+id/button_submit"
-        android:layout_alignStart="@+id/button_submit"
-        android:layout_marginLeft="22dp"
-        android:layout_marginStart="22dp" />
-
-    <CheckBox
-        android:text="Sunday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkBox_sunday"
-        android:layout_below="@+id/checkBox_saturday"
-        android:layout_toRightOf="@+id/button_submit"
-        android:layout_toEndOf="@+id/button_submit" />
-
-    <CheckBox
-        android:text="Saturday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkBox_saturday"
-        android:layout_above="@+id/checkBox_tuesday"
-        android:layout_alignLeft="@+id/checkBox_sunday"
-        android:layout_alignStart="@+id/checkBox_sunday" />
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner_time_from"
-        android:layout_marginTop="66dp"
-        android:layout_below="@+id/checkBox_friday"
-        android:layout_toRightOf="@+id/checkBox_friday"
-        android:layout_toEndOf="@+id/checkBox_friday" />
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner_time_to"
-        android:layout_marginTop="19dp"
-        android:layout_below="@+id/spinner_time_from"
-        android:layout_alignLeft="@+id/spinner_time_from"
-        android:layout_alignStart="@+id/spinner_time_from" />
-
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" android:layout_weight="0" android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" android:layout_marginTop="10dp">
+        <TextView
+                android:text="Skill level"
+                android:textSize="18sp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/Bee_color_1" android:layout_weight="0" android:layout_width="120dp"/>
+        <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner_difficulty_level" android:layout_weight="1"/>
+    </LinearLayout>
     <Button
-        android:text="Add hobby"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button_submit"
-        android:layout_marginBottom="37dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+            android:text="Add hobby"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_submit"
+            android:layout_marginBottom="30dp" style="@style/HobeeButton" android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" android:layout_marginTop="30dp"/>
 
-    <CheckBox
-        android:text="Monday"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkBox_monday"
-        android:layout_marginTop="10dp"
-        android:textSize="14sp"
-        android:layout_below="@+id/noShows"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:text="Difficulty Level"
-        android:textSize="16sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/noShows"
-        android:layout_alignRight="@+id/name"
-        android:layout_alignEnd="@+id/name" />
-
-</RelativeLayout>
+</LinearLayout>

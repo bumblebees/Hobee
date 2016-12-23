@@ -2,8 +2,10 @@ package bumblebees.hobee.hobbycategories;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.media.RatingCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +17,11 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Hobby;
 
 import static bumblebees.hobee.R.layout.activity_hobby_category_list;
-import static bumblebees.hobee.R.layout.activity_sportshobby;
 
 public class HobbyCategoryListActivity extends AppCompatActivity {
 
@@ -55,6 +55,8 @@ public class HobbyCategoryListActivity extends AppCompatActivity {
             hobbyItemView.setTypeface(face);
 
             hobbyItemView.setText(hobby);
+            hobbyItemView.setTextSize(18);
+            hobbyItemView.setTextColor(Color.DKGRAY);
             tableLayout.addView(hobbyView);
             final String hobbyName = hobby.toString();
             System.out.println(">>>>>>>>>>>>>>" +hobbyName);

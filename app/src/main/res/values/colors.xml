@@ -3,10 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="FFE299">#ffe36b</color>
-    <color name="Bee_color_1">#342220</color>
-    <color name="Bee_color_2">#a37136</color>
-    <color name="Bee_color_3">#fff4e6</color>
-    <color name="Bee_color_4">#f1c36d</color>
-    <color name="Bee_color_5">#514639</color>
+    <color name="Bee_color_4">#ffcc80</color>
+    <color name="Bee_color_1">#363130</color>
+    <color name="Bee_color_2">#fff3e0</color>
+    <color name="Bee_color_3">#23ffcc80</color>
+    <color name="Bee_color_button">#a1887f</color>
 </resources>

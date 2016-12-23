@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import android.widget.TextView;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -28,6 +29,7 @@ public class RankUserActivity extends AppCompatActivity {
     ArrayList<String> users;
     private Button buttonDone;
     private UserRankAdapter adapter;
+    private TextView toolbarTitle;
     private Event event;
     private Gson gson = new Gson();
 
@@ -36,6 +38,7 @@ public class RankUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rank_user);
         buttonDone = (Button) findViewById(R.id.bttnDone);
+        toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
         usersList = (ListView) findViewById(R.id.usersList);
         users = getIntent().getStringArrayListExtra("userList");
         event = gson.fromJson(getIntent().getStringExtra("event"),Event.class);
@@ -53,8 +56,7 @@ public class RankUserActivity extends AppCompatActivity {
             }
         });
 
-        Toolbar rankUserToolbar = (Toolbar) findViewById(R.id.rankUserToolbar);
-        rankUserToolbar.setTitle(event.getEvent_details().getEvent_name());
+        toolbarTitle.setText(event.getEvent_details().getEvent_name());
     }
 
 

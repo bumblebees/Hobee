@@ -1,11 +1,54 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="HobeeTheme" parent="AppTheme">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="colorPrimary">@color/Bee_color_1</item>
+        <item name="colorPrimaryDark">@color/Bee_color_1</item>
+        <item name="colorAccent">@color/Bee_color_4</item>
+        <item name="android:textColorPrimary">@color/common_google_signin_btn_text_light</item>
+        <item name="android:navigationBarColor">@color/Bee_color_1</item>
+        <item name="android:textColorPrimaryInverse">@color/Bee_color_1</item>
+        <item name="android:colorPrimary">@color/Bee_color_1</item>
+        <item name="android:colorPrimaryDark">@color/Bee_color_1</item>
+        <item name="android:colorAccent">@color/Bee_color_4</item>
+        <item name="android:colorControlNormal">@color/Bee_color_1</item>
+        <item name="android:colorControlHighlight">@color/Bee_color_1</item>
+        <item name="android:colorControlActivated">@color/Bee_color_4</item>
+    </style>
+    <style name="HobeeButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/buttonshape</item>
+        <item name="android:textColor">@color/Bee_color_1</item>
+        <item name="android:gravity">center</item>
+    </style>.
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="multiSliderStyle" >
+        <item name="android:track">@drawable/multislider_track_material</item>
+        <item name="range1">@drawable/multislider_primary_mtrl_alpha</item>
+        <item name="range2">@drawable/multislider_primary_mtrl_alpha</item>
+        <item name="android:thumb">@drawable/multislider_thumb_material</item>
+        <item name="thumbColor">?android:attr/colorControlActivated</item>
+        <item name="trackColor">?android:attr/colorControlNormal</item>
+        <item name="rangeColor">?android:attr/colorControlActivated</item>
+        <item name="range1Color">?android:attr/colorControlActivated</item>
+        <item name="range2Color">?android:attr/colorControlActivated</item>
+        <item name="android:background">#0000</item>
+
+    </style>
+
 
 </resources>

@@ -4,22 +4,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff8d2"
+    android:background="@drawable/bg_pattern"
     android:orientation="vertical"
     android:weightSum="1">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_weight="0.07">
+            android:layout_width="match_parent"
+            android:layout_weight="0.07" android:layout_height="50dp" android:background="@drawable/header_pattern">
 
-        <ImageView
-            app:srcCompat="@drawable/choosehobbies"
-            android:id="@+id/imageView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+        <TextView
+                android:text="Categories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" android:id="@+id/textView7" android:textSize="24sp"
+                android:textStyle="bold" android:textColor="@color/Bee_color_4"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -28,18 +26,16 @@
         android:layout_weight="0.13">
 
         <ImageButton
-            app:srcCompat="@drawable/sportsy"
-            android:id="@+id/hobby1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
-            android:layout_weight="0.12"
-            android:background="#0000"
-            android:layout_marginRight="182dp"
-            android:layout_marginEnd="182dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+                android:id="@+id/hobby1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:layout_weight="0.12"
+                android:layout_marginRight="182dp"
+                android:layout_marginEnd="182dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" app:srcCompat="@drawable/sportsy" android:background="#0000"/>
 
         <ImageButton
             app:srcCompat="@drawable/outdoors"
@@ -132,17 +128,16 @@
         android:layout_height="27dp"
         android:layout_weight="0.22">
 
-        <ImageButton
-            app:srcCompat="@drawable/imdone"
-            android:id="@+id/showProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
-            android:layout_weight="0.12"
-            android:background="#0000"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="23dp" />
+        <Button
+                android:id="@+id/showProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:layout_weight="0.12"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="23dp" style="@style/HobeeButton" android:text="I'm done"
+                android:layout_marginLeft="20dp" android:layout_marginRight="20dp"/>
     </RelativeLayout>
 
 </LinearLayout>

@@ -89,7 +89,7 @@ public class UserRankAdapter extends BaseAdapter {
         final CheckBox noShow = (CheckBox) row.findViewById(R.id.noShow);
 
         if (!isHost) {
-            noShow.setVisibility(View.INVISIBLE);
+            noShow.setVisibility(View.GONE);
             noShow.setEnabled(false);
         }
 
@@ -99,7 +99,7 @@ public class UserRankAdapter extends BaseAdapter {
         final SeekBar seekBar = (SeekBar) row.findViewById(R.id.seekBar);
 
         if (i == 0) {
-            row.setBackgroundColor(0xff0000ff);
+            //row.setBackgroundColor(0xff0000ff);
             textHost.setVisibility(View.VISIBLE);
         }
 
@@ -145,12 +145,12 @@ public class UserRankAdapter extends BaseAdapter {
             }
         });
 
-        ////TODO Implement onClickListeners so that you can see the user's profile
+        ////TODO Implement onClickListeners so that you can see the user's profile_img
 
         userImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Open user profile
+                //Open user profile_img
                 Intent intent = new Intent(context, UserProfileActivity.class);
                 intent.putExtra("User", gson.toJson(userList.get(i)).toString());
                 context.startActivity(intent);

@@ -40,11 +40,6 @@ import com.google.gson.Gson;
 
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import com.squareup.picasso.Picasso;
 
@@ -55,7 +50,7 @@ public class HomeActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     DrawerListAdapter adapter;
     TextView user;
-    ImageView avatar;
+    ImageView avatar, hamburger;
     ArrayList<NavItem> navItems = new ArrayList<>();
     ListView drawerList;
     TabLayout tabLayout;
@@ -77,14 +72,13 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
+        hamburger = (ImageView) findViewById(R.id.hamburger);
 
         dealContainer = findViewById(R.id.dealContainer);
 
         session = new SessionManager(getApplicationContext());
         gson = new Gson();
         Profile.getInstance().setUser(session.getUser());
-        appToolbar = (Toolbar) findViewById(R.id.homeToolbar);
-        setSupportActionBar(appToolbar);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -108,15 +102,15 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-
-
         session = new SessionManager(getApplicationContext());
         Profile.getInstance().setUser(session.getUser());
 
         // Add options to the menu (empty strings can be replaced with some additional info)
-        navItems.add(new NavItem("Profile", R.drawable.profile));
-        navItems.add(new NavItem("Settings", R.drawable.settings));
-        navItems.add(new NavItem("Logout", R.drawable.logout));
+        navItems.add(new NavItem("Profile", R.drawable.profile_img));
+        navItems.add(new NavItem("Host event", R.drawable.add_img));
+        navItems.add(new NavItem("Settings", R.drawable.settings_img));
+        navItems.add(new NavItem("Logout", R.drawable.logout_img));
+
 
         // DrawerLayout
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -143,6 +137,17 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        hamburger.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                    drawerLayout.openDrawer(GravityCompat.START);
+                }
+                else {
+                    drawerLayout.closeDrawers();
+                }
+            }
+        });
 
         Intent intent = new Intent(this, MQTTService.class);
         ServiceConnection serviceConnection = new ServiceConnection() {
@@ -276,6 +281,11 @@ public class HomeActivity extends AppCompatActivity {
                 break;
             case 1:
                 drawerLayout.closeDrawers();
+                Intent newEventIntent = new Intent(HomeActivity.this, NewEventActivity.class);
+                startActivity(newEventIntent);
+                break;
+            case 2:
+                drawerLayout.closeDrawers();
                 Intent settingsIntent = new Intent(HomeActivity.this, SettingsActivity.class);
                 startActivity(settingsIntent);
                 break;
@@ -358,25 +368,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.home_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menuBtnAddEvent:
-                Intent newEventIntent = new Intent(HomeActivity.this, NewEventActivity.class);
-                HomeActivity.this.startActivity(newEventIntent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     @Override
     protected void onResume() {

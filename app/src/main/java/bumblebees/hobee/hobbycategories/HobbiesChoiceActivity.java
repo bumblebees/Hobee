@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import bumblebees.hobee.R;
 
 public class HobbiesChoiceActivity extends AppCompatActivity {
 
-    ImageButton showProfile;
+    Button showProfile;
     ImageButton showSports;
     ImageButton showOutdoors;
     ImageButton showMusic;
@@ -25,13 +26,13 @@ public class HobbiesChoiceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hobbieschoice);
 
-        showProfile = (ImageButton)findViewById(R.id.showProfile);
         showSports = (ImageButton)findViewById(R.id.hobby1);
         showOutdoors = (ImageButton)findViewById(R.id.hobby2);
         showMusic = (ImageButton)findViewById(R.id.hobby3);
         showCrafts = (ImageButton)findViewById(R.id.hobby4);
         showCulinary = (ImageButton)findViewById(R.id.hobby5);
         showBoardGames = (ImageButton)findViewById(R.id.hobby6);
+        showProfile = (Button)findViewById(R.id.showProfile);
         sportsList.add(football);
         sportsList.add(basketball);
         outdoorsList.add(camping);

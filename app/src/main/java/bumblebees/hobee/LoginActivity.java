@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         session = new SessionManager(getApplicationContext());
 
-        //initialize the application settings
+        //initialize the application settings_img
         PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preferences, false);
 
         // If user has already logged in, just get his data from the server and go to homepage
