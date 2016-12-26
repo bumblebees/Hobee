@@ -12,8 +12,9 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,6 +24,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.ui.PlacePicker;
+
+import bumblebees.hobee.fragments.PlacePickerFragment;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.EventDetails;
 import bumblebees.hobee.objects.Hobby;
@@ -140,6 +147,31 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
             }
         });
 
+        inputEventLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getSupportFragmentManager();
+                PlacePickerFragment fragment = (PlacePickerFragment) fm.findFragmentByTag("PlacePickerFragment");
+                FragmentTransaction transaction = fm.beginTransaction();
+                if(fragment == null){
+                fragment = new PlacePickerFragment();
+                transaction.add(fragment,"PlacePickerFragment");
+                transaction.commit();
+                }
+
+            }
+        });
+
+    }
+
+    private void openMap() {
+        PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+        try {
+            Intent intent = intentBuilder.build(NewEventActivity.this);
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
     }
 
     @Override
@@ -263,8 +295,6 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
                 }
             };
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-
-
 
             Context context = getApplicationContext();
             CharSequence text = "Event created!";

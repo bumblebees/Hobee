@@ -21,248 +21,241 @@
         android:minHeight="?attr/actionBarSize"
         android:id="@+id/toolbarViewEvent" />
 
-        <LinearLayout
-            android:orientation="vertical"
+
+
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="1"
-            android:padding="15dp">
+            android:orientation="vertical"
+            android:layout_weight="0.79">
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
-            <TextView
-                android:text="Event Description"
-                android:layout_width="match_parent"
-                android:layout_height="75dp"
-                android:id="@+id/eventDescription"
-                android:layout_below="@+id/eventName"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:textAlignment="viewStart"
-                android:padding="10dp" />
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="25dp"
-                android:layout_margin="5dp">
-
                 <TextView
-                    android:text="Hosted by: "
-                    android:layout_width="wrap_content"
+                    android:text="Event Description"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textView4" />
-
-                <TextView
-                    android:text="Host Name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/eventHostName" />
-            </TableRow>
-
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="254dp"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:padding="10dp"
-                android:layout_weight="0.48">
+                    android:id="@+id/eventDescription"
+                    android:layout_below="@+id/eventName"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:textAlignment="viewStart"
+                    android:padding="10dp" />
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp">
+                    android:layout_height="25dp"
+                    android:layout_margin="5dp">
 
                     <TextView
-                        android:text="Hobby:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:text="Event Hobby"
+                        android:text="Hosted by: "
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/eventHobby"
-                        android:layout_marginLeft="5dp" />
+                        android:id="@+id/textView4" />
 
+                    <TextView
+                        android:text="Host Name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/eventHostName" />
                 </TableRow>
 
-                <TableRow
+                <TableLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp">
+                    android:layout_height="254dp"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:padding="10dp"
+                    android:layout_weight="0.48">
 
-                    <TextView
-                        android:text="Skill level:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp">
 
-                    <TextView
-                        android:text="Skill level"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:text="Hobby:"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:text="Event Hobby"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/eventHobby"
+                            android:layout_marginLeft="5dp" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:text="Skill level:"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:text="Skill level"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/eventHobbySkill"
+                            android:layout_marginLeft="5dp" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:text="Location:"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:text="Event Location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/eventLocation"
+                            android:layout_marginLeft="5dp" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:text="Date:"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:text="Event Date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/eventDate"
+                            android:layout_marginLeft="5dp" />
+
+                    </TableRow>
+
+                    <TableRow android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:text="Time:"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:text="Event Time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/eventTime"
+                            android:layout_marginLeft="5dp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:text="Maximum People:"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView31" />
+
+                        <TextView
+                            android:text="Event People"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/eventPeople"
+                            android:layout_marginLeft="5dp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:text="Gender:"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:text="Event Gender"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/eventGender"
+                            android:layout_marginLeft="5dp" />
+
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:text="Age:"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:text="Event Age Range"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/eventAge"
+                            android:layout_marginLeft="5dp" />
+
+                    </TableRow>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/eventHobbySkill"
-                        android:layout_marginLeft="5dp" />
+                        android:padding="5dp"
+                        android:id="@+id/containerUsers">
 
-                </TableRow>
+                        <TextView
+                            android:text="Participants:"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView5" />
 
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp">
-
-                    <TextView
-                        android:text="Location:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:text="Event Location"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/eventLocation"
-                        android:layout_marginLeft="5dp" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp">
-
-                    <TextView
-                        android:text="Date:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:text="Event Date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/eventDate"
-                        android:layout_marginLeft="5dp" />
-
-                </TableRow>
-
-                <TableRow android:layout_height="match_parent"
-                    android:layout_width="match_parent"
-                    android:padding="5dp">
-
-                    <TextView
-                        android:text="Time:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:text="Event Time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/eventTime"
-                        android:layout_marginLeft="5dp" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp">
-
-                    <TextView
-                        android:text="Maximum People:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/textView31" />
-
-                    <TextView
-                        android:text="Event People"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/eventPeople"
-                        android:layout_marginLeft="5dp" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp">
-
-                    <TextView
-                        android:text="Gender:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:text="Event Gender"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/eventGender"
-                        android:layout_marginLeft="5dp" />
-
-                </TableRow>
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp">
-
-                    <TextView
-                        android:text="Age:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:text="Event Age Range"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/eventAge"
-                        android:layout_marginLeft="5dp" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp">
-
-                    <TextView
-                        android:text="Participants:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/textView5" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/containerUsers"
-                        android:padding="0dp"></LinearLayout>
-                </TableRow>
+                        android:id="@+id/containerPending"
+                        android:padding="10dp"
+                        android:layout_weight="3"
+                        android:visibility="gone">
 
+                        <TextView
+                            android:text="Pending users:"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView3" />
+                    </LinearLayout>
 
-            </TableLayout>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/containerPending"
-                android:padding="10dp"
-                android:layout_weight="3"
-                android:visibility="gone">
+                </TableLayout>
 
-                <TextView
-                    android:text="Pending users:"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView3" />
             </LinearLayout>
-                </LinearLayout>
 
-            </ScrollView>
-        </LinearLayout>
+        </ScrollView>
+
 
     <Button
         android:text="Join Event"
@@ -273,4 +266,5 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_weight="0.09" />
+
 </LinearLayout>

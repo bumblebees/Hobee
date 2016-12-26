@@ -8,4 +8,7 @@
     <string name="gogodeals_url">http://gogodeals.se/</string>
     <string name="hobee_main_server">129.16.155.22</string>
     <string name="hobee_reserver_server">129.16.155.25</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
