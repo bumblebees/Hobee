@@ -223,16 +223,21 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         UUID uuid = UUID.randomUUID();
 
         //TODO: find a way to make this easier to parse?
-        String timestamp = "0";
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-        try {
-            Date date = sdf.parse(inputEventDate.getText().toString() + " " + inputEventTime.getText().toString());
-            cal.setTime(date);
-            timestamp = String.valueOf(cal.getTimeInMillis() / 1000L);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if(inputEventDate.getText().toString().equals("") || inputEventTime.getText().toString().equals("")){
+            showEventIncompleteToast();
         }
+        else {
+            String timestamp = "";
+            Calendar cal = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+            try {
+                Date date = sdf.parse(inputEventDate.getText().toString() + " " + inputEventTime.getText().toString());
+                cal.setTime(date);
+                timestamp = String.valueOf(cal.getTimeInMillis() / 1000L);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
 
         ArrayList<PublicUser> acceptedUsers = new ArrayList<>();
         PublicUser currentUser = Profile.getInstance().getUser().getSimpleUser();
@@ -279,15 +284,22 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
             NewEventActivity.this.startActivity(homeIntent);
         } catch (NullPointerException e) {
 
-            Toast toast = Toast.makeText(getApplicationContext(), "Please fill in all the fields", Toast.LENGTH_SHORT);
-            toast.show();
+            showEventIncompleteToast();
 
         }
         catch(NumberFormatException e){
-            Toast toast = Toast.makeText(getApplicationContext(), "Please fill in all the fields", Toast.LENGTH_SHORT);
-            toast.show();
+            showEventIncompleteToast();
         }
 
+        }
+    }
+
+    /**
+     * Display a toast when all of the event is incomplete and cannot be created.
+     */
+    public void showEventIncompleteToast(){
+        Toast toast = Toast.makeText(getApplicationContext(), "Please fill in all the fields", Toast.LENGTH_SHORT);
+        toast.show();
     }
 }
 
