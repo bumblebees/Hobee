@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -32,6 +33,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import bumblebees.hobee.fragments.FragmentAdapter;
+import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
+import bumblebees.hobee.hobbycategories.HobbyCategoryListActivity;
 import bumblebees.hobee.objects.Deal;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.utilities.*;
@@ -40,6 +43,8 @@ import com.google.gson.Gson;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.squareup.picasso.Picasso;
 
@@ -166,7 +171,38 @@ public class HomeActivity extends AppCompatActivity {
 
 
         rankUsers();
+
+        //show a snackbar if the user has no location set or no hobbies
+        //the user cannot see any events unless both location and hobby are set
+        Set<String> emptyLocation = new HashSet<>(); //to prevent null pointer exception
+        Set<String> preferencesStringSet = preferences.getStringSet("location_topics", emptyLocation);
+
+        //check if the location preferences have been set
+        if (preferencesStringSet.isEmpty()) {
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "No location selected in preferences", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("go", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent settingsIntent = new Intent(HomeActivity.this, SettingsActivity.class);
+                            startActivity(settingsIntent);
+                        }
+                    });
+            snackbar.show();
         }
+        //check if the user has hobbies selected and show a message if there are none
+        if(Profile.getInstance().getHobbyNames().size() == 0){
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "No hobby added to profile", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("go", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent hobbyIntent = new Intent(HomeActivity.this, HobbiesChoiceActivity.class);
+                            startActivity(hobbyIntent);
+                        }
+                    });
+            snackbar.show();
+        }
+
+    }
 
 
     /**
