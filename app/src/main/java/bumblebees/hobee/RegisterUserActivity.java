@@ -236,7 +236,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         chooseImageBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     writeStoragePermission();
                 }
                 else {
