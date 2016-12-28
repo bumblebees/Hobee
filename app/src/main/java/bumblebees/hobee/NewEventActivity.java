@@ -90,9 +90,9 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         setDateBtn = (Button) findViewById(R.id.setDateBtn);
         setTimeBtn = (Button) findViewById(R.id.setTimeBtn);
 
-
         //set gender spinner options
-        ArrayAdapter<String> genderChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{"everyone", "gender_male", "gender_female"});
+        String[] genderOptions = getResources().getStringArray(R.array.eventGenderOptions);
+        ArrayAdapter<String> genderChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, genderOptions);
         inputEventGender.setAdapter(genderChoice);
 
         //set skill spinner options

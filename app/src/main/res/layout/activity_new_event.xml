@@ -238,7 +238,7 @@
                         android:id="@+id/inputEventGender"
                         android:padding="10dp"
                         android:theme="@style/Widget.AppCompat.DropDownItem.Spinner"
-                        android:spinnerMode="dialog" android:layout_weight="1"
+                    android:layout_weight="1"
                         android:elevation="0dp"/>
             </LinearLayout>
             <LinearLayout
