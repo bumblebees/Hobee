@@ -4,17 +4,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
+import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.User;
 import bumblebees.hobee.utilities.CropSquareTransformation;
 import bumblebees.hobee.utilities.Profile;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 
 public class UserProfileActivity extends AppCompatActivity {
@@ -22,6 +30,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private ImageView userImage, userGender, editProfile, editHobbies;
     private TextView userName, userAge, userBiography, globalRank, hostRank, noShows;
     private User user;
+    private LinearLayout hobbyContainer;
 
 
     @Override
@@ -42,6 +51,7 @@ public class UserProfileActivity extends AppCompatActivity {
         noShows = (TextView) findViewById(R.id.noShows);
         editProfile = (ImageView) findViewById(R.id.editProfileBtn);
         editHobbies = (ImageView) findViewById(R.id.editHobbiesBtn);
+        hobbyContainer = (LinearLayout) findViewById(R.id.profileHobbyContainer);
 
 
         // If user wants to see his own profile
@@ -59,6 +69,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 hostRank.setText(reputationToRank(Profile.getInstance().getHostlRep()));
                 noShows.setText(Integer.toString(Profile.getInstance().getNoShows()));
                 userBiography.setText(Profile.getInstance().getBio());
+                showHobbies((ArrayList<Hobby>) Profile.getInstance().getUser().getHobbies());
                 Picasso.with(this).load(Profile.getInstance().getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
             } catch (NullPointerException e) {
                 Toast toast = Toast.makeText(getApplicationContext(), "Error seeing profile_img", Toast.LENGTH_LONG);
@@ -90,6 +101,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 noShows.setText(Integer.toString(user.getRank().getNoShows()));
                 userBiography.setText(user.getBio());
                 Picasso.with(this).load(user.getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
+                showHobbies((ArrayList<Hobby>) user.getHobbies());
             } catch (NullPointerException e) {
                 Toast toast = Toast.makeText(getApplicationContext(), "Error seeing profile_img", Toast.LENGTH_LONG);
                 toast.show();
@@ -150,6 +162,47 @@ public class UserProfileActivity extends AppCompatActivity {
         startActivity(backPressIntent);
 
     }
+
+    /**
+     * Fill in the hobbies that the user has on their profile.
+     * @param hobbies - array of hobbies
+     */
+    public void showHobbies(ArrayList<Hobby> hobbies){
+        for(Hobby hobby : hobbies) {
+            LayoutInflater inflater = LayoutInflater.from(this);
+            final View hobbyView = inflater.inflate(R.layout.profile_hobby_item, hobbyContainer, false);
+            ImageView hobbyImage = (ImageView) hobbyView.findViewById(R.id.profileHobbyIcon);
+            TextView hobbyName = (TextView) hobbyView.findViewById(R.id.profileHobbyName);
+            SeekBar hobbySkill = (SeekBar) hobbyView.findViewById(R.id.profileHobbySkill);
+            //do nothing when the user tries to move the seekbar
+            hobbySkill.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    return true;
+                }
+            });
+
+            hobbyImage.setImageResource(hobby.getIcon());
+            hobbyName.setText(hobby.getName());
+            switch (hobby.getDifficultyLevel()){
+                case "Beginner":
+                    hobbySkill.setProgress(1);
+                    break;
+                case "Intermediate":
+                    hobbySkill.setProgress(2);
+                    break;
+                case "Expert":
+                    hobbySkill.setProgress(3);
+                    break;
+                default:
+                    hobbySkill.setProgress(0);
+            }
+            hobbyContainer.addView(hobbyView);
+        }
+
+    }
+
+
 
 
 }

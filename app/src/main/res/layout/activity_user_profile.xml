@@ -153,7 +153,7 @@
             android:text="Hey I like to play the guitar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/userBiography" android:layout_centerVertical="true" android:layout_weight="0.71"
+            android:id="@+id/userBiography" android:layout_centerVertical="true" android:layout_weight="0.39"
             android:paddingLeft="20dp" android:paddingRight="20dp" android:paddingTop="10dp"
             android:textColor="@color/Bee_color_1"/>
     <TextView
@@ -162,37 +162,18 @@
             android:layout_height="wrap_content" android:id="@+id/textView15" android:layout_weight="0.09"
             android:paddingLeft="20dp" android:gravity="center_vertical" android:textColor="@color/Bee_color_1"
             android:textStyle="bold"/>
-    <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_gravity="center" android:layout_weight="0.1" android:layout_height="wrap_content"
-            android:paddingLeft="20dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.41"
+        android:id="@+id/profileHobbyScrollView">
+
         <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="10dp" android:layout_gravity="left">
-            <ImageView
-                    app:srcCompat="@drawable/basketball"
-                    android:id="@+id/imageView7" android:layout_weight="1"
-                    android:paddingLeft="10dp" android:paddingBottom="10dp"
-                    android:paddingRight="10dp" android:paddingTop="10dp" android:layout_width="60dp"
-                    android:layout_height="60dp"/>
-            <ImageView
-                    app:srcCompat="@drawable/chess" android:id="@+id/imageView8"
-                    android:layout_weight="1" android:paddingLeft="10dp" android:paddingBottom="10dp"
-                    android:paddingRight="10dp" android:paddingTop="10dp" android:layout_width="60dp"
-                    android:layout_height="60dp"/>
-            <ImageView
-                    app:srcCompat="@drawable/football" android:id="@+id/imageView9"
-                    android:layout_weight="1" android:paddingLeft="10dp" android:paddingBottom="10dp"
-                    android:paddingRight="10dp" android:paddingTop="10dp" android:layout_width="60dp"
-                    android:layout_height="60dp"/>
-            <ImageView
-                    app:srcCompat="@drawable/hicking" android:id="@+id/imageView10"
-                    android:layout_weight="1" android:paddingLeft="10dp" android:paddingBottom="10dp"
-                    android:paddingRight="10dp" android:paddingTop="10dp" android:layout_width="60dp"
-                    android:layout_height="60dp"/>
-        </LinearLayout>
-    </HorizontalScrollView>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/profileHobbyContainer" />
+    </ScrollView>
 
 </LinearLayout>
