@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_new_event"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="bumblebees.hobee.NewEventActivity">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/activity_new_event"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="bumblebees.hobee.NewEventActivity" android:background="@drawable/bg_pattern">
 
-    <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/Bee_color_4"
-        android:theme="?attr/actionBarTheme"
-        android:minHeight="?attr/actionBarSize"
-        android:id="@+id/toolbar"
-        android:elevation="4dp"
-        app:title="Add new event:" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -30,200 +21,294 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:id="@+id/inputEventName"
-                android:hint="Event name" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:ems="10"
-                android:id="@+id/inputEventNumber"
-                android:hint="Number of people needed" />
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp">
-
-                <TextView
-                    android:text="Area"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView"
-                    android:textSize="18sp" />
-
-                <Spinner
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/spinnerLocation" />
-
-            </TableRow>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:id="@+id/inputEventLocation"
-                android:inputType="textPostalAddress"
-                android:hint="Location" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:id="@+id/inputEventDate"
-                android:inputType="date"
-                android:hint="Press to select date"
-                android:textSize="18sp"
-                android:padding="5dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="time"
-                android:ems="10"
-                android:id="@+id/inputEventTime"
-                android:hint="Press to select time"
-                android:padding="5dp"
-                android:textSize="18sp" />
+        >
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp" android:background="@drawable/header_pattern"
+                    android:layout_weight="1">
+                <TextView
+                        android:text="Host event"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:id="@+id/textView25" android:layout_weight="1"
+                        android:textColor="@color/Bee_color_4" android:textSize="24sp" android:textStyle="bold"
+                        android:gravity="center_vertical|center_horizontal"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp" android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" android:layout_gravity="center_vertical|center_horizontal"
+                    android:gravity="center_vertical|center_horizontal" android:layout_weight="1"
+                    android:layout_height="80dp">
+                <TextView
+                        android:text="Event name"
+                        android:id="@+id/textView14"
+                        android:gravity="left|center_vertical" android:layout_gravity="center_vertical|center_horizontal"
+                        android:layout_width="match_parent" android:textSize="18sp" android:layout_height="40dp"
+                        android:paddingLeft="10dp" android:textColor="@color/Bee_color_1"/>
+                <EditText
+                        android:layout_width="match_parent"
+                        android:inputType="textPersonName"
+                        android:id="@+id/inputEventName"
+                        android:layout_weight="1" android:gravity="left|center_vertical"
+                        android:layout_gravity="center_vertical|fill_horizontal"
+                        android:background="@color/Bee_color_3" android:layout_height="40dp"
+                        android:paddingLeft="10dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1" android:layout_marginTop="10dp"
+                    android:layout_marginLeft="20dp" android:layout_marginRight="20dp" android:layout_height="40dp">
+                <TextView
+                        android:text="Area"
+                        android:layout_height="match_parent"
+                        android:id="@+id/textView"
+                        android:textSize="18sp" android:gravity="left|center_vertical"
+                        android:layout_gravity="center_vertical|center_horizontal" android:layout_width="120dp"
+                        android:paddingLeft="10dp" android:textColor="@color/Bee_color_1"/>
+                <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/spinnerLocation" android:layout_weight="1" android:gravity="left|center_vertical"
+                        android:layout_gravity="center_vertical|fill_horizontal" android:paddingLeft="10dp"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp" android:layout_weight="1" android:layout_marginTop="10dp"
+                    android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
+                <TextView
+                        android:text="Location"
+                        android:layout_width="120dp"
+                        android:layout_height="match_parent" android:id="@+id/textView21"
+                        android:gravity="left|center_vertical" android:layout_gravity="center_vertical|fill_horizontal"
+                        android:textSize="18sp" android:paddingLeft="10dp" android:textColor="@color/Bee_color_1"/>
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:ems="10"
+                        android:id="@+id/inputEventLocation"
+                        android:inputType="textPostalAddress"
+                        android:hint="street, house..." android:layout_weight="1" android:gravity="left|center_vertical"
+                        android:layout_gravity="center_vertical|fill_horizontal"
+                        android:background="@color/Bee_color_3" android:paddingLeft="10dp"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp" android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" android:layout_height="40dp" android:layout_weight="1">
+                <TextView
+                        android:text="Participants"
+                        android:layout_height="match_parent" android:id="@+id/textView17"
+                        android:gravity="left|center_vertical" android:layout_gravity="center_vertical|center_horizontal"
+                        android:textSize="18sp" android:paddingLeft="10dp" android:layout_width="120dp"
+                        android:textColor="@color/Bee_color_1"/>
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="number"
+                        android:ems="10"
+                        android:id="@+id/inputEventNumber"
+                        android:hint="1? 2? 69?" android:layout_weight="1"
+                        android:gravity="left|center_vertical" android:layout_gravity="center_vertical|fill_horizontal"
+                        android:paddingLeft="10dp" android:textSize="18sp" android:background="@color/Bee_color_3"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1" android:layout_marginTop="10dp"
+                    android:layout_marginLeft="20dp" android:layout_marginRight="20dp" android:layout_height="40dp">
+                <TextView
+                        android:text="Date"
+                        android:layout_height="match_parent" android:id="@+id/textView22" android:layout_weight="0"
+                        android:gravity="left|center_vertical" android:layout_gravity="center_vertical|fill_horizontal"
+                        android:textSize="18sp" android:paddingLeft="10dp" android:layout_width="80dp"
+                        android:textColor="@color/Bee_color_1"/>
+                <TextView
+                        android:layout_height="match_parent"
+                        android:ems="10"
+                        android:id="@+id/inputEventDate"
+                        android:inputType="date"
+                        android:textSize="18sp"
+                        android:padding="5dp" android:gravity="left|center_vertical"
+                        android:layout_gravity="center_vertical|fill_horizontal" android:layout_weight="1"
+                        android:paddingLeft="10dp" android:layout_width="match_parent"/>
+                <Button
+                        android:text="SET"
+                        android:layout_height="match_parent" android:id="@+id/setDateBtn" android:layout_weight="0"
+                        android:gravity="left|center_vertical" android:layout_gravity="center_vertical|fill_horizontal"
+                        android:textSize="14sp" style="@style/HobeeButton" android:textAlignment="center"
+                        android:layout_width="70dp" android:backgroundTintMode="add"
+                />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp" android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" android:layout_height="40dp">
+                <TextView
+                        android:text="Time"
+                        android:layout_height="match_parent" android:id="@+id/textView23" android:layout_weight="0"
+                        android:gravity="left|center_vertical" android:layout_gravity="center_vertical|fill_horizontal"
+                        android:textSize="18sp" android:paddingLeft="10dp" android:layout_width="80dp"
+                        android:textColor="@color/Bee_color_1"/>
+                <TextView
+                        android:layout_height="match_parent"
+                        android:inputType="time"
+                        android:ems="10"
+                        android:id="@+id/inputEventTime"
+                        android:padding="5dp"
+                        android:textSize="18sp" android:layout_weight="1" android:gravity="left|center_vertical"
+                        android:layout_gravity="center_vertical|fill_horizontal" android:paddingLeft="10dp"
+                        android:layout_width="match_parent"/>
+                <Button
+                        android:text="SET"
+                        android:layout_height="match_parent" android:id="@+id/setTimeBtn" android:layout_weight="0"
+                        android:gravity="left|center_vertical" android:layout_gravity="center_vertical|fill_horizontal"
+                        android:textSize="14sp" style="@style/HobeeButton" android:textAlignment="center"
+                        android:layout_width="70dp"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" android:layout_marginTop="10dp" android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Age Range:"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:textSize="18sp" />
+                            android:id="@+id/minAge"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="min"
+                            android:textSize="14sp" android:layout_weight="1" android:gravity="left|center_vertical"
+                            android:paddingLeft="10dp" android:textColor="@color/Bee_color_1"/>
                     <TextView
-                        android:id="@+id/minAge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="min"
-                        android:paddingLeft="10dp"
-                        android:textSize="18sp" />
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Age range"
+                            android:textSize="18sp" android:layout_weight="1" android:gravity="center_vertical|center_horizontal"
+                            android:textColor="@color/Bee_color_1"/>
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" - "/>
-                    <TextView
-                        android:id="@+id/maxAge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="max"
-                        android:textSize="18sp" />
+                            android:id="@+id/maxAge"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="max"
+                            android:textSize="14sp" android:layout_weight="1" android:gravity="right|center_vertical"
+                            android:paddingRight="10dp" android:textColor="@color/Bee_color_1"/>
                 </LinearLayout>
 
                 <io.apptik.widget.MultiSlider
-                    android:id="@+id/age_range_slider"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                        android:id="@+id/age_range_slider"
+                        android:layout_width="match_parent"
 
-                    app:range1="@drawable/multislider_scrubber_track_holo_light"
-
-                    android:padding="10dp" />
+                        app:range1="@drawable/multislider_range_material"
+                        android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_height="30dp"
+                        android:theme="@style/HobeeTheme"/>
 
             </LinearLayout>
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp">
-
-                <TextView
-                    android:text="Gender"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView13"
-                    android:textSize="18sp" />
-
-                <Spinner
+            <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/inputEventGender"
-                    android:padding="10dp"
-                    android:theme="@style/Widget.AppCompat.DropDownItem.Spinner"
-                    android:spinnerMode="dialog" />
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp">
-
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp" android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+                    android:layout_weight="1">
                 <TextView
-                    android:text="Category:"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textViewEventCategory"
-                    android:textSize="18sp" />
-
+                        android:text="Gender"
+                        android:layout_width="120dp"
+                        android:layout_height="match_parent"
+                        android:id="@+id/textView13"
+                        android:textSize="18sp"
+                        android:paddingLeft="10dp" android:gravity="left|center_vertical"
+                        android:textColor="@color/Bee_color_1"/>
                 <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/inputEventGender"
+                        android:padding="10dp"
+                        android:theme="@style/Widget.AppCompat.DropDownItem.Spinner"
+                    android:layout_weight="1"
+                        android:elevation="0dp"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/eventHobbyChoice" />
-
-
-
-            </TableRow>
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp">
-
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp" android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+                    android:layout_weight="1">
                 <TextView
-                    android:text="Skill level:"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textViewEventHobbySkill"
-                    android:textSize="18sp" />
-
+                        android:text="Category"
+                        android:layout_width="120dp"
+                        android:layout_height="match_parent"
+                        android:id="@+id/textViewEventCategory"
+                        android:textSize="18sp"
+                        android:paddingLeft="10dp" android:gravity="left|center_vertical"
+                        android:textColor="@color/Bee_color_1"/>
                 <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/eventHobbyChoice" android:layout_weight="1"
+                        android:elevation="0dp"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/spinnerSkillChoice" />
-                </TableRow>
+                    android:layout_height="40dp" android:layout_weight="1"
+                    android:layout_marginTop="10dp" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
+                <TextView
+                        android:text="Skill level"
+                        android:layout_width="120dp"
+                        android:layout_height="match_parent"
+                        android:id="@+id/textViewEventHobbySkill"
+                        android:textSize="18sp"
+                        android:paddingLeft="10dp" android:gravity="left|center_vertical"
+                        android:textColor="@color/Bee_color_1"/>
+                <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/spinnerSkillChoice" android:layout_weight="1"
+                        android:elevation="0dp"/>
+            </LinearLayout>
 
+            <TextView
+                    android:text="Event description"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp" android:id="@+id/textView24" android:layout_weight="1"
+                    android:textSize="18sp" android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" android:layout_marginTop="10dp"
+                    android:gravity="left|center_vertical" android:paddingLeft="10dp"
+                    android:textColor="@color/Bee_color_1"/>
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:ems="10"
-                android:id="@+id/inputEventDescription"
-                android:hint="Description of the event"
-                android:maxLines="4"
-                android:lines="2" />
-
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:ems="10"
+                    android:id="@+id/inputEventDescription"
+                    android:hint="anything what needs to be said..."
+                    android:maxLines="6"
+                    android:lines="6"
+                    android:layout_weight="1" android:textSize="14sp" android:padding="10dp"
+                    android:background="@color/Bee_color_3" android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" android:layout_marginTop="10dp"
+                    android:gravity="left"/>
             <Button
-                android:text="Add new event"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/eventAddNew" />
+                    android:text="Add new event"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/eventAddNew" style="@style/HobeeButton" android:layout_marginBottom="30dp"
+                    android:layout_marginLeft="20dp" android:layout_marginRight="20dp" android:layout_marginTop="20dp"/>
 
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

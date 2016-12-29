@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
@@ -59,7 +60,7 @@ public class RegisterUserActivity extends AppCompatActivity {
     RadioButton genderFemale;
     RadioButton selectedGender;
     CheckBox termsOfServiceCheckBox;
-    Button termsOfServiceBtn;
+    TextView termsOfServiceBtn;
     EditText bio;
     ImageView userImage;
     Button submitBtn;
@@ -69,6 +70,7 @@ public class RegisterUserActivity extends AppCompatActivity {
     Bundle userData;
     User user;
     Gson gson;
+    TextView toolbarText;
 
     SessionManager session;
 
@@ -112,16 +114,18 @@ public class RegisterUserActivity extends AppCompatActivity {
         submitBtn = (Button) findViewById(R.id.submitBtn);
         setBirthdayBtn = (Button) findViewById(R.id.setBirthdayBtn);
         chooseImageBtn = (Button) findViewById(R.id.chooseImageBtn);
-        termsOfServiceBtn = (Button) findViewById(R.id.termsOfServiceBtn);
+        termsOfServiceBtn = (TextView) findViewById(R.id.termsOfServiceBtn);
         termsOfServiceCheckBox = (CheckBox) findViewById(R.id.termsOfServiceCheckBox);
+        toolbarText = (TextView) findViewById(R.id.registerUserToolbarText);
 
         if (userData == null) {
+            toolbarText.setText("Edit profile");
             termsOfServiceBtn.setVisibility(View.INVISIBLE);
             termsOfServiceCheckBox.setVisibility(View.INVISIBLE);
             submitBtn.setEnabled(true);
         } else {
+            toolbarText.setText("Register");
             submitBtn.setEnabled(false);
-
             termsOfServiceCheckBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -140,7 +144,7 @@ public class RegisterUserActivity extends AppCompatActivity {
             lastName.setText(Profile.getInstance().getLastName());
             birthday.setText(Profile.getInstance().getBirthday());
             termsOfServiceCheckBox.setChecked(true);
-            if (Profile.getInstance().getGender().equals("male")) {
+            if (Profile.getInstance().getGender().equals("gender_male")) {
                 genderMale.setChecked(true);
             } else {
                 genderFemale.setChecked(true);
@@ -156,9 +160,9 @@ public class RegisterUserActivity extends AppCompatActivity {
             email.setText(userData.getString("email"));
             if (userGender == null) {
                 genderMale.setChecked(true);
-            } else if (userGender.equals("male")) {
+            } else if (userGender.equals("gender_male")) {
                 genderMale.setChecked(true);
-            } else if (userGender.equals("female")) {
+            } else if (userGender.equals("gender_female")) {
                 genderFemale.setChecked(true);
             }
             if (userBirthday != null) {
@@ -226,12 +230,19 @@ public class RegisterUserActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         *  In-built image chooser, should not crash with different API versions
+         */
         chooseImageBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-//                Intent gallery = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-//                startActivityForResult(gallery, SELECT_IMAGE);
-                writeStoragePermission();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                    writeStoragePermission();
+                }
+                else {
+                    Intent gallery = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                    startActivityForResult(gallery, SELECT_IMAGE);
+                }
             }
         });
     }

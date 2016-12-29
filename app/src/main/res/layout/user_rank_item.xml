@@ -1,80 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:padding="10dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="120dp" android:layout_marginTop="10dp" android:layout_marginBottom="10dp"
+              android:paddingBottom="5dp">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="120dp"
+            android:layout_height="match_parent" android:layout_weight="0">
+        <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_weight="1" android:layout_gravity="center_vertical|center_horizontal">
 
-        <ImageView
-            app:srcCompat="@drawable/profile"
-            android:id="@+id/userImage"
-            android:layout_width="128dp"
-            android:layout_height="128dp" />
-
+            <ImageView
+                    app:srcCompat="@drawable/profile_img"
+                    android:id="@+id/userImage"
+                    android:layout_weight="1" android:layout_width="match_parent" android:layout_height="match_parent"
+                    android:adjustViewBounds="true" android:layout_margin="4dp"/>
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" app:srcCompat="@drawable/frame" android:id="@+id/frame"
+                    android:layout_weight="1"/>
+        </FrameLayout>
         <TextView
-            android:text="0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/numberView"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:layout_below="@+id/seekBar"
-            android:layout_toRightOf="@+id/userImage"
-            android:layout_toEndOf="@+id/userImage"
-            android:layout_marginLeft="97dp"
-            android:layout_marginStart="97dp" />
-
-        <CheckBox
-            android:text="No show"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/noShow"
-            android:layout_below="@+id/userName"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
+                android:text="HOST"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textHost"
+                android:textAppearance="@style/TextAppearance.AppCompat.Button"
+                android:layout_alignBaseline="@+id/noShow"
+                android:layout_alignBottom="@+id/noShow"
+                android:layout_toLeftOf="@+id/noShow"
+                android:layout_toStartOf="@+id/noShow" android:textAlignment="center"
+                android:textColor="@color/Bee_color_1"/>
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:layout_weight="1">
         <TextView
-            android:text="Jose Luis Cardenas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/userName"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/userImage"
-            android:layout_toEndOf="@+id/userImage" />
-
-        <TextView
-            android:text="Your rank:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView16"
-            android:layout_alignBaseline="@+id/numberView"
-            android:layout_alignBottom="@+id/numberView"
-            android:layout_centerHorizontal="true" />
-
+                android:text="Jose Luis Cardenas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/userName"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/userImage"
+                android:layout_toEndOf="@+id/userImage" android:layout_weight="1" android:textAlignment="center"
+                android:textColor="@color/Bee_color_1" android:textSize="18sp" android:gravity="center_vertical|fill_horizontal"/>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp" android:layout_marginTop="10dp">
+            <TextView
+                    android:text="Rank:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView16"
+                    android:layout_centerHorizontal="false" android:layout_weight="0" android:textSize="18sp"
+                    android:paddingLeft="5dp" android:paddingRight="5dp" android:textColor="@color/Bee_color_1"/>
+            <TextView
+                    android:text="0"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/numberView"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:layout_below="@+id/seekBar"
+                    android:layout_toRightOf="@+id/userImage"
+                    android:layout_toEndOf="@+id/userImage"
+                    android:layout_weight="0" android:textSize="18sp" android:paddingLeft="5dp"
+                    android:paddingRight="5dp" android:textColor="@color/Bee_color_1" android:layout_width="30dp"
+                    android:textAlignment="center"/>
+        </LinearLayout>
         <SeekBar
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:id="@+id/seekBar"
-            android:max="6"
-            android:layout_below="@+id/noShow"
-            android:layout_alignRight="@+id/userName"
-            android:layout_alignEnd="@+id/userName"
-            android:layout_toRightOf="@+id/userImage"
-            android:layout_toEndOf="@+id/userImage" />
-
-        <TextView
-            android:text="HOST"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textHost"
-            android:textAppearance="@style/TextAppearance.AppCompat.Button"
-            android:layout_alignBaseline="@+id/noShow"
-            android:layout_alignBottom="@+id/noShow"
-            android:layout_toLeftOf="@+id/noShow"
-            android:layout_toStartOf="@+id/noShow" />
-
-    </RelativeLayout>
-</TableRow>
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="match_parent"
+                android:id="@+id/seekBar"
+                android:max="6"
+                android:layout_weight="1" android:progress="3" android:layout_height="30dp"/>
+        <CheckBox
+                android:text="No show"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/noShow"
+                android:layout_below="@+id/userName"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" android:layout_weight="1"/>
+    </LinearLayout>
+</LinearLayout>

@@ -4,8 +4,8 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:background="@drawable/bg_pattern">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -13,30 +13,29 @@
             android:orientation="vertical" >
 
             <ImageView
-                android:layout_width="358dp"
-                android:layout_height="157dp"
-                app:srcCompat="@drawable/bee"
-                android:layout_alignTop="@+id/textView11"
-                android:layout_toRightOf="@+id/textView11"
-                android:id="@+id/hobeeLogo"
-                android:layout_above="@+id/textView20"
-                android:layout_toStartOf="@+id/textView12"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                    app:srcCompat="@drawable/bee"
+                    android:layout_alignTop="@+id/textView11"
+                    android:layout_toRightOf="@+id/textView11"
+                    android:id="@+id/hobeeLogo"
+                    android:layout_above="@+id/textView20"
+                    android:layout_toStartOf="@+id/textView12"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" android:layout_width="300dp" android:layout_height="120dp"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:id="@+id/termsOne"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_below="@+id/textView19"
-                android:text="Please read the following terms of service agreement carefully. By accessing or using our sites and our services, you hereby agree to be bound by the terms and all terms incorporated herein by reference. It is the responsibility of you, the user, customer, or prospective customer to read the terms and conditions before proceeding to use this site. If you do not expressly agree to all of the terms and conditions, then please do not access or use our sites or our services. This terms of service agreement is effective as of 13.12.2016\n \n    INFORMATION WE COLLECT \n  \n We collect information to provide better services to all of our users - from filtering the events for you, and providing better advertisements to you. \n  	- Information you give us. Our services require you to sign up using a Google or Facebook account. When you do, we’ll ask for personal information, like your name, email address, gender, age, and your profile picture. \n	- How we use information we collect. Hobee respects your private information and we do not give away any of your data to any third parties."
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:id="@+id/termsOne"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/textView19"
+                    android:text="Please read the following terms of service agreement carefully. By accessing or using our sites and our services, you hereby agree to be bound by the terms and all terms incorporated herein by reference. It is the responsibility of you, the user, customer, or prospective customer to read the terms and conditions before proceeding to use this site. If you do not expressly agree to all of the terms and conditions, then please do not access or use our sites or our services. This terms of service agreement is effective as of 13.12.2016\n \n    INFORMATION WE COLLECT \n  \n We collect information to provide better services to all of our users - from filtering the events for you, and providing better advertisements to you. \n  	- Information you give us. Our services require you to sign up using a Google or Facebook account. When you do, we’ll ask for personal information, like your name, email address, gender, age, and your profile picture. \n	- How we use information we collect. Hobee respects your private information and we do not give away any of your data to any third parties."
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp" android:layout_marginTop="10dp"/>
         </LinearLayout>
     </ScrollView>
 

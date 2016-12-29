@@ -52,7 +52,7 @@ import io.apptik.widget.MultiSlider;
 
 public class NewEventActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, PlacePickerFragment.OnActivityResultListener {
 
-    Button btnAddEvent;
+    Button btnAddEvent, setDateBtn, setTimeBtn;
     TextView maxAge;
     TextView minAge;
     TextView inputEventName;
@@ -100,10 +100,12 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         eventHobbyChoice = (Spinner) findViewById(R.id.eventHobbyChoice);
         spinnerLocation = (Spinner) findViewById(R.id.spinnerLocation);
         spinnerHobbySkillChoice = (Spinner) findViewById(R.id.spinnerSkillChoice);
-
+        setDateBtn = (Button) findViewById(R.id.setDateBtn);
+        setTimeBtn = (Button) findViewById(R.id.setTimeBtn);
 
         //set gender spinner options
-        ArrayAdapter<String> genderChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{"everyone", "male", "female"});
+        String[] genderOptions = getResources().getStringArray(R.array.eventGenderOptions);
+        ArrayAdapter<String> genderChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, genderOptions);
         inputEventGender.setAdapter(genderChoice);
 
         //set skill spinner options
@@ -126,7 +128,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
             }
         });
 
-        inputEventTime.setOnClickListener(new View.OnClickListener() {
+        setTimeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DialogFragment newFragment = new TimePickerFragment();
@@ -134,7 +136,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
             }
         });
 
-        inputEventDate.setOnClickListener(new View.OnClickListener() {
+        setDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DialogFragment newFragment = new DatePickerFragment();
@@ -259,16 +261,21 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         UUID uuid = UUID.randomUUID();
 
         //TODO: find a way to make this easier to parse?
-        String timestamp = "0";
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-        try {
-            Date date = sdf.parse(inputEventDate.getText().toString() + " " + inputEventTime.getText().toString());
-            cal.setTime(date);
-            timestamp = String.valueOf(cal.getTimeInMillis() / 1000L);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if(inputEventDate.getText().toString().equals("") || inputEventTime.getText().toString().equals("")){
+            showEventIncompleteToast();
         }
+        else {
+            String timestamp = "";
+            Calendar cal = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+            try {
+                Date date = sdf.parse(inputEventDate.getText().toString() + " " + inputEventTime.getText().toString());
+                cal.setTime(date);
+                timestamp = String.valueOf(cal.getTimeInMillis() / 1000L);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
 
         ArrayList<PublicUser> acceptedUsers = new ArrayList<>();
         PublicUser currentUser = Profile.getInstance().getUser().getSimpleUser();
@@ -313,15 +320,22 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
             NewEventActivity.this.startActivity(homeIntent);
         } catch (NullPointerException e) {
 
-            Toast toast = Toast.makeText(getApplicationContext(), "Please fill in all the fields", Toast.LENGTH_SHORT);
-            toast.show();
+            showEventIncompleteToast();
 
         }
         catch(NumberFormatException e){
-            Toast toast = Toast.makeText(getApplicationContext(), "Please fill in all the fields", Toast.LENGTH_SHORT);
-            toast.show();
+            showEventIncompleteToast();
         }
 
+        }
+    }
+
+    /**
+     * Display a toast when all of the event is incomplete and cannot be created.
+     */
+    public void showEventIncompleteToast(){
+        Toast toast = Toast.makeText(getApplicationContext(), "Please fill in all the fields", Toast.LENGTH_SHORT);
+        toast.show();
     }
 
 

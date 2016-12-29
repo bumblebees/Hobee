@@ -4,11 +4,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -31,18 +31,18 @@ import bumblebees.hobee.utilities.SocketIO;
 
 
 public class EventViewActivity extends AppCompatActivity {
-   TextView  eventDescription, eventLocation, eventDate, eventTime,eventPeople,eventGender, eventAge, eventHostName, eventHobbySkill, eventHobby;
+   TextView eventName, eventDescription, eventLocation, eventDate, eventTime,eventPeople,eventGender, eventAge, eventHostName, eventHobbySkill, eventHobby;
     Gson g;
     String eventString;
     LinearLayout containerUsers, containerPending;
     Event event;
     Button btnJoinEvent;
-    Toolbar toolbarEventView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_view);
+        eventName = (TextView) findViewById(R.id.eventName);
         eventDescription = (TextView) findViewById(R.id.eventDescription);
         eventLocation = (TextView) findViewById(R.id.eventLocation);
         eventDate = (TextView) findViewById(R.id.eventDate);
@@ -53,9 +53,6 @@ public class EventViewActivity extends AppCompatActivity {
         eventHostName = (TextView) findViewById(R.id.eventHostName);
         eventHobby = (TextView) findViewById(R.id.eventHobby);
         eventHobbySkill = (TextView)findViewById(R.id.eventHobbySkill);
-        toolbarEventView = (Toolbar) findViewById(R.id.toolbarViewEvent);
-        setSupportActionBar(toolbarEventView);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         containerUsers = (LinearLayout) findViewById(R.id.containerUsers);
@@ -100,6 +97,8 @@ public class EventViewActivity extends AppCompatActivity {
 
                     TextView pendingUser = (TextView) row.findViewById(R.id.userAcceptName);
                     pendingUser.setText(user.getName());
+                    pendingUser.setTextSize(16);
+                    pendingUser.setTextColor(Color.DKGRAY);
                     pendingUser.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -161,7 +160,8 @@ public class EventViewActivity extends AppCompatActivity {
                 }
             });
         }
-        getSupportActionBar().setTitle(event.getEvent_details().getEvent_name());
+
+        eventName.setText(event.getEvent_details().getEvent_name());
         eventDescription.setText(event.getEvent_details().getDescription());
         eventLocation.setText(event.getEvent_details().getLocation());
 
@@ -184,6 +184,8 @@ public class EventViewActivity extends AppCompatActivity {
         for(final PublicUser publicUser : event.getEvent_details().getUsers_accepted()){
             TextView acceptedUser = new TextView(this.getApplicationContext());
             acceptedUser.setText(publicUser.getName());
+            acceptedUser.setTextSize(16);
+            acceptedUser.setTextColor(Color.DKGRAY);
             acceptedUser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

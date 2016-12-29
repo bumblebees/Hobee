@@ -2,12 +2,15 @@ package bumblebees.hobee.objects;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.ImageView;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.Until;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import bumblebees.hobee.R;
 
 /**
  * A class to represent a hobby.
@@ -143,5 +146,9 @@ public class Hobby implements Parcelable {
         result = (int) (temp ^ (temp >>> 32));
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
+    }
+
+    public int getIcon() {
+        return R.drawable.basketball;
     }
 }

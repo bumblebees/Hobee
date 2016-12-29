@@ -4,7 +4,7 @@
 
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawerLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -18,33 +18,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/Bee_color_4"
-            android:theme="?attr/actionBarTheme"
-            android:minHeight="?attr/actionBarSize"
-            android:id="@+id/homeToolbar"
-            android:elevation="4dp" />
-
-        <android.support.design.widget.TabLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tabLayout"
-            android:layout_below="@+id/homeToolbar"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:background="@color/Bee_color_4">
-        </android.support.design.widget.TabLayout>
+            android:layout_height="50dp"
+            android:background="@drawable/header_pattern"
+        >
+            <TextView
+                    android:text="Hobee"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:id="@+id/textView27" android:layout_weight="1"
+                    android:textStyle="normal|bold" android:textSize="24sp" android:textColor="@color/Bee_color_4"
+                    android:paddingLeft="20dp" android:gravity="center_vertical"/>
+            <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp" app:srcCompat="@drawable/hamburger_img"
+                    android:id="@+id/hamburger" android:layout_weight="0" android:layout_margin="10dp"/>
+        </LinearLayout>
 
         <android.support.v4.view.ViewPager
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
 
-            android:id="@+id/viewPager"
-            android:layout_below="@+id/tabLayout"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
+                android:id="@+id/viewPager"
+                android:layout_below="@+id/tabLayout"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" android:background="@drawable/bg_pattern">
 
         </android.support.v4.view.ViewPager>
 
@@ -55,6 +54,15 @@
             android:visibility="gone"
             android:layout_alignParentBottom="true"
             android:id="@+id/dealContainer" />
+        <android.support.design.widget.TabLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/tabLayout"
+                android:background="@drawable/header_pattern" android:elevation="2dp"
+                app:tabTextColor="@color/cardview_light_background" app:tabSelectedTextColor="@color/Bee_color_4"
+                android:layout_marginTop="50dp"
+                android:layout_below="@+id/dealContainer" android:layout_alignParentStart="true">
+        </android.support.design.widget.TabLayout>
     </RelativeLayout>
 
     <RelativeLayout
@@ -66,11 +74,11 @@
         <!-- Profile Box -->
 
         <RelativeLayout
-            android:id="@+id/profileBox"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/Bee_color_1"
-            android:padding="8dp" >
+                android:id="@+id/profileBox"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@drawable/header_pattern"
+                android:padding="10dp" android:clickable="false">
 
             <ImageView
                 android:id="@+id/avatar"
@@ -92,8 +100,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textColor="#fff"
-                    android:textSize="16sp"
+                    android:textColor="@color/Bee_color_4"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -101,12 +109,13 @@
 
         <!-- List of Actions (pages) -->
         <ListView
-            android:id="@+id/navList"
-            android:layout_width="280dp"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/profileBox"
-            android:choiceMode="singleChoice"
-            android:background="#ffffffff" />
+                android:id="@+id/navList"
+                android:layout_width="280dp"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/profileBox"
+                android:choiceMode="singleChoice"
+                android:background="@color/Bee_color_1" android:divider="@color/Bee_color_4"
+                android:dividerHeight="1dp"/>
 
 
 

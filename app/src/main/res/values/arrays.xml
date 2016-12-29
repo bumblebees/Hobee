@@ -32,5 +32,10 @@
         <item>Intermediate</item>
         <item>Expert</item>
     </string-array>
+    <string-array name="eventGenderOptions">
+        <item>everyone</item>
+        <item>male</item>
+        <item>female</item>
+    </string-array>
 
 </resources>
