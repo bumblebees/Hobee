@@ -24,9 +24,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 import bumblebees.hobee.fragments.PlacePickerFragment;
@@ -52,7 +50,7 @@ import bumblebees.hobee.utilities.TimePickerFragment;
 import io.apptik.widget.MultiSlider;
 
 
-public class NewEventActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class NewEventActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, PlacePickerFragment.OnActivityResultListener {
 
     Button btnAddEvent;
     TextView maxAge;
@@ -68,8 +66,16 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
     Spinner spinnerHobbySkillChoice;
     TextView inputEventNumber;
     MultiSlider ageRangeSlider;
+    String placeID;
+
 
     HashMap<String, String> areas;
+
+    @Override
+    public void updateEvent(Place place) {
+        inputEventLocation.setText(place.getAddress());
+        placeID = place.getId();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -274,7 +280,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
             Hobby hobby = new Hobby(eventHobbyChoice.getSelectedItem().toString(), spinnerHobbySkillChoice.getSelectedItem().toString());
             EventDetails eventDetails = new EventDetails(inputEventName.getText().toString(), hostID, currentUser.getName(),
                     Integer.parseInt(minAge.getText().toString()), Integer.parseInt(maxAge.getText().toString()), inputEventGender.getSelectedItem().toString(),
-                    timestamp, Integer.parseInt(inputEventNumber.getText().toString()), inputEventLocation.getText().toString(), inputEventDescription.getText().toString(),
+                    timestamp, Integer.parseInt(inputEventNumber.getText().toString()), placeID, inputEventDescription.getText().toString(),
                     new ArrayList<PublicUser>(), acceptedUsers, hobby, users_unranked);
 
             final Event event = new Event(uuid, eventCategory, String.valueOf(timeCreated), eventDetails, areas.get(spinnerLocation.getSelectedItem().toString()));
@@ -317,6 +323,8 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         }
 
     }
+
+
 }
 
 

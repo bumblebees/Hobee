@@ -18,8 +18,10 @@ package bumblebees.hobee.fragments;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
@@ -30,8 +32,15 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
+import bumblebees.hobee.NewEventActivity;
+
 
 public class PlacePickerFragment extends Fragment {
+
+
+    public interface OnActivityResultListener{
+        public void updateEvent(Place place);
+    }
 
     private static final String TAG = "PlacePicker";
 
@@ -48,6 +57,24 @@ public class PlacePickerFragment extends Fragment {
      */
     private static final int REQUEST_PLACE_PICKER = 1;
 
+    OnActivityResultListener mCallback;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnActivityResultListener) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getActivity().toString()
+                    + " must implement OnActivityResultListener");
+        }
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,8 +85,7 @@ public class PlacePickerFragment extends Fragment {
             startActivityForResult(intent, REQUEST_PLACE_PICKER);
 
         } catch (GooglePlayServicesRepairableException e) {
-            GooglePlayServicesUtil
-                    .getErrorDialog(e.getConnectionStatusCode(), getActivity(), 0);
+            GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), getActivity(), 0);
         } catch (GooglePlayServicesNotAvailableException e) {
             Toast.makeText(getActivity(), "Google Play Services is not available.",
                     Toast.LENGTH_LONG)
@@ -73,6 +99,10 @@ public class PlacePickerFragment extends Fragment {
     }
 
 
+
+
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_PLACE_PICKER) {
@@ -84,37 +114,25 @@ public class PlacePickerFragment extends Fragment {
                    Data is extracted from the returned intent by retrieving a Place object from
                    the PlacePicker.
                  */
-                final Place place = PlacePicker.getPlace(data, getActivity());
+                final Place place = PlacePicker.getPlace(getActivity(),data);
 
                 /* A Place object contains details about that place, such as its name, address
                 and phone number. Extract the name, address, phone number, place ID and place types.
                  */
-                final CharSequence name = place.getName();
-                final CharSequence address = place.getAddress();
-                final CharSequence phone = place.getPhoneNumber();
-                final String placeId = place.getId();
-                String attribution = PlacePicker.getAttributions(data);
-                if(attribution == null){
-                    attribution = "";
+
+
+                String name = place.getName().toString();
+                Log.d(TAG, "Place selected: " + place.getId() + " (" + name.toString() + ")");
+
+                try{
+                    ((PlacePickerFragment.OnActivityResultListener)getActivity()).updateEvent(place);
+                }catch(ClassCastException cce){
+                    Log.d("PlacePickerFragment",cce.toString());
                 }
-
-                // Update data on card.
-                /*
-                getCardStream().getCard(CARD_DETAIL)
-                        .setTitle(name.toString())
-                        .setDescription(getString(R.string.detail_text, placeId, address, phone,
-                                attribution));
-                                */
-
-                // Print data to debug log
-                Log.d(TAG, "Place selected: " + placeId + " (" + name.toString() + ")");
-
-                // Show the card.
-              //  getCardStream().showCard(CARD_DETAIL);
 
             } else {
                 // User has not selected a place, hide the card.
-            //    getCardStream().hideCard(CARD_DETAIL);
+
             }
 
         } else {
