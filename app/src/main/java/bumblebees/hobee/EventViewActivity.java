@@ -16,6 +16,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -32,11 +44,31 @@ import bumblebees.hobee.utilities.SocketIO;
 
 public class EventViewActivity extends AppCompatActivity {
    TextView eventName, eventDescription, eventLocation, eventDate, eventTime,eventPeople,eventGender, eventAge, eventHostName, eventHobbySkill, eventHobby;
+    MapFragment map;
+    private GoogleMap gMap;
     Gson g;
     String eventString;
     LinearLayout containerUsers, containerPending;
     Event event;
     Button btnJoinEvent;
+
+    OnMapReadyCallback callback = new OnMapReadyCallback() {
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+            gMap = googleMap;
+            String unparsedLocation = event.getEvent_details().getLocation();
+            unparsedLocation = unparsedLocation.substring(unparsedLocation.indexOf("(")+1,unparsedLocation.indexOf(")"));
+            String[] latlong = unparsedLocation.split(",");
+            double lat = Double.parseDouble(latlong[0]);
+            double lng = Double.parseDouble(latlong[1]);
+            LatLng position = new LatLng(lat,lng);
+            gMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng)));
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(position).zoom(14.0f).build();
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+            gMap.moveCamera(cameraUpdate);
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +76,6 @@ public class EventViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_view);
         eventName = (TextView) findViewById(R.id.eventName);
         eventDescription = (TextView) findViewById(R.id.eventDescription);
-        eventLocation = (TextView) findViewById(R.id.eventLocation);
         eventDate = (TextView) findViewById(R.id.eventDate);
         eventTime = (TextView) findViewById(R.id.eventTime);
         eventPeople = (TextView) findViewById(R.id.eventPeople);
@@ -53,18 +84,18 @@ public class EventViewActivity extends AppCompatActivity {
         eventHostName = (TextView) findViewById(R.id.eventHostName);
         eventHobby = (TextView) findViewById(R.id.eventHobby);
         eventHobbySkill = (TextView)findViewById(R.id.eventHobbySkill);
-
-
+        map = (MapFragment)getFragmentManager().findFragmentById(R.id.mapFragment);
         containerUsers = (LinearLayout) findViewById(R.id.containerUsers);
         containerPending = (LinearLayout) findViewById(R.id.containerPending);
-
+        btnJoinEvent = (Button) findViewById(R.id.btnJoinEvent);
 
         Intent intent = getIntent();
         g = new Gson();
         eventString = intent.getStringExtra("event");
         event = g.fromJson(eventString, Event.class);
 
-        btnJoinEvent = (Button) findViewById(R.id.btnJoinEvent);
+        map.getMapAsync(callback);
+
 
         PublicUser currentUser = Profile.getInstance().getUser().getSimpleUser();
 
@@ -163,7 +194,6 @@ public class EventViewActivity extends AppCompatActivity {
 
         eventName.setText(event.getEvent_details().getEvent_name());
         eventDescription.setText(event.getEvent_details().getDescription());
-        eventLocation.setText(event.getEvent_details().getLocation());
 
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(Long.parseLong(event.getEvent_details().getTimestamp())*1000L);

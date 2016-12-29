@@ -66,7 +66,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
     Spinner spinnerHobbySkillChoice;
     TextView inputEventNumber;
     MultiSlider ageRangeSlider;
-    String placeID;
+    Place place;
 
 
     HashMap<String, String> areas;
@@ -74,7 +74,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
     @Override
     public void updateEvent(Place place) {
         inputEventLocation.setText(place.getAddress());
-        placeID = place.getId();
+        this.place = place;
     }
 
     @Override
@@ -287,7 +287,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
             Hobby hobby = new Hobby(eventHobbyChoice.getSelectedItem().toString(), spinnerHobbySkillChoice.getSelectedItem().toString());
             EventDetails eventDetails = new EventDetails(inputEventName.getText().toString(), hostID, currentUser.getName(),
                     Integer.parseInt(minAge.getText().toString()), Integer.parseInt(maxAge.getText().toString()), inputEventGender.getSelectedItem().toString(),
-                    timestamp, Integer.parseInt(inputEventNumber.getText().toString()), placeID, inputEventDescription.getText().toString(),
+                    timestamp, Integer.parseInt(inputEventNumber.getText().toString()), place.getLatLng().toString(), inputEventDescription.getText().toString(),
                     new ArrayList<PublicUser>(), acceptedUsers, hobby, users_unranked);
 
             final Event event = new Event(uuid, eventCategory, String.valueOf(timeCreated), eventDetails, areas.get(spinnerLocation.getSelectedItem().toString()));

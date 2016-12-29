@@ -87,15 +87,15 @@
                         android:layout_height="match_parent" android:id="@+id/textView21"
                         android:gravity="left|center_vertical" android:layout_gravity="center_vertical|fill_horizontal"
                         android:textSize="18sp" android:paddingLeft="10dp" android:textColor="@color/Bee_color_1"/>
-                <EditText
+                <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:ems="10"
                         android:id="@+id/inputEventLocation"
-                        android:inputType="textPostalAddress"
-                        android:hint="street, house..." android:layout_weight="1" android:gravity="left|center_vertical"
+                        android:hint="Select a location" android:layout_weight="1" android:gravity="left|center_vertical"
                         android:layout_gravity="center_vertical|fill_horizontal"
-                        android:background="@color/Bee_color_3" android:paddingLeft="10dp"/>
+                        android:background="@color/Bee_color_3" android:paddingLeft="10dp"
+                        android:textSize="18sp" />
             </LinearLayout>
             <LinearLayout
                     android:orientation="horizontal"
