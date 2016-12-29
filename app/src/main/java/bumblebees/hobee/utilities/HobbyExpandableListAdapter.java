@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import bumblebees.hobee.EventViewActivity;
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
+import bumblebees.hobee.objects.Hobby;
 
 public class HobbyExpandableListAdapter extends BaseExpandableListAdapter {
 
@@ -114,8 +115,7 @@ public class HobbyExpandableListAdapter extends BaseExpandableListAdapter {
             }
         }
 
-        //TODO: set ImageView based on hobby
-        eventIcon.setImageResource(R.drawable.basketball);
+        eventIcon.setImageResource(event.getEvent_details().getHobbyIcon());
 
         eventItemLayout.setOnClickListener(new View.OnClickListener() {
             @Override

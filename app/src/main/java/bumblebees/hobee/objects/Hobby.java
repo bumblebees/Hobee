@@ -148,7 +148,36 @@ public class Hobby implements Parcelable {
         return result;
     }
 
+    /**
+     * Get the icon corresponding to the hobby.
+     * @return
+     */
     public int getIcon() {
-        return R.drawable.basketball;
+        switch(name.toLowerCase()){
+            case "basketball":
+                return R.drawable.basketball;
+            case "football":
+                return R.drawable.football;
+            case "karaoke":
+                return R.drawable.karaoke;
+            case "ballroom":
+                return R.drawable.ballroom;
+            case "museum tour":
+                return R.drawable.museumtour;
+            case "baking":
+                return R.drawable.baking;
+            case "cooking":
+                return R.drawable.cooking;
+            case "chess":
+                return R.drawable.chess;
+            case "scrabble":
+                return R.drawable.scrabble;
+            case "monopoly":
+                return R.drawable.monopoly1;
+            case "camping":
+                return R.drawable.camping;
+            default:
+                return R.drawable.bee;
+        }
     }
 }

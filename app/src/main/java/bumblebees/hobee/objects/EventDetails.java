@@ -187,6 +187,10 @@ public class EventDetails {
         return hobby.getDifficultyLevel();
     }
 
+    public int getHobbyIcon(){
+        return hobby.getIcon();
+    }
+
     public List<String> getUsers_unranked () { return users_unranked;}
 
     public JSONObject getUsers_unrankedJson() {
