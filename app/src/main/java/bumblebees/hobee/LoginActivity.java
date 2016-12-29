@@ -46,22 +46,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         //initialize the application settings_img
         PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preferences, false);
 
-        // If user has already logged in, just get his data from the server and go to homepage
-//        if (session.getId() != null){
-//            SocketIO.getInstance().getUserAndLogin(session.getId(), getApplicationContext());
-//        }
-
         //If user has already logged in, retrieve data from the preferences and go to homepage
         if(session.isLoggedIn()){
-            SocketIO.getInstance().getUserAndLogin(session.getUser().getLoginId(), getApplicationContext());
+            //SocketIO.getInstance().getUserAndLogin(session.getUser().getLoginId(), getApplicationContext());
 
-           /*
             Profile.getInstance().setUser(session.getUser());
-
             Intent intent = new Intent(this, HomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.startActivity(intent);
-            */
         }
 
 

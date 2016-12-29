@@ -95,100 +95,105 @@ public class EventViewActivity extends AppCompatActivity {
 
         map.getMapAsync(callback);
 
-
         PublicUser currentUser = Profile.getInstance().getUser().getSimpleUser();
 
 
-        //check if the user is also the host of the event
-        //if so, turn the button into one that cancels the event
-        if(event.getEvent_details().getHost_id().equals(Profile.getInstance().getUserID())){
-            btnJoinEvent.setText("Host: cancel event");
-            //btnJoinEvent.setEnabled(false);
+        //check if the event is still active
+        //if not, disable all interactions with the event
+        if(event.isEventActive()) {
 
-            btnJoinEvent.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cancelEvent(event);
+            //check if the user is also the host of the event
+            //if so, turn the button into one that cancels the event
+            if (event.getEvent_details().getHost_id().equals(Profile.getInstance().getUserID())) {
+                btnJoinEvent.setText("Host: cancel event");
+                //btnJoinEvent.setEnabled(false);
+
+                btnJoinEvent.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        cancelEvent(event);
+                    }
+                });
+
+                containerPending.setVisibility(View.VISIBLE);
+
+                if (event.getEvent_details().getUsers_pending().size() == 0) {
+                    TextView pendingUsers = new TextView(this.getApplicationContext());
+                    pendingUsers.setText("No users found.");
+                    containerPending.addView(pendingUsers);
+                } else {
+                    for (final PublicUser user : event.getEvent_details().getUsers_pending()) {
+                        LayoutInflater inflater = LayoutInflater.from(this);
+                        final View row = inflater.inflate(R.layout.user_accept_item, containerPending, false);
+
+
+                        TextView pendingUser = (TextView) row.findViewById(R.id.userAcceptName);
+                        pendingUser.setText(user.getName());
+                        pendingUser.setTextSize(16);
+                        pendingUser.setTextColor(Color.DKGRAY);
+                        pendingUser.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                //This needs to be fixed
+                                viewUserProfile(user.getUserID());
+                            }
+                        });
+
+                        Button acceptUser = (Button) row.findViewById(R.id.userAcceptButton);
+                        acceptUser.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                event.getEvent_details().confirmUser(user);
+                                updateEvent(event);
+                                //TODO: refresh users without having to reload the entire activity
+                                finish();
+                                Intent updatedIntent = getIntent();
+                                updatedIntent.putExtra("event", g.toJson(event));
+                                startActivity(updatedIntent);
+                            }
+                        });
+                        Button rejectUser = (Button) row.findViewById(R.id.userRejectButton);
+                        rejectUser.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                event.getEvent_details().rejectUser(user);
+                                updateEvent(event);
+
+                                //TODO: refresh users without having to reload the entire activity
+                                finish();
+                                Intent updatedIntent = getIntent();
+                                updatedIntent.putExtra("event", g.toJson(event));
+                                startActivity(updatedIntent);
+                            }
+                        });
+
+                        containerPending.addView(row);
+
+                    }
                 }
-            });
 
-            containerPending.setVisibility(View.VISIBLE);
 
-            if(event.getEvent_details().getUsers_pending().size()==0){
-                TextView pendingUsers = new TextView(this.getApplicationContext());
-                pendingUsers.setText("No users found.");
-                containerPending.addView(pendingUsers);
             }
-            else {
-                for (final PublicUser user : event.getEvent_details().getUsers_pending()) {
-                    LayoutInflater inflater = LayoutInflater.from(this);
-                    final View row = inflater.inflate(R.layout.user_accept_item, containerPending, false);
+            //check if the user has already joined the event
+            else if (event.getEvent_details().checkUser(currentUser)) {
+                //disable the button so that the user cannot join the event again
+                btnJoinEvent.setText("You have already joined this event");
+                btnJoinEvent.setEnabled(false);
+            } else {
+                //add the on-click listener so that the user can join the event
 
-
-                    TextView pendingUser = (TextView) row.findViewById(R.id.userAcceptName);
-                    pendingUser.setText(user.getName());
-                    pendingUser.setTextSize(16);
-                    pendingUser.setTextColor(Color.DKGRAY);
-                    pendingUser.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //This needs to be fixed
-                            viewUserProfile(user.getUserID());
-                        }
-                    });
-
-                    Button acceptUser = (Button) row.findViewById(R.id.userAcceptButton);
-                    acceptUser.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            event.getEvent_details().confirmUser(user);
-                            updateEvent(event);
-                            //TODO: refresh users without having to reload the entire activity
-                            finish();
-                            Intent updatedIntent = getIntent();
-                            updatedIntent.putExtra("event", g.toJson(event));
-                            startActivity(updatedIntent);
-                        }
-                    });
-                    Button rejectUser = (Button) row.findViewById(R.id.userRejectButton);
-                    rejectUser.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            event.getEvent_details().rejectUser(user);
-                            updateEvent(event);
-
-                            //TODO: refresh users without having to reload the entire activity
-                            finish();
-                            Intent updatedIntent = getIntent();
-                            updatedIntent.putExtra("event", g.toJson(event));
-                            startActivity(updatedIntent);
-                        }
-                    });
-
-                    containerPending.addView(row);
-
-                }
+                btnJoinEvent.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        joinEvent(event);
+                    }
+                });
             }
-
-
-
-
-        }
-        //check if the user has already joined the event
-        else if(event.getEvent_details().checkUser(currentUser)){
-            //disable the button so that the user cannot join the event again
-            btnJoinEvent.setText("You have already joined this event");
-            btnJoinEvent.setEnabled(false);
         }
         else{
-            //add the on-click listener so that the user can join the event
-
-            btnJoinEvent.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    joinEvent(event);
-                }
-            });
+            //event is inactive, remove all interaction with it
+            btnJoinEvent.setText("You cannot join a past event.");
+            btnJoinEvent.setEnabled(false);
         }
 
         eventName.setText(event.getEvent_details().getEvent_name());

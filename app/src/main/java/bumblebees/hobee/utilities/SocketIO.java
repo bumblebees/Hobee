@@ -273,7 +273,7 @@ public class SocketIO {
 
                 Intent intent = new Intent(context, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                SocketIO.getInstance().getEventHistory();
+                SocketIO.getInstance().getEventHistory(context);
                 Log.d("getUserAndLogin","Running");
                 context.startActivity(intent);
             }
@@ -339,23 +339,30 @@ public class SocketIO {
     }
 
 
-    public void getEventHistory(){
+    public void getEventHistory(final Context context){
         Log.d("get_event_history","is happening");
         socket.emit("get_event_history", Profile.getInstance().getUserID(), new Ack(){
             @Override
             public void call(Object...objects){
-                ArrayList<Event> eventHistory = new ArrayList<Event>();
                 JSONArray eventArray = (JSONArray) objects[0];
+                SessionManager session = new SessionManager(context);
+                EventManager eventManager = session.getEventManager();
                 if(eventArray == null)
                     Log.d("eventArray","is Null");
                 if(eventArray != null)
                     for(int i=0;i<eventArray.length();i++){
                         try {
-                            eventHistory.add(gson.fromJson(eventArray.getString(i),Event.class));
+                            Event event = gson.fromJson(eventArray.getString(i),Event.class);
+                            if(event.isCurrentUserHost()){
+                                eventManager.addHistoryHostedEvent(event);
+                            }
+                            else{
+                                eventManager.addHistoryJoinedEvent(event);
+                            }
 
                         } catch (JSONException e) {e.printStackTrace();}
                     }
-                Profile.getInstance().setHistoryEvents(eventHistory);
+                session.saveEvents(eventManager);
             }
         });
     }

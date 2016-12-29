@@ -19,7 +19,6 @@ public class Profile{
     static private Profile instance;
     private User user;
 
-    private ArrayList<Event> historyEvents = new ArrayList<>();
 
     public static Profile getInstance(){
         if (instance == null){
@@ -145,14 +144,6 @@ public class Profile{
             list.add(hobby.getName().toLowerCase());
         }
         return list;
-    }
-
-    public ArrayList<Event> getHistoryEvents() {
-        return historyEvents;
-    }
-
-    public void setHistoryEvents(ArrayList<Event> historyEvents) {
-        this.historyEvents = historyEvents;
     }
 
 }

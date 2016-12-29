@@ -114,6 +114,21 @@ public class MQTTService extends Service implements MqttCallback {
         }
     }
 
+    /**
+     * Remove an event when it has expired (the event has already taken place).
+     */
+    public void removeExpiredEvent(Event event){
+        try {
+            MqttMessage message = new MqttMessage();
+            message.setPayload("".getBytes());
+            message.setRetained(true);
+            message.setQos(1);
+            client.publish(event.getTopic(), message);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void connectMQTT(){
 
         MemoryPersistence persistence = new MemoryPersistence();
@@ -347,7 +362,10 @@ public class MQTTService extends Service implements MqttCallback {
                     e.printStackTrace();
                 }
             }
-            eventManager.findAndRemoveEvents(removedTopics, user.getHobbyNames());
+            ArrayList<Event> expiredEvents = eventManager.findAndRemoveEvents(removedTopics, user.getHobbyNames());
+            for(Event event:expiredEvents){
+                removeExpiredEvent(event);
+            }
             subscribedTopics = possibleTopics;
             sessionManager.saveEvents(eventManager);
         }

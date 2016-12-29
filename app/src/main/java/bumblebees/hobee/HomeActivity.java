@@ -160,6 +160,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
                 MQTTService.MQTTBinder binder = (MQTTService.MQTTBinder) iBinder;
                 service = binder.getInstance();
+
             }
 
             @Override
@@ -212,23 +213,20 @@ public class HomeActivity extends AppCompatActivity {
     public void rankUsers(){
         final ArrayList<Event> unRankedEvents = new ArrayList<>();
         final ArrayList<Event> hostedUnrankedEvents = new ArrayList<>();
-        ArrayList<Event> historyEvents= Profile.getInstance().getHistoryEvents();
-        Log.d("historyEvents empty" ,String.valueOf(historyEvents.isEmpty()));
-        for(final Event event:historyEvents) {
+        SessionManager sessionManager = new SessionManager(this);
 
-            if (event.isCurrentUserHost()) {
+        for(Event event:sessionManager.getEventManager().getHistoryHostedEvents()){
+            if (!event.checkRanked(Profile.getInstance().getUser())) {
+                hostedUnrankedEvents.add(event);
+            }
+        }
+        for(Event event:sessionManager.getEventManager().getHistoryJoinedEvents()){
+            if (event.checkHostranked()) {
                 if (!event.checkRanked(Profile.getInstance().getUser())) {
-                    hostedUnrankedEvents.add(event);
-                }
-            } else {
-                if (event.checkHostranked()) {
-                    if (!event.checkRanked(Profile.getInstance().getUser())) {
-                        unRankedEvents.add(event);
-                    }
+                    unRankedEvents.add(event);
                 }
             }
         }
-
 
         if(!hostedUnrankedEvents.isEmpty()){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -269,10 +267,6 @@ public class HomeActivity extends AppCompatActivity {
 
 
     }
-
-
-
-
 
 
     /**

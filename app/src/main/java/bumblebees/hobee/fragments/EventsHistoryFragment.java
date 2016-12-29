@@ -1,6 +1,11 @@
 package bumblebees.hobee.fragments;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -18,6 +23,7 @@ import java.util.ArrayList;
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.utilities.HobbyExpandableListAdapter;
+import bumblebees.hobee.utilities.MQTTService;
 import bumblebees.hobee.utilities.Profile;
 import bumblebees.hobee.utilities.SocketIO;
 
@@ -33,22 +39,17 @@ public class EventsHistoryFragment extends Fragment {
     HobbyExpandableListAdapter adapter;
     ArrayList<Event> hostedEvents = new ArrayList<>();
     ArrayList<Event> joinedEvents = new ArrayList<>();
+    private ServiceConnection serviceConnection;
+    private MQTTService service;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         content = new ArrayList<>();
-        ArrayList<Event> eventHistory = Profile.getInstance().getHistoryEvents();
-        for(Event event: eventHistory){
-            if(event.getEvent_details().getHost_id().equals(Profile.getInstance().getUserID()))
-                hostedEvents.add(event);
-            else
-                joinedEvents.add(event);
-        }
 
-        content.add(new Pair<>("Hosted events", hostedEvents));
-        content.add(new Pair<>("Joined events", joinedEvents));
+        content.add(new Pair<>("Hosted events", new ArrayList<Event>()));
+        content.add(new Pair<>("Joined events", new ArrayList<Event>()));
     }
 
     @Override
@@ -69,6 +70,32 @@ public class EventsHistoryFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        Intent intent = new Intent(getContext(), MQTTService.class);
+        serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                MQTTService.MQTTBinder binder = (MQTTService.MQTTBinder) iBinder;
+                service = binder.getInstance();
+
+                content.set(0, new Pair<>("Hosted events", service.getEvents().getHistoryHostedEvents()));
+                content.set(1, new Pair<>("Joined events", service.getEvents().getHistoryJoinedEvents()));
+
+                //expand all groups by default
+                for(int i=0;i<content.size(); i++){
+                    eventsTabList.expandGroup(i);
+                }
+                adapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+
+            }
+        };
+        getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
         adapter = new HobbyExpandableListAdapter(getActivity().getApplicationContext(), content);
         eventsTabList.setAdapter(adapter);
 

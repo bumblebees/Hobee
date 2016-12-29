@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -100,7 +101,7 @@ public class Event {
      * @param user
      * @return
      */
-    public Boolean checkRanked(User user){
+    public boolean checkRanked(User user){
        return (!this.getEvent_details().getUsers_unranked().contains(user.getUserID()));
     }
 
@@ -110,13 +111,28 @@ public class Event {
      * @return
      */
 
-    public Boolean checkHostranked(){
+    public boolean checkHostranked(){
         List<String> userUnrankedList = this.getEvent_details().getUsers_unranked();
         String hostID = this.getEvent_details().getHost_id();
         for(String userID: userUnrankedList){
             if(userID.equals(hostID)) return false;
         }
         return true;
+    }
+
+    /**
+     * Checks if the event is still active: the time when the event takes place has not passed yet.
+     * @return true - event is active
+     *          false - event is not active, event has already happened
+     */
+    public boolean isEventActive(){
+        long currentTime = Calendar.getInstance().getTimeInMillis() / 1000L;
+        if (currentTime < Long.parseLong(event_details.getTimestamp())) {
+            //event has not passed yet
+            return true;
+        }
+        //event is over
+        else return false;
     }
 
 

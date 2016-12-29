@@ -26,6 +26,9 @@ public class EventManager {
     private ArrayList<Event> pendingEvents = new ArrayList<>();
     private HashMap<String, ArrayList<Event>> eligibleEventList = new HashMap<>();
 
+    private ArrayList<Event> historyHostedEvents = new ArrayList<>();
+    private ArrayList<Event> historyJoinedEvents = new ArrayList<>();
+
     public ArrayList<Event> getAcceptedEvents() {
         return acceptedEvents;
     }
@@ -36,6 +39,14 @@ public class EventManager {
 
     public ArrayList<Event> getPendingEvents() {
         return pendingEvents;
+    }
+
+    public ArrayList<Event> getHistoryHostedEvents() {
+        return historyHostedEvents;
+    }
+
+    public ArrayList<Event> getHistoryJoinedEvents() {
+        return historyJoinedEvents;
     }
 
     /**
@@ -123,21 +134,22 @@ public class EventManager {
     }
 
     public HashMap<String, ArrayList<Event>> getEligibleEventList() {
-        if(eligibleEventList.isEmpty()){
-            //we pretend these are the hobbies for now
-            String[] hobbies = {"basketball", "football", "fishing", "cooking"};
-            for(int i=0; i<hobbies.length;i++) {
-                eligibleEventList.put(hobbies[i], new ArrayList<Event>());
-            }
-        }
         return eligibleEventList;
     }
 
-    //returns true if the event is new
-    //false otherwise
+    /**
+     * Add the event to the list of eligible events
+     * @param hobby - hobby corresponding to the event
+     * @param event - event t be added
+     * @return true if the event is added for the first time to the list, false if the event is only updated
+     */
     public boolean  addEligibleEvent(String hobby, Event event){
         boolean res = true;
-        if(eligibleEventList.get(hobby).contains(event)){
+        //check if there is a list corresponding to the hobby
+        if(eligibleEventList.get(hobby) == null){
+            eligibleEventList.put(hobby, new ArrayList<Event>());
+        }
+        else if(eligibleEventList.get(hobby).contains(event)){
             eligibleEventList.get(hobby).remove(event);
             res = false;
         }
@@ -241,15 +253,24 @@ public class EventManager {
         return false;
     }
 
-
-    public void findAndRemoveEvents(HashSet<String> topics, ArrayList<String> hobbies) {
+    /**
+     * Remove all events that do not match the given topics or that have expired (they have already happened).
+     * @param topics - topics corresponding to the events to be removed
+     * @param hobbies - hobbies that the user currently has
+     * @return ArrayList of the events that have expired
+     */
+    public ArrayList<Event> findAndRemoveEvents(HashSet<String> topics, ArrayList<String> hobbies) {
         //TODO: this is complicated, maybe replace with a HashMap or something easier to search in
-
-
+        ArrayList<Event> oldEvents = new ArrayList<>();
         ArrayList<Event> removedEvents = new ArrayList<>();
         for(Event event : hostedEvents){
             if(topics.contains(event.getSubscribeTopic())){
                 removedEvents.add(event);
+            }
+            if(!event.isEventActive()){
+                removedEvents.add(event);
+                historyHostedEvents.add(event);
+                oldEvents.add(event);
             }
         }
         hostedEvents.removeAll(removedEvents);
@@ -258,12 +279,21 @@ public class EventManager {
             if(topics.contains(event.getSubscribeTopic())){
                 removedEvents.add(event);
             }
+            if(!event.isEventActive()){
+                removedEvents.add(event);
+                historyJoinedEvents.add(event);
+                oldEvents.add(event);
+            }
         }
         acceptedEvents.removeAll(removedEvents);
         removedEvents.clear();
         for(Event event : pendingEvents){
             if(topics.contains(event.getSubscribeTopic())){
                 removedEvents.add(event);
+            }
+            if(!event.isEventActive()){
+                removedEvents.add(event);
+                oldEvents.add(event);
             }
         }
         pendingEvents.removeAll(removedEvents);
@@ -274,17 +304,22 @@ public class EventManager {
                     if (topics.contains(event.getSubscribeTopic())) {
                         removedEvents.add(event);
                     }
+                    if (!event.isEventActive()) {
+                        removedEvents.add(event);
+                        oldEvents.add(event);
+                    }
                 }
                 eligibleEventList.get(hobby).removeAll(removedEvents);
                 removedEvents.clear();
             }
         }
-
-
-
-
+        return oldEvents;
     }
 
-
-
+    public void addHistoryHostedEvent(Event event){
+        historyHostedEvents.add(event);
+    }
+    public void addHistoryJoinedEvent(Event event){
+        historyJoinedEvents.add(event);
+    }
 }
