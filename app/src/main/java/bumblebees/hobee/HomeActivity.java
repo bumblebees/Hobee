@@ -216,8 +216,10 @@ public class HomeActivity extends AppCompatActivity {
         SessionManager sessionManager = new SessionManager(this);
 
         for(Event event:sessionManager.getEventManager().getHistoryHostedEvents()){
-            if (!event.checkRanked(Profile.getInstance().getUser())) {
+            if(event.getEvent_details().getUsers_accepted().size()>1){
+                if (!event.checkRanked(Profile.getInstance().getUser())) {
                 hostedUnrankedEvents.add(event);
+                }
             }
         }
         for(Event event:sessionManager.getEventManager().getHistoryJoinedEvents()){
