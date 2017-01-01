@@ -1,5 +1,7 @@
 package bumblebees.hobee;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -8,9 +10,15 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
+
+
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.OrientationHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,12 +28,9 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -40,6 +45,8 @@ import bumblebees.hobee.utilities.MQTTService;
 import bumblebees.hobee.utilities.Profile;
 import bumblebees.hobee.utilities.SocketIO;
 
+import static bumblebees.hobee.R.color.Bee_color_1;
+
 
 public class EventViewActivity extends AppCompatActivity {
    TextView eventName, eventDescription, eventLocation, eventDate, eventTime,eventPeople,eventGender, eventAge, eventHostName, eventHobbySkill, eventHobby;
@@ -47,24 +54,32 @@ public class EventViewActivity extends AppCompatActivity {
     private GoogleMap gMap;
     Gson g;
     String eventString;
-    LinearLayout containerUsers, containerPending;
+    LinearLayout containerUsers, containerPending, locationContainer, mapContainer;
     Event event;
     Button btnJoinEvent;
+
+
 
     OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             gMap = googleMap;
             String unparsedLocation = event.getEvent_details().getLocation();
-            unparsedLocation = unparsedLocation.substring(unparsedLocation.indexOf("(")+1,unparsedLocation.indexOf(")"));
-            String[] latlong = unparsedLocation.split(",");
-            double lat = Double.parseDouble(latlong[0]);
-            double lng = Double.parseDouble(latlong[1]);
-            LatLng position = new LatLng(lat,lng);
-            gMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng)));
-            CameraPosition cameraPosition = new CameraPosition.Builder().target(position).zoom(14.0f).build();
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
-            gMap.moveCamera(cameraUpdate);
+            try {
+                unparsedLocation = unparsedLocation.substring(unparsedLocation.indexOf("(")+1,unparsedLocation.indexOf(")"));
+                String[] latlong = unparsedLocation.split(",");
+                double lat = Double.parseDouble(latlong[0]);
+                double lng = Double.parseDouble(latlong[1]);
+                LatLng position = new LatLng(lat,lng);
+                gMap.addMarker(new MarkerOptions().position(new LatLng(lat,lng)));
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(position).zoom(14.0f).build();
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+                gMap.moveCamera(cameraUpdate);
+
+            } catch (Exception e){
+                Log.d("Error creating map",e.toString());
+            }
+
         }
     };
 
@@ -83,17 +98,35 @@ public class EventViewActivity extends AppCompatActivity {
         eventHostName = (TextView) findViewById(R.id.eventHostName);
         eventHobby = (TextView) findViewById(R.id.eventHobby);
         eventHobbySkill = (TextView)findViewById(R.id.eventHobbySkill);
-        map = (MapFragment)getFragmentManager().findFragmentById(R.id.mapFragment);
+        mapContainer =(LinearLayout)findViewById(R.id.mapContainer);
+        //map = (MapFragment)fragmentManager.findFragmentById(R.id.mapFragment);
         containerUsers = (LinearLayout) findViewById(R.id.containerUsers);
         containerPending = (LinearLayout) findViewById(R.id.containerPending);
         btnJoinEvent = (Button) findViewById(R.id.btnJoinEvent);
+        locationContainer = (LinearLayout) findViewById(R.id.locationContainer);
 
         Intent intent = getIntent();
         g = new Gson();
         eventString = intent.getStringExtra("event");
         event = g.fromJson(eventString, Event.class);
 
-        map.getMapAsync(callback);
+        if(event.getEvent_details().getLocation().contains("lat/lng:")) {
+            map = MapFragment.newInstance();
+            FragmentManager fm = getFragmentManager();
+            fm.beginTransaction().replace(R.id.mapContainer, map).commit();
+            map.getMapAsync(callback);
+        }
+        else {
+            locationContainer.removeView(mapContainer);
+            locationContainer.setOrientation(OrientationHelper.HORIZONTAL);
+            TextView location = new TextView(getApplicationContext());
+            location.setTextSize(18);
+            location.setTextColor(getResources().getColor(Bee_color_1));
+            location.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT));
+            location.setText(event.getEvent_details().getLocation());
+            locationContainer.addView(location);
+        }
+
 
         PublicUser currentUser = Profile.getInstance().getUser().getSimpleUser();
 

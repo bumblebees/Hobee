@@ -83,7 +83,8 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_weight="1" android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                android:id="@+id/locationContainer">
 
                 <TextView
                         android:text="Location:"
@@ -91,11 +92,11 @@
                         android:paddingLeft="10dp" android:gravity="left|center_vertical" android:layout_weight="0"
                         android:textSize="18sp" android:textColor="@color/Bee_color_1" android:layout_width="120dp"/>
 
-                <fragment
-                    class= "com.google.android.gms.maps.MapFragment"
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="300dp"
-                    android:id="@+id/mapFragment"
+                    android:id="@+id/mapContainer"
                     android:layout_weight="1" />
 
             </LinearLayout>
