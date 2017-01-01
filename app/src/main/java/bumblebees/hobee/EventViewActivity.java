@@ -99,7 +99,6 @@ public class EventViewActivity extends AppCompatActivity {
         eventHobby = (TextView) findViewById(R.id.eventHobby);
         eventHobbySkill = (TextView)findViewById(R.id.eventHobbySkill);
         mapContainer =(LinearLayout)findViewById(R.id.mapContainer);
-        //map = (MapFragment)fragmentManager.findFragmentById(R.id.mapFragment);
         containerUsers = (LinearLayout) findViewById(R.id.containerUsers);
         containerPending = (LinearLayout) findViewById(R.id.containerPending);
         btnJoinEvent = (Button) findViewById(R.id.btnJoinEvent);

@@ -37,6 +37,8 @@ import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
 import bumblebees.hobee.hobbycategories.HobbyCategoryListActivity;
 import bumblebees.hobee.objects.Deal;
 import bumblebees.hobee.objects.Event;
+import bumblebees.hobee.objects.PublicUser;
+import bumblebees.hobee.objects.User;
 import bumblebees.hobee.utilities.*;
 import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
@@ -44,9 +46,14 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -240,11 +247,11 @@ public class HomeActivity extends AppCompatActivity {
                             SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(gson.toJson(event), event.getEvent_details().getUsers_unrankedJson(), getApplicationContext());
                         }
                     })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
+                    .setNeutralButton("Later", new DialogInterface.OnClickListener(){
+                        public void onClick(DialogInterface dialog, int id){
                             dialog.cancel();
-                        }
-                    });
+                }
+            });
             AlertDialog alert = builder.create();
             alert.show();
         }
@@ -261,6 +268,15 @@ public class HomeActivity extends AppCompatActivity {
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.cancel();
+                            for(Event event:unRankedEvents){
+                                sendEmptyRank(event);
+                            }
+                        }
+                    })
+                    .setNeutralButton("Later", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
                         }
                     });
             AlertDialog alert = builder.create();
@@ -443,4 +459,37 @@ public class HomeActivity extends AppCompatActivity {
         });
 
     }
+
+    public void sendEmptyRank(Event event){
+        Boolean hasranked = false;
+        JSONObject rankingMessage = new JSONObject();
+        JSONArray parent = new JSONArray();
+        List<PublicUser> users = event.getEvent_details().getUsers_accepted();
+
+        //Create two dimmentional array with JSON objects
+        try {
+            for (int j = 0; j < users.size(); j++) {
+                JSONArray child = new JSONArray();
+                for (int i = 0; i < 3; i++) {
+                    if(i==0) child.put(i, users.get(j));
+                    if (i == 1){
+                        child.put(i, 0);
+                    }
+                    if(i==2) child.put(i,false);
+                }
+                parent.put(j, child);
+            }
+
+
+            rankingMessage.put("hasRanked", true);
+            rankingMessage.put("userID", Profile.getInstance().getUserID());
+            rankingMessage.put("eventID", event.getEventID());
+            rankingMessage.put("hostRep", 0);
+            rankingMessage.put("userReps", parent);
+        }
+        catch (JSONException e){
+            Log.d("Json" , e.toString());}
+        SocketIO.getInstance().sendRanking(rankingMessage);
+    }
+
 }
