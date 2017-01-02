@@ -418,6 +418,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         //refresh the user data in case something has changed
+        SocketIO.getInstance().updateUserData(loggedInUser.getUserID(), this);
         loggedInUser = session.getUser();
         boolean seeDeals = preferences.getBoolean("deals_preference", false);
         if(seeDeals){

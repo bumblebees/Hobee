@@ -75,7 +75,6 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
 
         // Spinner element
         spinnerDifficultyLevel = (Spinner) findViewById(R.id.spinner_difficulty_level);
-        //spinnerDifficultyLevel.setPrompt("Title");
 
         spinnerTimeFrom = (Spinner) findViewById(R.id.spinner_time_from);
         spinnerTimeTo = (Spinner) findViewById(R.id.spinner_time_to);
@@ -211,8 +210,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
      * @param hobby
      */
     private void getHobbyFields(Hobby hobby){
-          //  System.out.println(">>>>> getHobbyFields "  );
-        //System.out.println(hobby.getDifficultyLevel().toString());
+
             spinnerDifficultyLevel.setSelection(setSpinnerDifficultyLevel(hobby.getDifficultyLevel()));
             spinnerTimeFrom.setSelection(setSpinnerTime(hobby.getTimeFrom()));
             spinnerTimeTo.setSelection(setSpinnerTime(hobby.getTimeTo()));

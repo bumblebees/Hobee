@@ -196,10 +196,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                     user = createUser();
                     SocketIO.getInstance().updateProfile(user, getImageBase64(), RegisterUserActivity.this);
                     session.saveUser(user);
-
-                    //Creating user
-                } else {
-                    //JSONObject userJSON = createJSON();
+                } else { //Registering
                     // Set shared preferences
                     session.setPreferences(userData.getString("loginId"), userData.getString("origin"));
 
@@ -208,9 +205,6 @@ public class RegisterUserActivity extends AppCompatActivity {
                     session.saveDataAndEvents(user, new EventManager());
                     // Save user in database
                     SocketIO.getInstance().register(user, getImageBase64(), RegisterUserActivity.this);
-
-//                // Save user image on server
-//                SocketIO.getInstance().sendImage(userData.getString("loginId"), getImageBase64());
                 }
 
             }
@@ -266,24 +260,26 @@ public class RegisterUserActivity extends AppCompatActivity {
     }
 
     public User createUser(){
-        UUID uuid = UUID.randomUUID();
-        Calendar cal = Calendar.getInstance();
-        String createdTimestamp = String.valueOf(cal.getTimeInMillis()/1000L);
+
         selectedGender = (RadioButton) findViewById(gender.getCheckedRadioButtonId());
-        if (userData == null) {
-            User user = new User(uuid.toString(), session.getId(), session.getOrigin(), firstName.getText().toString(), lastName.getText().toString(),
+        if (userData == null) { //updating profile
+            User currentUser = session.getUser();
+            User updatedUser = new User(session.getUserID(), session.getId(), session.getOrigin(), firstName.getText().toString(), lastName.getText().toString(),
+                    birthday.getText().toString(), email.getText().toString(),
+                    selectedGender.getText().toString(),
+                    bio.getText().toString(), currentUser.getDateCreated(),
+                    currentUser.getRank(), currentUser.getHobbies());
+            return updatedUser;
+        } else { //registering user
+            UUID uuid = UUID.randomUUID();
+            Calendar cal = Calendar.getInstance();
+            String createdTimestamp = String.valueOf(cal.getTimeInMillis()/1000L);
+            User newUser = new User(uuid.toString(), userData.getString("loginId"), userData.getString("origin"), firstName.getText().toString(), lastName.getText().toString(),
                     birthday.getText().toString(), email.getText().toString(),
                     selectedGender.getText().toString(),
                     bio.getText().toString(), createdTimestamp,
                     new Rank(), new ArrayList<Hobby>());
-            return user;
-        } else {
-            User user = new User(uuid.toString(), userData.getString("loginId"), userData.getString("origin"), firstName.getText().toString(), lastName.getText().toString(),
-                    birthday.getText().toString(), email.getText().toString(),
-                    selectedGender.getText().toString(),
-                    bio.getText().toString(), createdTimestamp,
-                    new Rank(), new ArrayList<Hobby>());
-            return user;
+            return newUser;
         }
     }
 
