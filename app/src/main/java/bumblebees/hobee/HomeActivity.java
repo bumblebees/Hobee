@@ -1,5 +1,6 @@
 package bumblebees.hobee;
 
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -341,10 +342,16 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 // clear user from preferences
                 session.logoutUser();
+
+                //clear all other app data
+                ActivityManager activityManager = (ActivityManager)getSystemService(ACTIVITY_SERVICE);
+                activityManager.clearApplicationUserData();
+
                 // go back to login screen
                 drawerLayout.closeDrawers();
                 Intent logoutIntent = new Intent(HomeActivity.this, LoginActivity.class);
                 HomeActivity.this.startActivity(logoutIntent);
+                stopService(new Intent(HomeActivity.this, MQTTService.class));
                 break;
             default:
         }
