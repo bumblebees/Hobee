@@ -269,7 +269,6 @@ public class SocketIO {
                 SessionManager session = new SessionManager(context);
                 session.saveDataAndEvents(user, new EventManager());
                 session.setPreferences(user.getLoginId(), user.getOrigin());
-                Profile.getInstance().setUser(user);
 
                 Intent intent = new Intent(context, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -341,7 +340,7 @@ public class SocketIO {
 
     public void getEventHistory(final Context context){
         Log.d("get_event_history","is happening");
-        socket.emit("get_event_history", Profile.getInstance().getUserID(), new Ack(){
+        socket.emit("get_event_history", new SessionManager(context).getUserID(), new Ack(){
             @Override
             public void call(Object...objects){
                 JSONArray eventArray = (JSONArray) objects[0];
@@ -353,7 +352,7 @@ public class SocketIO {
                     for(int i=0;i<eventArray.length();i++){
                         try {
                             Event event = gson.fromJson(eventArray.getString(i),Event.class);
-                            if(event.isCurrentUserHost()){
+                            if(event.isUserHost(session.getUserID())){
                                 eventManager.addHistoryHostedEvent(event);
                             }
                             else{

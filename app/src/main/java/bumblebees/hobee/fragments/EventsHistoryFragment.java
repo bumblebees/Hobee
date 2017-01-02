@@ -8,14 +8,11 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-
-import com.google.gson.Gson;
 
 
 import java.util.ArrayList;
@@ -24,8 +21,6 @@ import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.utilities.HobbyExpandableListAdapter;
 import bumblebees.hobee.utilities.MQTTService;
-import bumblebees.hobee.utilities.Profile;
-import bumblebees.hobee.utilities.SocketIO;
 
 
 public class EventsHistoryFragment extends Fragment {

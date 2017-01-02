@@ -25,19 +25,23 @@ public class UserRankAdapter extends BaseAdapter {
     private String[][] ranks;
     private int repMultiplier = 150;
     private Boolean isHost = false;
+    SessionManager session;
+    String userID;
 
 
     public UserRankAdapter(Context context, ArrayList<String> userStringList, Event event) {
         //If the user that is evaluating is the host
         this.userStringList = userStringList;
         this.context = context;
-        this.isHost = event.isCurrentUserHost();
+        session = new SessionManager(context);
+        userID = session.getUserID();
+        this.isHost = event.isUserHost(userID);
 
 
         for (String str : userStringList) {
             User user = gson.fromJson(str, User.class);
             //If the user to be added to the list is the local user and he is not the host
-            if (!user.getUserID().equals(Profile.getInstance().getUserID()) && !((user.getUserID().equals(event.getEvent_details().getHost_id()))))
+            if (!user.getUserID().equals(userID) && !((user.getUserID().equals(event.getEvent_details().getHost_id()))))
                 userList.add(user);
 
             //If the user being added to the ..list is the host
@@ -158,7 +162,7 @@ public class UserRankAdapter extends BaseAdapter {
         });
         ;
 
-        if (userList.get(i).getUserID().equals(Profile.getInstance().getUserID())) {
+        if (userList.get(i).getUserID().equals(userID)) {
             seekBar.setEnabled(false);
             noShow.setEnabled(false);
         }

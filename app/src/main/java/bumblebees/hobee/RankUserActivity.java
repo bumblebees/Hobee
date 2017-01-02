@@ -3,7 +3,6 @@ package bumblebees.hobee;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +18,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import bumblebees.hobee.objects.Event;
-import bumblebees.hobee.utilities.Profile;
+import bumblebees.hobee.utilities.SessionManager;
 import bumblebees.hobee.utilities.SocketIO;
 import bumblebees.hobee.utilities.UserRankAdapter;
 
@@ -42,9 +41,6 @@ public class RankUserActivity extends AppCompatActivity {
         usersList = (ListView) findViewById(R.id.usersList);
         users = getIntent().getStringArrayListExtra("userList");
         event = gson.fromJson(getIntent().getStringExtra("event"),Event.class);
-
-        Boolean isHost = false;
-        if(event.isCurrentUserHost()) isHost = true;
 
         usersList.setAdapter(new UserRankAdapter(this,users, event));
         adapter = (UserRankAdapter) usersList.getAdapter();
@@ -85,7 +81,8 @@ public class RankUserActivity extends AppCompatActivity {
 
 
                 rankingMessage.put("hasRanked", hasranked);
-                rankingMessage.put("userID", Profile.getInstance().getUserID());
+                SessionManager session = new SessionManager(this);
+                rankingMessage.put("userID", session.getUserID());
                 rankingMessage.put("eventID", event.getEventID());
                 rankingMessage.put("hostRep", Integer.parseInt(ranks[0][1]));
                 rankingMessage.put("userReps", parent);

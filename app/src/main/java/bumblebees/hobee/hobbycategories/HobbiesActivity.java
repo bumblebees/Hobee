@@ -2,7 +2,6 @@ package bumblebees.hobee.hobbycategories;
 
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,11 +16,8 @@ import com.google.gson.Gson;
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.User;
-import bumblebees.hobee.utilities.Profile;
 import bumblebees.hobee.utilities.SessionManager;
 import bumblebees.hobee.utilities.SocketIO;
-
-import static android.R.id.list;
 
 public class HobbiesActivity extends AppCompatActivity implements OnItemSelectedListener {
 
@@ -42,6 +38,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
     ToggleButton checkBoxFriday;
     ToggleButton checkBoxSaturday;
     ToggleButton checkBoxSunday;
+    SessionManager session;
 
     Button submitBtn;
     private Gson gson = new Gson();
@@ -53,7 +50,8 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hobbies);
         String hobbyName = getIntent().getExtras().getString("HobbyName");
-        user = Profile.getInstance().getUser();
+        session = new SessionManager(this);
+        user = session.getUser();
         createHobby(hobbyName);
 
         textView = (TextView) findViewById(R.id.name);
@@ -67,10 +65,9 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         submitBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 setHobby();
-                Profile.getInstance().addOrUpdateHobby(hobby);
-                SessionManager sessionManager = new SessionManager(HobbiesActivity.this);
-                sessionManager.saveUser(Profile.getInstance().getUser());
-                SocketIO.getInstance().addHobbyToUser(hobby, Profile.getInstance().getUserID());
+                user.addOrUpdateHobby(hobby);
+
+                SocketIO.getInstance().addHobbyToUser(hobby, session.getUserID());
                 Intent saveAndGoBackIntent = new Intent(HobbiesActivity.this, HobbiesChoiceActivity.class);
                 HobbiesActivity.this.startActivity(saveAndGoBackIntent);
             }
@@ -235,7 +232,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
     }
 
     private boolean hobbyExists(String hobbyName){
-        for (Hobby hobby : Profile.getInstance().getUser().getHobbies()){
+        for (Hobby hobby : session.getUser().getHobbies()){
             System.out.println(">>>>>>>>>>>>>>>>>>>>>>HOBB EXISTS!" + hobby.getName());
             if (hobby.getName().equals(hobbyName)){
                 return true;
@@ -258,28 +255,18 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
      */
     private void setHobby(){
         hobby.setDifficultyLevel(spinnerDifficultyLevel.getSelectedItem().toString());
-       // System.out.println(hobby.getDifficultyLevel().toString());
         hobby.setTimeFrom(spinnerTimeFrom.getSelectedItem().toString());
         hobby.setTimeTo(spinnerTimeTo.getSelectedItem().toString());
         readDayOfWeek();
     }
 
-    /*
-    * Toast
-    */
-
-    //public void onItemClicked()
-
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
         String item = parent.getItemAtPosition(position).toString();
-
-        // Showing selected spinner item
-        //Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
     }
     public void onNothingSelected(AdapterView<?> arg0) {
-        // TODO Auto-generated method stub
+
     }
 
     public void addListenerOnButton() {

@@ -1,15 +1,8 @@
 package bumblebees.hobee.objects;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
-
-import bumblebees.hobee.utilities.Profile;
 
 
 public class Event {
@@ -91,8 +84,8 @@ public class Event {
         return result;
     }
 
-    public boolean isCurrentUserHost(){
-        return (event_details.getHost_id().equals(Profile.getInstance().getUserID())) ;
+    public boolean isUserHost(String userID){
+        return (event_details.getHost_id().equals(userID)) ;
      }
 
 

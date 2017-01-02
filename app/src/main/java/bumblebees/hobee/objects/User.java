@@ -168,8 +168,11 @@ public class User {
         this.rank  = rank;
     }
 
-    public void addHobby(Hobby hobby) {
-        this.hobbies.add(hobby);
+    public void addOrUpdateHobby(Hobby hobby) {
+        if(hobbies.contains(hobby)){
+            hobbies.remove(hobby);
+        }
+        hobbies.add(hobby);
     }
 
     public ArrayList<String> getHobbyNames(){
