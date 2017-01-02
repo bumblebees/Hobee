@@ -3,14 +3,11 @@ package bumblebees.hobee;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +15,8 @@ import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
 import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.User;
 import bumblebees.hobee.utilities.CropSquareTransformation;
-import bumblebees.hobee.utilities.Profile;
+import bumblebees.hobee.utilities.SessionManager;
+
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -58,27 +56,17 @@ public class UserProfileActivity extends AppCompatActivity {
 
         if (extra == null) {
             try {
-                userName.setText(Profile.getInstance().getFirstName() + " " + Profile.getInstance().getLastName());
-                userAge.setText("" + Profile.getInstance().getAge());
-                if (Profile.getInstance().getGender().equals("gender_male")) {
-                    userGender.setImageResource(R.drawable.gender_male);
-                } else {
-                    userGender.setImageResource(R.drawable.gender_female);
-                }
-                globalRank.setText(reputationToRank(Profile.getInstance().getGlobalRep()));
-                hostRank.setText(reputationToRank(Profile.getInstance().getHostlRep()));
-                noShows.setText(Integer.toString(Profile.getInstance().getNoShows()));
-                userBiography.setText(Profile.getInstance().getBio());
-                showHobbies((ArrayList<Hobby>) Profile.getInstance().getUser().getHobbies());
-                Picasso.with(this).load(Profile.getInstance().getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
+                SessionManager session = new SessionManager(this);
+                user=session.getUser();
+
             } catch (NullPointerException e) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Error seeing profile_img", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getApplicationContext(), "Error seeing profile.", Toast.LENGTH_LONG);
                 toast.show();
                 finish();
             }
 
         } else if (extra.equals("error")) {
-            Toast toast = Toast.makeText(getApplicationContext(), "Error seeing profile_img", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplicationContext(), "Error seeing profile.", Toast.LENGTH_LONG);
             toast.show();
             finish();
 
@@ -88,10 +76,11 @@ public class UserProfileActivity extends AppCompatActivity {
             editHobbies.setVisibility(View.INVISIBLE);
             editProfile.setVisibility(View.INVISIBLE);
             user = gson.fromJson(getIntent().getStringExtra("User"), User.class);
+        }
             try {
                 userName.setText(user.getFirstName() + " " + user.getLastName());
                 userAge.setText("" + user.getAge());
-                if (user.getGender().equals("gender_male")) {
+                if (user.getGender().equals("male")) {
                     userGender.setImageResource(R.drawable.gender_male);
                 } else {
                     userGender.setImageResource(R.drawable.gender_female);
@@ -103,13 +92,13 @@ public class UserProfileActivity extends AppCompatActivity {
                 Picasso.with(this).load(user.getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
                 showHobbies((ArrayList<Hobby>) user.getHobbies());
             } catch (NullPointerException e) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Error seeing profile_img", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getApplicationContext(), "Error seeing profile.", Toast.LENGTH_LONG);
                 toast.show();
                 finish();
             }
 
 
-        }
+
 
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -25,10 +25,14 @@ public class HobbyExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private ArrayList<Pair<String, ArrayList<Event>>> pairArrayList;
     Gson gson = new Gson();
+    SessionManager session;
+    String userID;
 
     public HobbyExpandableListAdapter(Context context, ArrayList<Pair<String, ArrayList<Event>>> pairArrayList) {
         this.context = context;
         this.pairArrayList = pairArrayList;
+        session = new SessionManager(context);
+        userID = session.getUserID();
     }
 
 
@@ -107,7 +111,7 @@ public class HobbyExpandableListAdapter extends BaseExpandableListAdapter {
         eventTime.setText(event.getEvent_details().getTime());
 
         //check if the logged in user is the host of the event
-        if(Profile.getInstance().getUserID().equals(event.getEvent_details().getHost_id())) {
+        if(userID.equals(event.getEvent_details().getHost_id())) {
             //show the pending count for the event
             if (event.getEvent_details().getUsers_pending().size() > 0) {
                 eventPendingCount.setVisibility(View.VISIBLE);

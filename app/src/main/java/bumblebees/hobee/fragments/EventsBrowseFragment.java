@@ -23,7 +23,7 @@ import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.utilities.HobbyExpandableListAdapter;
 import bumblebees.hobee.utilities.MQTTService;
-import bumblebees.hobee.utilities.Profile;
+import bumblebees.hobee.utilities.SessionManager;
 
 
 public class EventsBrowseFragment extends Fragment {
@@ -31,7 +31,7 @@ public class EventsBrowseFragment extends Fragment {
     Gson gson = new Gson();
     ArrayList<Pair<String, ArrayList<Event>>> content;
 
-    ArrayList<String> hobbies = Profile.getInstance().getHobbyNames();
+    ArrayList<String> hobbies;
 
     ExpandableListView eventsTabList;
     SwipeRefreshLayout refreshLayout;
@@ -65,6 +65,7 @@ public class EventsBrowseFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        hobbies = new SessionManager(getContext()).getUser().getHobbyNames();
 
         Intent intent = new Intent(getContext(), MQTTService.class);
         serviceConnection = new ServiceConnection() {

@@ -32,9 +32,9 @@ import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.EventDetails;
 import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.PublicUser;
+import bumblebees.hobee.objects.User;
 import bumblebees.hobee.utilities.DatePickerFragment;
 import bumblebees.hobee.utilities.MQTTService;
-import bumblebees.hobee.utilities.Profile;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,6 +46,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import bumblebees.hobee.utilities.SessionManager;
 import bumblebees.hobee.utilities.TimePickerFragment;
 import io.apptik.widget.MultiSlider;
 
@@ -67,6 +68,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
     TextView inputEventNumber;
     MultiSlider ageRangeSlider;
     Place place;
+    User loggedInUser;
 
 
     HashMap<String, String> areas;
@@ -82,6 +84,9 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
         View v = findViewById(android.R.id.content);
+        
+        SessionManager session = new SessionManager(this);
+        loggedInUser = session.getUser();
 
         inputEventName = (TextView) findViewById(R.id.inputEventName);
         inputEventDescription = (TextView) findViewById(R.id.inputEventDescription);
@@ -113,7 +118,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         ArrayAdapter<String> hobbySkillChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, hobbySkill);
         spinnerHobbySkillChoice.setAdapter(hobbySkillChoice);
 
-        String[] hobbyChoices = Profile.getInstance().getHobbyNames().toArray(new String[Profile.getInstance().getHobbyNames().size()]);
+        String[] hobbyChoices = loggedInUser.getHobbyNames().toArray(new String[loggedInUser.getHobbyNames().size()]);
 
         ArrayAdapter<String> hobbyChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, hobbyChoices);
 
@@ -256,7 +261,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
     public void addNewEvent() {
         long timeCreated = Calendar.getInstance().getTimeInMillis() / 1000L;
         String eventCategory = eventHobbyChoice.getSelectedItem().toString();
-        String hostID = Profile.getInstance().getUserID();
+        String hostID = loggedInUser.getUserID();
 
         UUID uuid = UUID.randomUUID();
 
@@ -278,10 +283,10 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
 
 
         ArrayList<PublicUser> acceptedUsers = new ArrayList<>();
-        PublicUser currentUser = Profile.getInstance().getUser().getSimpleUser();
+        PublicUser currentUser = loggedInUser.getSimpleUser();
         acceptedUsers.add(currentUser);
         ArrayList<String> users_unranked = new ArrayList<>();
-        users_unranked.add(Profile.getInstance().getUserID());
+        users_unranked.add(loggedInUser.getUserID());
 
         try {
             Hobby hobby = new Hobby(eventHobbyChoice.getSelectedItem().toString(), spinnerHobbySkillChoice.getSelectedItem().toString());

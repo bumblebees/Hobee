@@ -67,10 +67,10 @@ public class HomeActivity extends AppCompatActivity {
     ListView drawerList;
     TabLayout tabLayout;
     ViewPager viewPager;
-    Toolbar appToolbar;
     Gson gson;
     SharedPreferences preferences;
     MQTTService service;
+    User loggedInUser;
 
     View dealContainer;
 
@@ -90,7 +90,7 @@ public class HomeActivity extends AppCompatActivity {
 
         session = new SessionManager(getApplicationContext());
         gson = new Gson();
-        Profile.getInstance().setUser(session.getUser());
+        loggedInUser = session.getUser();
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -114,9 +114,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        session = new SessionManager(getApplicationContext());
-        Profile.getInstance().setUser(session.getUser());
-
         // Add options to the menu (empty strings can be replaced with some additional info)
         navItems.add(new NavItem("Profile", R.drawable.profile_img));
         navItems.add(new NavItem("Host event", R.drawable.add_img));
@@ -129,11 +126,11 @@ public class HomeActivity extends AppCompatActivity {
 
         // Display user name in menu
         user = (TextView) findViewById(R.id.firstName_lastName);
-        user.setText(Profile.getInstance().getFirstName() + " " + Profile.getInstance().getLastName());
+        user.setText(loggedInUser.getFirstName() + " " + loggedInUser.getLastName());
 
         // Display avatar
         avatar = (ImageView) findViewById(R.id.avatar);
-        Picasso.with(this).load(Profile.getInstance().getPicUrl()).into(avatar);
+        Picasso.with(this).load(loggedInUser.getPicUrl()).into(avatar);
 
         // Populate the Navigation Drawer with options
         drawerPane = (RelativeLayout) findViewById(R.id.drawerPane);
@@ -198,7 +195,7 @@ public class HomeActivity extends AppCompatActivity {
             snackbar.show();
         }
         //check if the user has hobbies selected and show a message if there are none
-        if(Profile.getInstance().getHobbyNames().size() == 0){
+        if(loggedInUser.getHobbyNames().size() == 0){
             Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "No hobby added to profile", Snackbar.LENGTH_INDEFINITE)
                     .setAction("go", new View.OnClickListener() {
                         @Override
@@ -224,14 +221,14 @@ public class HomeActivity extends AppCompatActivity {
 
         for(Event event:sessionManager.getEventManager().getHistoryHostedEvents()){
             if(event.getEvent_details().getUsers_accepted().size()>1){
-                if (!event.checkRanked(Profile.getInstance().getUser())) {
+                if (!event.checkRanked(loggedInUser)) {
                 hostedUnrankedEvents.add(event);
                 }
             }
         }
         for(Event event:sessionManager.getEventManager().getHistoryJoinedEvents()){
             if (event.checkHostranked()) {
-                if (!event.checkRanked(Profile.getInstance().getUser())) {
+                if (!event.checkRanked(loggedInUser)) {
                     unRankedEvents.add(event);
                 }
             }
@@ -420,6 +417,9 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        //refresh the user data in case something has changed
+        SocketIO.getInstance().updateUserData(loggedInUser.getUserID(), this);
+        loggedInUser = session.getUser();
         boolean seeDeals = preferences.getBoolean("deals_preference", false);
         if(seeDeals){
             if(service!=null){
@@ -482,7 +482,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
             rankingMessage.put("hasRanked", true);
-            rankingMessage.put("userID", Profile.getInstance().getUserID());
+            rankingMessage.put("userID", loggedInUser.getUserID());
             rankingMessage.put("eventID", event.getEventID());
             rankingMessage.put("hostRep", 0);
             rankingMessage.put("userReps", parent);

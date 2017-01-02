@@ -3,16 +3,9 @@ package bumblebees.hobee.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -23,7 +16,6 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -31,11 +23,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import bumblebees.hobee.EventViewActivity;
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
-import bumblebees.hobee.utilities.MQTTService;
-import bumblebees.hobee.utilities.Profile;
 
 public class CancelEventDialogFragment extends DialogFragment{
 

@@ -1,6 +1,5 @@
 package bumblebees.hobee;
 
-import android.*;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -17,7 +16,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
@@ -30,14 +28,12 @@ import bumblebees.hobee.utilities.CropSquareTransformation;
 import bumblebees.hobee.utilities.EventManager;
 import bumblebees.hobee.utilities.SessionManager;
 import bumblebees.hobee.utilities.SocketIO;
-import bumblebees.hobee.utilities.Profile;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -140,18 +136,19 @@ public class RegisterUserActivity extends AppCompatActivity {
         }
 
         if (userData == null) {
-            firstName.setText(Profile.getInstance().getFirstName());
-            lastName.setText(Profile.getInstance().getLastName());
-            birthday.setText(Profile.getInstance().getBirthday());
+            User loggedInUser = session.getUser();
+            firstName.setText(loggedInUser.getFirstName());
+            lastName.setText(loggedInUser.getLastName());
+            birthday.setText(loggedInUser.getBirthday());
             termsOfServiceCheckBox.setChecked(true);
-            if (Profile.getInstance().getGender().equals("gender_male")) {
+            if (loggedInUser.getGender().equals("male")) {
                 genderMale.setChecked(true);
             } else {
                 genderFemale.setChecked(true);
             }
-            email.setText(Profile.getInstance().getEmail());
-            bio.setText(Profile.getInstance().getBio());
-            Picasso.with(this).load(Profile.getInstance().getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
+            email.setText(loggedInUser.getEmail());
+            bio.setText(loggedInUser.getBio());
+            Picasso.with(this).load(loggedInUser.getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
 
         } else {
             // Set fields with extracted user data
@@ -197,25 +194,17 @@ public class RegisterUserActivity extends AppCompatActivity {
                 //Updating
                 if (userData == null) {
                     user = createUser();
-                    Profile.getInstance().setUser(user);
                     SocketIO.getInstance().updateProfile(user, getImageBase64(), RegisterUserActivity.this);
                     session.saveUser(user);
-
-                    //Creating user
-                } else {
-                    //JSONObject userJSON = createJSON();
+                } else { //Registering
                     // Set shared preferences
                     session.setPreferences(userData.getString("loginId"), userData.getString("origin"));
 
                     // Set user instance
                     user = createUser();
-                    Profile.getInstance().setUser(user);
                     session.saveDataAndEvents(user, new EventManager());
                     // Save user in database
                     SocketIO.getInstance().register(user, getImageBase64(), RegisterUserActivity.this);
-
-//                // Save user image on server
-//                SocketIO.getInstance().sendImage(userData.getString("loginId"), getImageBase64());
                 }
 
             }
@@ -271,27 +260,26 @@ public class RegisterUserActivity extends AppCompatActivity {
     }
 
     public User createUser(){
-        UUID uuid = UUID.randomUUID();
-        Calendar cal = Calendar.getInstance();
-        String createdTimestamp = String.valueOf(cal.getTimeInMillis()/1000L);
+
         selectedGender = (RadioButton) findViewById(gender.getCheckedRadioButtonId());
-        if (selectedGender == null) {
-            System.out.println("NULL");
-        }
-        if (userData == null) {
-            User user = new User(uuid.toString(), Profile.getInstance().getLoginId(), Profile.getInstance().getOrigin(), firstName.getText().toString(), lastName.getText().toString(),
+        if (userData == null) { //updating profile
+            User currentUser = session.getUser();
+            User updatedUser = new User(session.getUserID(), session.getId(), session.getOrigin(), firstName.getText().toString(), lastName.getText().toString(),
+                    birthday.getText().toString(), email.getText().toString(),
+                    selectedGender.getText().toString(),
+                    bio.getText().toString(), currentUser.getDateCreated(),
+                    currentUser.getRank(), currentUser.getHobbies());
+            return updatedUser;
+        } else { //registering user
+            UUID uuid = UUID.randomUUID();
+            Calendar cal = Calendar.getInstance();
+            String createdTimestamp = String.valueOf(cal.getTimeInMillis()/1000L);
+            User newUser = new User(uuid.toString(), userData.getString("loginId"), userData.getString("origin"), firstName.getText().toString(), lastName.getText().toString(),
                     birthday.getText().toString(), email.getText().toString(),
                     selectedGender.getText().toString(),
                     bio.getText().toString(), createdTimestamp,
                     new Rank(), new ArrayList<Hobby>());
-            return user;
-        } else {
-            User user = new User(uuid.toString(), userData.getString("loginId"), userData.getString("origin"), firstName.getText().toString(), lastName.getText().toString(),
-                    birthday.getText().toString(), email.getText().toString(),
-                    selectedGender.getText().toString(),
-                    bio.getText().toString(), createdTimestamp,
-                    new Rank(), new ArrayList<Hobby>());
-            return user;
+            return newUser;
         }
     }
 

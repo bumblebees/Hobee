@@ -233,6 +233,12 @@ public class SocketIO {
         packageContext.startActivity(intent);
     }
 
+    /**
+     * Update the user profile in the DB.
+     * @param user - user with updated information
+     * @param imageString - image data
+     * @param packageContext - context
+     */
     public void updateProfile(final User user, String imageString, final Context packageContext) {
 
         final JSONObject userImage = new JSONObject();
@@ -269,13 +275,29 @@ public class SocketIO {
                 SessionManager session = new SessionManager(context);
                 session.saveDataAndEvents(user, new EventManager());
                 session.setPreferences(user.getLoginId(), user.getOrigin());
-                Profile.getInstance().setUser(user);
 
                 Intent intent = new Intent(context, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 SocketIO.getInstance().getEventHistory(context);
                 Log.d("getUserAndLogin","Running");
                 context.startActivity(intent);
+            }
+        });
+    }
+
+    /**
+     * Retrieve the user data from the database to check for updates (such as ranking).
+     * @param UUID - id of the logged in user
+     * @param context - application context
+     */
+    public void updateUserData(final String UUID, final Context context){
+        socket.emit("get_userUUID", UUID, new Ack() {
+            @Override
+            public void call(Object... objects) {
+                JSONObject userJSON = (JSONObject) objects[0];
+                User user = gson.fromJson(String.valueOf(userJSON), User.class);
+                SessionManager session = new SessionManager(context);
+                session.saveUser(user);
             }
         });
     }
@@ -304,6 +326,11 @@ public class SocketIO {
     }
 
 
+    /**
+     * Add or update a hobby to the account with the corresponding UserID.
+     * @param hobby - hobby to be added/updated
+     * @param userID - UUID of the user
+     */
     public void addHobbyToUser(Hobby hobby, String userID) {
         JSONObject obj = new JSONObject();
         try {
@@ -341,7 +368,7 @@ public class SocketIO {
 
     public void getEventHistory(final Context context){
         Log.d("get_event_history","is happening");
-        socket.emit("get_event_history", Profile.getInstance().getUserID(), new Ack(){
+        socket.emit("get_event_history", new SessionManager(context).getUserID(), new Ack(){
             @Override
             public void call(Object...objects){
                 JSONArray eventArray = (JSONArray) objects[0];
@@ -353,7 +380,7 @@ public class SocketIO {
                     for(int i=0;i<eventArray.length();i++){
                         try {
                             Event event = gson.fromJson(eventArray.getString(i),Event.class);
-                            if(event.isCurrentUserHost()){
+                            if(event.isUserHost(session.getUserID())){
                                 eventManager.addHistoryHostedEvent(event);
                             }
                             else{

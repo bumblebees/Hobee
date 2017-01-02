@@ -1,6 +1,5 @@
 package bumblebees.hobee;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 
 import bumblebees.hobee.utilities.*;
-import bumblebees.hobee.utilities.Profile;
 
 import com.facebook.*;
 import com.facebook.login.LoginResult;
@@ -50,7 +48,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if(session.isLoggedIn()){
             //SocketIO.getInstance().getUserAndLogin(session.getUser().getLoginId(), getApplicationContext());
 
-            Profile.getInstance().setUser(session.getUser());
             Intent intent = new Intent(this, HomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.startActivity(intent);

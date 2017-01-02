@@ -1,7 +1,6 @@
 package bumblebees.hobee;
 
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -42,7 +41,7 @@ import bumblebees.hobee.fragments.CancelEventDialogFragment;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.PublicUser;
 import bumblebees.hobee.utilities.MQTTService;
-import bumblebees.hobee.utilities.Profile;
+import bumblebees.hobee.utilities.SessionManager;
 import bumblebees.hobee.utilities.SocketIO;
 
 import static bumblebees.hobee.R.color.Bee_color_1;
@@ -57,6 +56,7 @@ public class EventViewActivity extends AppCompatActivity {
     LinearLayout containerUsers, containerPending, locationContainer, mapContainer;
     Event event;
     Button btnJoinEvent;
+    SessionManager session;
 
 
 
@@ -104,6 +104,8 @@ public class EventViewActivity extends AppCompatActivity {
         btnJoinEvent = (Button) findViewById(R.id.btnJoinEvent);
         locationContainer = (LinearLayout) findViewById(R.id.locationContainer);
 
+        session = new SessionManager(this);
+
         Intent intent = getIntent();
         g = new Gson();
         eventString = intent.getStringExtra("event");
@@ -127,7 +129,7 @@ public class EventViewActivity extends AppCompatActivity {
         }
 
 
-        PublicUser currentUser = Profile.getInstance().getUser().getSimpleUser();
+        PublicUser currentUser = session.getUser().getSimpleUser();
 
 
         //check if the event is still active
@@ -136,7 +138,7 @@ public class EventViewActivity extends AppCompatActivity {
 
             //check if the user is also the host of the event
             //if so, turn the button into one that cancels the event
-            if (event.getEvent_details().getHost_id().equals(Profile.getInstance().getUserID())) {
+            if (event.getEvent_details().getHost_id().equals(currentUser.getUserID())) {
                 btnJoinEvent.setText("Host: cancel event");
                 //btnJoinEvent.setEnabled(false);
 
@@ -274,11 +276,12 @@ public class EventViewActivity extends AppCompatActivity {
     /**
      * Adds the currently logged in user to the event, publishes it to the MQTT topic.
      * Returns to the home activity with a confirmation Toast.
-     * @param event
+     * @param event - event to be joined
      */
 
     public void joinEvent(Event event){
-        PublicUser currentUser = Profile.getInstance().getUser().getSimpleUser();
+
+        PublicUser currentUser = session.getUser().getSimpleUser();
         event.getEvent_details().addUser(currentUser);
 
         updateEvent(event);
@@ -307,6 +310,8 @@ public class EventViewActivity extends AppCompatActivity {
                 MQTTService.MQTTBinder binder = (MQTTService.MQTTBinder) iBinder;
                 MQTTService service = binder.getInstance();
                 service.addOrUpdateEvent(event);
+
+                //TODO: why is this here?
                 service.getEvents().removeEligibleEvent(event.getType(), event);
             }
 
@@ -337,9 +342,4 @@ public class EventViewActivity extends AppCompatActivity {
     public void viewUserProfile(String userID){
         SocketIO.getInstance().getUserAndOpenProfile(userID,getApplicationContext());
     }
-
-    public void rankEvent(View view){
-    }
-
-
 }
