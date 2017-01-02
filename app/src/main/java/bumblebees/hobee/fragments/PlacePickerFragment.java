@@ -31,6 +31,8 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import bumblebees.hobee.NewEventActivity;
 
@@ -80,7 +82,10 @@ public class PlacePickerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         try {
             PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+            LatLngBounds gothenburgBounds = new LatLngBounds(new LatLng(57.6,11.67), new LatLng(57.82,12.16));
+            intentBuilder.setLatLngBounds(gothenburgBounds);
             Intent intent = intentBuilder.build(getActivity());
+
             // Start the Intent by requesting a result, identified by a request code.
             startActivityForResult(intent, REQUEST_PLACE_PICKER);
 
