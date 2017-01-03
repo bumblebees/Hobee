@@ -274,7 +274,6 @@ public class EventManager {
      * @return ArrayList of the events that have expired
      */
     public ArrayList<Event> findAndRemoveEvents(HashSet<String> topics, ArrayList<String> hobbies) {
-        //TODO: this is complicated, maybe replace with a HashMap or something easier to search in
         ArrayList<Event> oldEvents = new ArrayList<>();
         ArrayList<Event> removedEvents = new ArrayList<>();
         for(Event event : hostedEvents){
@@ -283,6 +282,7 @@ public class EventManager {
             }
             if(!event.isEventActive()){
                 removedEvents.add(event);
+                historyHostedEvents.remove(event);
                 historyHostedEvents.add(event);
                 oldEvents.add(event);
             }
@@ -295,6 +295,7 @@ public class EventManager {
             }
             if(!event.isEventActive()){
                 removedEvents.add(event);
+                historyJoinedEvents.remove(event);
                 historyJoinedEvents.add(event);
                 oldEvents.add(event);
             }
@@ -328,12 +329,5 @@ public class EventManager {
             }
         }
         return oldEvents;
-    }
-
-    public void addHistoryHostedEvent(Event event){
-        historyHostedEvents.add(event);
-    }
-    public void addHistoryJoinedEvent(Event event){
-        historyJoinedEvents.add(event);
     }
 }
