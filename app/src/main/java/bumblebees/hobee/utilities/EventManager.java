@@ -29,6 +29,19 @@ public class EventManager {
     private ArrayList<Event> historyHostedEvents = new ArrayList<>();
     private ArrayList<Event> historyJoinedEvents = new ArrayList<>();
 
+    public EventManager(ArrayList<Event> acceptedEvents, HashMap<String, ArrayList<Event>> eligibleEventList, ArrayList<Event> historyHostedEvents,
+                        ArrayList<Event> historyJoinedEvents, ArrayList<Event> hostedEvents, ArrayList<Event> pendingEvents) {
+        this.acceptedEvents = acceptedEvents;
+        this.eligibleEventList = eligibleEventList;
+        this.historyHostedEvents = historyHostedEvents;
+        this.historyJoinedEvents = historyJoinedEvents;
+        this.hostedEvents = hostedEvents;
+        this.pendingEvents = pendingEvents;
+    }
+
+    public EventManager() {
+    }
+
     public ArrayList<Event> getAcceptedEvents() {
         return acceptedEvents;
     }
@@ -48,6 +61,7 @@ public class EventManager {
     public ArrayList<Event> getHistoryJoinedEvents() {
         return historyJoinedEvents;
     }
+
 
     /**
      * Check if the user belongs to the event, or if the user is eligible for the event.

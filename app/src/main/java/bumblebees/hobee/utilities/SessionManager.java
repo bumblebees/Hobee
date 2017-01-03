@@ -5,7 +5,13 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.User;
 
 public class SessionManager {
@@ -22,7 +28,13 @@ public class SessionManager {
 
     private static final String USER = "user";
     private static final String USERID = "userID";
-    private static final String EVENT_MANAGER = "eventManager";
+
+    private static final String EVENT_HOSTED = "eventHosted";
+    private static final String EVENT_JOINED = "eventJoined";
+    private static final String EVENT_PENDING = "eventPending";
+    private static final String EVENT_BROWSE = "eventBrowse";
+    private static final String EVENT_HISTORY_HOSTED = "eventHistoryHosted";
+    private static final String EVENT_HISTORY_JOINED = "eventHistoryJoined";
 
 
     /**
@@ -56,15 +68,34 @@ public class SessionManager {
      */
     public void saveDataAndEvents(User user, EventManager eventManager){
         saveUser(user);
-        saveEvents(eventManager);
+        saveAllEvents(eventManager);
     }
 
     /**
      * Save the event data to the preferences.
      * @param eventManager
      */
-    public void saveEvents(EventManager eventManager){
-        editor.putString(EVENT_MANAGER, gson.toJson(eventManager));
+    public void saveAllEvents(EventManager eventManager){
+        saveCurrentEvents(eventManager.getHostedEvents(), eventManager.getAcceptedEvents(), eventManager.getPendingEvents());
+        saveBrowseEvents(eventManager.getEligibleEventList());
+        saveEventsHistory(eventManager.getHistoryJoinedEvents(), eventManager.getHistoryHostedEvents());
+    }
+
+    public void saveCurrentEvents(ArrayList<Event> hostedEvents, ArrayList<Event> joinedEvents, ArrayList<Event> pendingEvents){
+        editor.putString(EVENT_HOSTED, gson.toJson(hostedEvents));
+        editor.putString(EVENT_PENDING, gson.toJson(pendingEvents));
+        editor.putString(EVENT_JOINED, gson.toJson(joinedEvents));
+        editor.commit();
+    }
+
+    public void saveBrowseEvents(HashMap<String, ArrayList<Event>> eligibleList){
+        editor.putString(EVENT_BROWSE, gson.toJson(eligibleList));
+        editor.commit();
+    }
+
+    public void saveEventsHistory(ArrayList<Event> joinedEvents, ArrayList<Event> hostedEvents){
+        editor.putString(EVENT_HISTORY_HOSTED, gson.toJson(hostedEvents));
+        editor.putString(EVENT_HISTORY_JOINED, gson.toJson(joinedEvents));
         editor.commit();
     }
 
@@ -108,15 +139,6 @@ public class SessionManager {
         return preferences.getString(KEY_ORIGIN, null);
     }
 
-    public EventManager getEventManager(){
-        String eventManager = preferences.getString(EVENT_MANAGER, null);
-        if(eventManager == null){
-            return null;
-        }
-        else{
-            return gson.fromJson(eventManager, EventManager.class);
-        }
-    }
 
     public User getUser(){
         String user = preferences.getString(USER, null);
@@ -131,4 +153,52 @@ public class SessionManager {
     public String getUserID() {
         return preferences.getString(USERID, null);
     }
+
+    public ArrayList<Event> getHostedEvents(){
+        return getEventListArray(EVENT_HOSTED);
+    }
+
+    public ArrayList<Event> getJoinedEvents(){
+        return getEventListArray(EVENT_JOINED);
+    }
+
+    public ArrayList<Event> getPendingEvents(){
+        return getEventListArray(EVENT_PENDING);
+    }
+
+
+    public ArrayList<Event> getHistoryJoined(){
+        return getEventListArray(EVENT_HISTORY_JOINED);
+    }
+
+    public ArrayList<Event> getHistoryHosted(){
+        return getEventListArray(EVENT_HISTORY_HOSTED);
+    }
+
+    public HashMap<String, ArrayList<Event>> getBrowseEvents(){
+        String events = preferences.getString(EVENT_BROWSE, null);
+        if(events == null){
+            return null;
+        }
+        else{
+            return gson.fromJson(events, new TypeToken<HashMap<String, ArrayList<Event>>>(){}.getType());
+        }
+    }
+
+    private ArrayList<Event> getEventListArray(String type){
+        String events = preferences.getString(type, null);
+        if(events == null){
+            return null;
+        }
+        else{
+            return gson.fromJson(events, new TypeToken<ArrayList<Event>>(){}.getType());
+        }
+
+    }
+
+    public EventManager getAllEvents(){
+        return new EventManager(getJoinedEvents(), getBrowseEvents(), getHistoryHosted(), getHistoryJoined(), getHostedEvents(), getPendingEvents());
+    }
+
+
 }

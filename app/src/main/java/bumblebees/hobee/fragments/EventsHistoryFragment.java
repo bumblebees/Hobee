@@ -21,30 +21,23 @@ import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.utilities.HobbyExpandableListAdapter;
 import bumblebees.hobee.utilities.MQTTService;
+import bumblebees.hobee.utilities.SessionManager;
 
 
 public class EventsHistoryFragment extends Fragment {
 
     ArrayList<Pair<String, ArrayList<Event>>> content;
 
-
     ExpandableListView eventsTabList;
     SwipeRefreshLayout refreshLayout;
 
     HobbyExpandableListAdapter adapter;
-    ArrayList<Event> hostedEvents = new ArrayList<>();
-    ArrayList<Event> joinedEvents = new ArrayList<>();
-    private ServiceConnection serviceConnection;
-    private MQTTService service;
-
+    SessionManager session;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         content = new ArrayList<>();
-
-        content.add(new Pair<>("Hosted events", new ArrayList<Event>()));
-        content.add(new Pair<>("Joined events", new ArrayList<Event>()));
     }
 
     @Override
@@ -55,7 +48,7 @@ public class EventsHistoryFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                adapter.notifyDataSetChanged();
+                updateData();
                 refreshLayout.setRefreshing(false);
             }
         });
@@ -66,34 +59,34 @@ public class EventsHistoryFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Intent intent = new Intent(getContext(), MQTTService.class);
-        serviceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                MQTTService.MQTTBinder binder = (MQTTService.MQTTBinder) iBinder;
-                service = binder.getInstance();
+        session = new SessionManager(getContext());
 
-                content.set(0, new Pair<>("Hosted events", service.getEvents().getHistoryHostedEvents()));
-                content.set(1, new Pair<>("Joined events", service.getEvents().getHistoryJoinedEvents()));
-
-                //expand all groups by default
-                for(int i=0;i<content.size(); i++){
-                    eventsTabList.expandGroup(i);
-                }
-                adapter.notifyDataSetChanged();
-
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-
-            }
-        };
-        getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        content.clear();
+        content.add(new Pair<>("Hosted events", session.getHistoryHosted()));
+        content.add(new Pair<>("Joined events", session.getHistoryJoined()));
 
         adapter = new HobbyExpandableListAdapter(getActivity().getApplicationContext(), content);
         eventsTabList.setAdapter(adapter);
 
+        //expand all groups by default
+        for(int i=0;i<content.size(); i++){
+            eventsTabList.expandGroup(i);
+        }
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateData();
+
+    }
+
+    private void updateData(){
+        if(adapter!= null){
+            content.set(0, new Pair<>("Hosted events", session.getHistoryHosted()));
+            content.set(1, new Pair<>("Joined events", session.getHistoryJoined()));
+            adapter.notifyDataSetChanged();
+        }
     }
 }

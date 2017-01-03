@@ -220,14 +220,14 @@ public class HomeActivity extends AppCompatActivity {
         final ArrayList<Event> hostedUnrankedEvents = new ArrayList<>();
         SessionManager sessionManager = new SessionManager(this);
 
-        for(Event event:sessionManager.getEventManager().getHistoryHostedEvents()){
+        for(Event event:sessionManager.getHistoryHosted()){
             if(event.getEvent_details().getUsers_accepted().size()>1){
                 if (!event.checkRanked(loggedInUser)) {
                 hostedUnrankedEvents.add(event);
                 }
             }
         }
-        for(Event event:sessionManager.getEventManager().getHistoryJoinedEvents()){
+        for(Event event:sessionManager.getHistoryJoined()){
             if (event.checkHostranked()) {
                 if (!event.checkRanked(loggedInUser)) {
                     unRankedEvents.add(event);

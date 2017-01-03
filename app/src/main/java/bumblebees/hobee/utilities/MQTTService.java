@@ -155,7 +155,7 @@ public class MQTTService extends Service implements MqttCallback {
                         Log.d(TAG, "something went wrong");
                     }
                 });
-                eventManager = sessionManager.getEventManager();
+                eventManager = sessionManager.getAllEvents();
                 user = sessionManager.getUser();
                 setUpRepeatingTasks();
 
@@ -232,7 +232,7 @@ public class MQTTService extends Service implements MqttCallback {
                             //do nothing
                             break;
                     }
-                    sessionManager.saveEvents(eventManager);
+                    sessionManager.saveAllEvents(eventManager);
                 } catch (Exception e) {
                     //check if the message received was a cancelled event
                     try {
@@ -253,7 +253,7 @@ public class MQTTService extends Service implements MqttCallback {
                                 //do nothing
                                 break;
                         }
-                        sessionManager.saveEvents(eventManager);
+                        sessionManager.saveAllEvents(eventManager);
                     } catch (Exception ee) {
                         //message was something that could not be processed, ignore it
                         ee.printStackTrace();
@@ -367,7 +367,7 @@ public class MQTTService extends Service implements MqttCallback {
                 removeExpiredEvent(event);
             }
             subscribedTopics = possibleTopics;
-            sessionManager.saveEvents(eventManager);
+            sessionManager.saveAllEvents(eventManager);
         }
 
     }

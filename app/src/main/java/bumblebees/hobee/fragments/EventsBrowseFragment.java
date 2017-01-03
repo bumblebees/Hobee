@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
@@ -28,7 +29,6 @@ import bumblebees.hobee.utilities.SessionManager;
 
 public class EventsBrowseFragment extends Fragment {
 
-    Gson gson = new Gson();
     ArrayList<Pair<String, ArrayList<Event>>> content;
 
     ArrayList<String> hobbies;
@@ -37,13 +37,16 @@ public class EventsBrowseFragment extends Fragment {
     SwipeRefreshLayout refreshLayout;
 
     HobbyExpandableListAdapter adapter;
-    private ServiceConnection serviceConnection;
-    private MQTTService service;
+    SessionManager session;
+
+    HashMap<String, ArrayList<Event>> browseEvents;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         content = new ArrayList<>();
+        browseEvents = new HashMap<String, ArrayList<Event>>();
 
     }
 
@@ -55,7 +58,7 @@ public class EventsBrowseFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                adapter.notifyDataSetChanged();
+                updateData();
                 refreshLayout.setRefreshing(false);
             }
         });
@@ -65,47 +68,40 @@ public class EventsBrowseFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        hobbies = new SessionManager(getContext()).getUser().getHobbyNames();
+        session = new SessionManager(getContext());
+        hobbies = session.getUser().getHobbyNames();
+        browseEvents = session.getBrowseEvents();
 
-        Intent intent = new Intent(getContext(), MQTTService.class);
-        serviceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                MQTTService.MQTTBinder binder = (MQTTService.MQTTBinder) iBinder;
-                service = binder.getInstance();
-
-                for (String hobby : hobbies) {
-
-                    Pair<String, ArrayList<Event>> pair = new Pair<>(hobby.toUpperCase(), service.getEvents().getEligibleEventList().get(hobby));
-                    content.add(pair);
-                }
-
-                //expand all groups by default
-                for(int i=0;i<content.size(); i++){
-                    eventsTabList.expandGroup(i);
-                }
-                adapter.notifyDataSetChanged();
-
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-
-            }
-        };
-        getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        content.clear();
+        for (String hobby : hobbies) {
+            Pair<String, ArrayList<Event>> pair = new Pair<>(hobby.toUpperCase(), browseEvents.get(hobby));
+            content.add(pair);
+        }
 
         adapter = new HobbyExpandableListAdapter(getActivity().getApplicationContext(), content);
         eventsTabList.setAdapter(adapter);
 
+        //expand all groups by default
+        for(int i=0;i<content.size(); i++){
+            eventsTabList.expandGroup(i);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(adapter!= null) {
-            adapter.notifyDataSetChanged();
+       updateData();
+    }
 
+    private void updateData(){
+        if(adapter!=null){
+            browseEvents = session.getBrowseEvents();
+            for(int i =0; i<hobbies.size(); i++) {
+                Pair<String, ArrayList<Event>> pair = new Pair<>(hobbies.get(i).toUpperCase(), browseEvents.get(hobbies.get(i)));
+                content.set(i, pair);
+
+            }
+            adapter.notifyDataSetChanged();
         }
     }
 }

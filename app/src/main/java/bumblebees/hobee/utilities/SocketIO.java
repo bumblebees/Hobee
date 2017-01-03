@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import bumblebees.hobee.HomeActivity;
-import bumblebees.hobee.LoginActivity;
 import bumblebees.hobee.R;
 import bumblebees.hobee.RankUserActivity;
 import bumblebees.hobee.RegisterUserActivity;
@@ -31,12 +29,12 @@ import bumblebees.hobee.objects.User;
 import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
@@ -340,7 +338,8 @@ public class SocketIO {
             public void call(Object...objects){
                 JSONArray eventArray = (JSONArray) objects[0];
                 SessionManager session = new SessionManager(context);
-                EventManager eventManager = session.getEventManager();
+                ArrayList<Event> joinedEvents = new ArrayList<Event>();
+                ArrayList<Event> hostedEvents = new ArrayList<Event>();
                 if(eventArray == null)
                     Log.d("eventArray","is Null");
                 if(eventArray != null)
@@ -348,15 +347,15 @@ public class SocketIO {
                         try {
                             Event event = gson.fromJson(eventArray.getString(i),Event.class);
                             if(event.isUserHost(session.getUserID())){
-                                eventManager.addHistoryHostedEvent(event);
+                                hostedEvents.add(event);
                             }
                             else{
-                                eventManager.addHistoryJoinedEvent(event);
+                                joinedEvents.add(event);
                             }
 
                         } catch (JSONException e) {e.printStackTrace();}
                     }
-                session.saveEvents(eventManager);
+                session.saveEventsHistory(joinedEvents, hostedEvents);
             }
         });
     }

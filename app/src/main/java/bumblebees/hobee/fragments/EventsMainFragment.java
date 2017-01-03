@@ -22,6 +22,7 @@ import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.utilities.HobbyExpandableListAdapter;
 import bumblebees.hobee.utilities.MQTTService;
+import bumblebees.hobee.utilities.SessionManager;
 
 
 public class EventsMainFragment extends Fragment {
@@ -32,23 +33,15 @@ public class EventsMainFragment extends Fragment {
     ExpandableListView eventsTabList;
 
     HobbyExpandableListAdapter adapter;
-    private SwipeRefreshLayout refreshLayout;
-    private ServiceConnection serviceConnection;
-    private MQTTService service;
+    SwipeRefreshLayout refreshLayout;
+    SessionManager session;
+
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         content = new ArrayList<>();
-        content.add(new Pair<>("Hosted events", new ArrayList<Event>()));
-        content.add(new Pair<>("Joined events", new ArrayList<Event>()));
-        content.add(new Pair<>("Pending events", new ArrayList<Event>()));
-
-
-
     }
 
     @Override
@@ -59,10 +52,7 @@ public class EventsMainFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(service!=null){
-                    service.updateData();
-                }
-                adapter.notifyDataSetChanged();
+               updateData();
                 refreshLayout.setRefreshing(false);
             }
         });
@@ -73,47 +63,35 @@ public class EventsMainFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Intent intent = new Intent(getContext(), MQTTService.class);
-        serviceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                MQTTService.MQTTBinder binder = (MQTTService.MQTTBinder) iBinder;
-                service = binder.getInstance();
+        session = new SessionManager(getContext());
+        content.clear();
+        content.add(new Pair<>("Hosted events", session.getHostedEvents()));
+        content.add(new Pair<>("Joined events", session.getJoinedEvents()));
+        content.add(new Pair<>("Pending events", session.getPendingEvents()));
 
-                content.set(0, new Pair<>("Hosted events", service.getEvents().getHostedEvents()));
-                content.set(1, new Pair<>("Joined events", service.getEvents().getAcceptedEvents()));
-                content.set(2, new Pair<>("Pending events", service.getEvents().getPendingEvents()));
-
-
-
-                //expand all groups by default
-                for(int i=0;i<content.size(); i++){
-                  eventsTabList.expandGroup(i);
-                }
-                adapter.notifyDataSetChanged();
-
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-
-            }
-        };
-        getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         adapter = new HobbyExpandableListAdapter(getActivity().getApplicationContext(), content);
         eventsTabList.setAdapter(adapter);
+
+        //expand all groups by default
+        for(int i=0;i<content.size(); i++){
+            eventsTabList.expandGroup(i);
+        }
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(adapter!= null) {
-            adapter.notifyDataSetChanged();
+        updateData();
 
-        }
-        if(service!=null){
-            service.updateData();
+    }
+
+    private void updateData(){
+        if(adapter!=null){
+            content.set(0, new Pair<>("Hosted events", session.getHostedEvents()));
+            content.set(1, new Pair<>("Joined events", session.getJoinedEvents()));
+            content.set(2, new Pair<>("Pending events", session.getPendingEvents()));
+            adapter.notifyDataSetChanged();
         }
 
     }
