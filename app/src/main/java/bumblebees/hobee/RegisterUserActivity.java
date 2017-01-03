@@ -35,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -306,8 +307,19 @@ public class RegisterUserActivity extends AppCompatActivity {
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
 
+            int mnth = month +1;
             TextView birthday = (TextView) getActivity().findViewById(R.id.birthday);
-            birthday.setText(new StringBuilder().append(year).append("/").append(month + 1).append("/").append(day));
+
+            DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+            try {
+                Date date = (Date) formatter.parse(year + "/" + mnth + "/" + day);
+                formatter = new SimpleDateFormat("yyyy/MM/dd");
+                birthday.setText(formatter.format(date));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
         }
     }
 
