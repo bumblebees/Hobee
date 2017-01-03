@@ -27,6 +27,7 @@ public class Notification {
     private Context context;
     private NotificationCompat.Builder notificationBuilder;
     private Gson g = new Gson();
+    private boolean notificationsActive;
 
 
     public Notification(Context context){
@@ -36,15 +37,18 @@ public class Notification {
                 .setSmallIcon(R.drawable.bee)
                 .setAutoCancel(true);
 
-        //set light, sound and vibration if they have been enabled in the preferences
-        if(preferences.getBoolean("notification_light", true)){
-            notificationBuilder.setLights(0xffffff00, 2000, 2000);
-        }
-        if(preferences.getBoolean("notification_sound", false)){
-            notificationBuilder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
-        }
-        if(preferences.getBoolean("notification_vibration", true)){
-            notificationBuilder.setVibrate(new long[]{2000, 2000});
+        notificationsActive = preferences.getBoolean("notification_general", false);
+        if(notificationsActive) {
+            //set light, sound and vibration if they have been enabled in the preferences
+            if (preferences.getBoolean("notification_light", true)) {
+                notificationBuilder.setLights(0xffffff00, 2000, 2000);
+            }
+            if (preferences.getBoolean("notification_sound", false)) {
+                notificationBuilder.setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
+            }
+            if (preferences.getBoolean("notification_vibration", true)) {
+                notificationBuilder.setVibrate(new long[]{2000, 2000});
+            }
         }
     }
 
@@ -54,7 +58,7 @@ public class Notification {
      */
     public void sendNewEvent(Event event){
         //check if the notification should be sent or not
-        if(isEventNotFull(event)){
+        if(!event.isFull() && notificationsActive){
 
             notificationBuilder.setContentTitle("New event: "+event.getEvent_details().getEvent_name());
             notificationBuilder.setContentText(event.getEvent_details().getDescription());
@@ -109,45 +113,15 @@ public class Notification {
 
     }
 
-
-    /**
-     * Check if the event is full
-     * @param event - event to be checked
-     * @return true if it is not full, false otherwise
-     */
-    public boolean isEventNotFull(Event event){
-        if(event.getEvent_details().getUsers_accepted().size()==event.getEvent_details().getMaximum_people()){
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Inform the host that there are users pending to join an event.
-     * @param event - event that has been joined
-     */
-    public void sendPendingUsers(Event event){
-        if(preferences.getBoolean("notification_pending", false)) {
-            notificationBuilder.setContentTitle("Pending users: " + event.getEvent_details().getEvent_name());
-            notificationBuilder.setContentText(event.getEvent_details().getUsers_pending().size() + " people want to join the event.");
-            sendEventNotification(notificationBuilder, event);
-        }
-    }
-
-    public void checkPendingUsers(String eventManagerString){
-        EventManager eventManager = g.fromJson(eventManagerString, EventManager.class);
-        sendPendingUsersTotal(eventManager);
-    }
-
     /**
      * Inform the host how many users are waiting to join the events they are hosting.
      * Go to the homepage to see the events with pending people.
      */
-
-    private void sendPendingUsersTotal(EventManager eventManager){
+    public void sendPendingUsersTotal(){
         if(preferences.getBoolean("notification_pending", false)) {
+            SessionManager session = new SessionManager(context);
             int totalPending = 0;
-            for(Event event:eventManager.getHostedEvents()) {
+            for(Event event:session.getHostedEvents()) {
                totalPending += event.getEvent_details().getUsers_pending().size();
             }
             if (totalPending > 0) {
@@ -163,12 +137,12 @@ public class Notification {
      * @param event
      */
     public void sendUserEventAccepted(Event event){
-        notificationBuilder.setContentTitle("Event accepted: "+event.getEvent_details().getEvent_name());
-        notificationBuilder.setContentText(event.getEvent_details().getDescription());
+        if(notificationsActive) {
+            notificationBuilder.setContentTitle("Event accepted: " + event.getEvent_details().getEvent_name());
+            notificationBuilder.setContentText(event.getEvent_details().getDescription());
 
-        sendEventNotification(notificationBuilder, event);
-
-
+            sendEventNotification(notificationBuilder, event);
+        }
     }
 
     /**
@@ -176,11 +150,12 @@ public class Notification {
      * @param event
      */
     public void sendUserEventRejected(Event event){
-        notificationBuilder.setContentTitle("Event rejected: "+event.getEvent_details().getEvent_name());
-        notificationBuilder.setContentText(event.getEvent_details().getDescription());
+        if(notificationsActive) {
+            notificationBuilder.setContentTitle("Event rejected: " + event.getEvent_details().getEvent_name());
+            notificationBuilder.setContentText(event.getEvent_details().getDescription());
 
-        sendEventNotification(notificationBuilder, event);
-
+            sendEventNotification(notificationBuilder, event);
+        }
     }
 
     /**
@@ -188,11 +163,11 @@ public class Notification {
      * @param event
      */
     public void sendCancelledEvent(CancelledEvent event, String type){
-        notificationBuilder.setContentTitle("One of your "+ type +" events has been cancelled.");
-        notificationBuilder.setContentText("Reason :"+event.getReason());
+        if(notificationsActive) {
+            notificationBuilder.setContentTitle("One of your " + type + " events has been cancelled.");
+            notificationBuilder.setContentText("Reason :" + event.getReason());
 
-        sendGeneralNotification(notificationBuilder);
+            sendGeneralNotification(notificationBuilder);
+        }
     }
-
-
 }

@@ -95,7 +95,7 @@ public class EventManager {
             removePendingEvent(event);
             return UserStatus.REJECTED;
         }
-        if(matchesPreferences(event, user)){
+        if(matchesPreferences(event, user) && !event.isFull()){
             if(addEligibleEvent(event.getType(), event)){
                 return UserStatus.NEW_MATCH;
             }

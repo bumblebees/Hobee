@@ -13,6 +13,6 @@ public class PendingNotificationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        new Notification(context).checkPendingUsers(intent.getStringExtra("eventManager"));
+        new Notification(context).sendPendingUsersTotal();
     }
 }

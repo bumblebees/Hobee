@@ -157,7 +157,7 @@ public class MQTTService extends Service implements MqttCallback {
                 });
                 eventManager = sessionManager.getAllEvents();
                 user = sessionManager.getUser();
-                setUpRepeatingTasks();
+                setUpRepeatingNotifications();
 
             }
             else{
@@ -402,18 +402,14 @@ public class MQTTService extends Service implements MqttCallback {
     /**
      * Set up alarms to trigger events such as notifications.
      */
-    public void setUpRepeatingTasks(){
-        Gson gson = new Gson();
+    public void setUpRepeatingNotifications(){
         AlarmManager alarmManager;
         Intent intent = new Intent(this, PendingNotificationReceiver.class);
-        intent.putExtra("eventManager", gson.toJson(eventManager));
         PendingIntent pendingIntentAlarm = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() +
                 AlarmManager.INTERVAL_FIFTEEN_MINUTES, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntentAlarm);
-
-
     }
 
 

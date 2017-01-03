@@ -128,6 +128,14 @@ public class Event {
         else return false;
     }
 
+    /**
+     * Check if the event is full (the number of accepted people is equal to the number of slots).
+     * @return true - event is full
+     *          false - event is not full
+     */
+    public boolean isFull(){
+        return event_details.getUsers_accepted().size() == event_details.getMaximum_people();
+    }
 
 
 }
