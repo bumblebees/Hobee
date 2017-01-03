@@ -183,13 +183,13 @@ public class UserProfileActivity extends AppCompatActivity {
             hobbyName.setText(hobby.getName());
             switch (hobby.getDifficultyLevel()){
                 case "Beginner":
-                    hobbySkill.setProgress(1);
+                    hobbySkill.setProgress(0);
                     break;
                 case "Intermediate":
-                    hobbySkill.setProgress(2);
+                    hobbySkill.setProgress(1);
                     break;
                 case "Expert":
-                    hobbySkill.setProgress(3);
+                    hobbySkill.setProgress(2);
                     break;
                 default:
                     hobbySkill.setProgress(0);

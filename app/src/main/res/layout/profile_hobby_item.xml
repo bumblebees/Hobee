@@ -21,13 +21,13 @@
         android:padding="10dp" />
 
     <SeekBar
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/profileHobbySkill"
         android:layout_weight="7.33"
-        android:max="3"
+        android:max="2"
         android:progress="0"
         android:focusable="false"
-        android:padding="5dp" />
+        android:padding="5dp"
+        android:layout_width="40dp" />
 
 </LinearLayout>
