@@ -129,6 +129,9 @@ public class MQTTService extends Service implements MqttCallback {
         }
     }
 
+    /**
+     * Connect to the MQTT broker.
+     */
     public void connectMQTT(){
 
         MemoryPersistence persistence = new MemoryPersistence();
@@ -203,12 +206,10 @@ public class MQTTService extends Service implements MqttCallback {
             } else { //topic is an event topic
                 try {
                     Event event = gson.fromJson(message.toString(), Event.class);
-
+                    //send notifications based on what the event was
                     switch (eventManager.processEvent(user, event)) {
                         case HOST:
-                            Intent intent = new Intent(this, PendingNotificationReceiver.class);
-                            intent.putExtra("eventManager", gson.toJson(eventManager));
-                            PendingIntent pendingIntentAlarm = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_NO_CREATE);
+                            //do nothing
                             break;
                         case NEW_ACCEPTED:
                             new Notification(this).sendUserEventAccepted(event);
@@ -269,14 +270,6 @@ public class MQTTService extends Service implements MqttCallback {
     }
 
     /**
-     * Save data to the shared preferences and refresh the subscribed topics.
-     */
-    public void updateData(){
-        sessionManager.saveDataAndEvents(user, eventManager);
-        subscribeTopics();
-    }
-
-    /**
      * Retrieve deals from GoGoDeals.
      */
     private void getNewDeals(){
@@ -323,7 +316,10 @@ public class MQTTService extends Service implements MqttCallback {
         return deal;
     }
 
-    private void subscribeTopics(){
+    /**
+     * Subscribe to the MQTT topics.
+     */
+    public void subscribeTopics(){
 
         //also update the available deals, if the preferences allow it and if there are no more old deals to show
         boolean seeDeals = preferences.getBoolean("deals_preference", false);
@@ -402,7 +398,7 @@ public class MQTTService extends Service implements MqttCallback {
     /**
      * Set up alarms to trigger events such as notifications.
      */
-    public void setUpRepeatingNotifications(){
+    private void setUpRepeatingNotifications(){
         AlarmManager alarmManager;
         Intent intent = new Intent(this, PendingNotificationReceiver.class);
         PendingIntent pendingIntentAlarm = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);

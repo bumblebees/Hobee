@@ -427,6 +427,10 @@ public class HomeActivity extends AppCompatActivity {
         //refresh the user data in case something has changed
         SocketIO.getInstance().updateUserData(loggedInUser.getUserID(), this);
         loggedInUser = session.getUser();
+        //also update MQTT topics
+        if(service!=null){
+            service.subscribeTopics();
+        }
         boolean seeDeals = preferences.getBoolean("deals_preference", false);
         if(seeDeals){
             if(service!=null){

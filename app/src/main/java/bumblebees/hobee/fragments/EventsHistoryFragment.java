@@ -82,6 +82,9 @@ public class EventsHistoryFragment extends Fragment {
 
     }
 
+    /**
+     * Retrieve the data from the preferences again and add it to the list again.
+     */
     private void updateData(){
         if(adapter!= null){
             content.set(0, new Pair<>("Hosted events", session.getHistoryHosted()));

@@ -76,7 +76,6 @@ public class EventsMainFragment extends Fragment {
         for(int i=0;i<content.size(); i++){
             eventsTabList.expandGroup(i);
         }
-
     }
 
     @Override
@@ -86,6 +85,9 @@ public class EventsMainFragment extends Fragment {
 
     }
 
+    /**
+     * Retrieve the data from the preferences again and add it to the list again.
+     */
     private void updateData(){
         if(adapter!=null){
             content.set(0, new Pair<>("Hosted events", session.getHostedEvents()));

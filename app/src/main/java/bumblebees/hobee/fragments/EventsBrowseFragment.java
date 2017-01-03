@@ -93,13 +93,15 @@ public class EventsBrowseFragment extends Fragment {
        updateData();
     }
 
+    /**
+     * Retrieve the data from the preferences again and add it to the list again.
+     */
     private void updateData(){
         if(adapter!=null){
             browseEvents = session.getBrowseEvents();
             for(int i =0; i<hobbies.size(); i++) {
                 Pair<String, ArrayList<Event>> pair = new Pair<>(hobbies.get(i).toUpperCase(), browseEvents.get(hobbies.get(i)));
                 content.set(i, pair);
-
             }
             adapter.notifyDataSetChanged();
         }
