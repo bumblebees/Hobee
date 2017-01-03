@@ -235,8 +235,8 @@ public class EventViewActivity extends AppCompatActivity {
 
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(Long.parseLong(event.getEvent_details().getTimestamp())*1000L);
-        SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
 
         eventDate.setText(String.valueOf(sdfDate.format(cal.getTime())));
         eventTime.setText(String.valueOf(sdfTime.format(cal.getTime())));

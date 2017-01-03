@@ -191,12 +191,17 @@ public class RegisterUserActivity extends AppCompatActivity {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Updating
+
+                    //Updating
+
                 if (userData == null) {
                     user = createUser();
                     SocketIO.getInstance().updateProfile(user, getImageBase64(), RegisterUserActivity.this);
                     session.saveUser(user);
-                } else { //Registering
+                } else {
+
+                    //Registering
+
                     // Set shared preferences
                     session.setPreferences(userData.getString("loginId"), userData.getString("origin"));
 

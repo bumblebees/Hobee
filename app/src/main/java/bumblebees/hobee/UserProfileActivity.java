@@ -29,6 +29,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private TextView userName, userAge, userBiography, globalRank, hostRank, noShows;
     private User user;
     private LinearLayout hobbyContainer;
+    private String extra;
 
 
     @Override
@@ -36,7 +37,7 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        String extra = getIntent().getStringExtra("User");
+        extra = getIntent().getStringExtra("User");
 
         userName = (TextView) findViewById(R.id.userName);
 
@@ -77,25 +78,28 @@ public class UserProfileActivity extends AppCompatActivity {
             editProfile.setVisibility(View.INVISIBLE);
             user = gson.fromJson(getIntent().getStringExtra("User"), User.class);
         }
-            try {
-                userName.setText(user.getFirstName() + " " + user.getLastName());
-                userAge.setText("" + user.getAge());
-                if (user.getGender().equals("male")) {
-                    userGender.setImageResource(R.drawable.gender_male);
-                } else {
-                    userGender.setImageResource(R.drawable.gender_female);
-                }
-                globalRank.setText(reputationToRank(user.getRank().getGlobalRep()));
-                hostRank.setText(reputationToRank(user.getRank().getHostRep()));
-                noShows.setText(Integer.toString(user.getRank().getNoShows()));
-                userBiography.setText(user.getBio());
-                Picasso.with(this).load(user.getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
-                showHobbies((ArrayList<Hobby>) user.getHobbies());
-            } catch (NullPointerException e) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Error seeing profile.", Toast.LENGTH_LONG);
-                toast.show();
-                finish();
+
+        try {
+            userName.setText(user.getFirstName() + " " + user.getLastName());
+            userAge.setText("" + user.getAge());
+            if (user.getGender().equals("male")) {
+                userGender.setImageResource(R.drawable.gender_male);
             }
+            else {
+                userGender.setImageResource(R.drawable.gender_female);
+            }
+            globalRank.setText(reputationToRank(user.getRank().getGlobalRep()));
+            hostRank.setText(reputationToRank(user.getRank().getHostRep()));
+            noShows.setText(Integer.toString(user.getRank().getNoShows()));
+            userBiography.setText(user.getBio());
+            Picasso.with(this).load(user.getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
+            showHobbies((ArrayList<Hobby>) user.getHobbies());
+        }
+        catch (NullPointerException e) {
+            Toast toast = Toast.makeText(getApplicationContext(), "Error seeing profile.", Toast.LENGTH_LONG);
+            toast.show();
+            finish();
+        }
 
 
 
@@ -147,9 +151,13 @@ public class UserProfileActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent backPressIntent = new Intent(UserProfileActivity.this, HomeActivity.class);
-        startActivity(backPressIntent);
-
+        if (extra == null) {
+            Intent backPressIntent = new Intent(UserProfileActivity.this, HomeActivity.class);
+            startActivity(backPressIntent);
+        }
+        else {
+            finish();
+        }
     }
 
     /**
