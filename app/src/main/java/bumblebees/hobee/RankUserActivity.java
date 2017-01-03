@@ -31,6 +31,7 @@ public class RankUserActivity extends AppCompatActivity {
     private TextView toolbarTitle;
     private Event event;
     private Gson gson = new Gson();
+    SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class RankUserActivity extends AppCompatActivity {
 
         usersList.setAdapter(new UserRankAdapter(this,users, event));
         adapter = (UserRankAdapter) usersList.getAdapter();
+        session = new SessionManager(getApplicationContext());
 
         buttonDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,10 +63,16 @@ public class RankUserActivity extends AppCompatActivity {
         Boolean hasranked = false;
         JSONObject rankingMessage = new JSONObject();
         JSONArray parent = new JSONArray();
+        int rankSize;
+        if(event.isUserHost(session.getUserID()))
+            rankSize = users.size();
+        else
+            rankSize = users.size()-1;
+
 
         //Create two dimmentional array with JSON objects
             try {
-                for (int j = 0; j < users.size(); j++) {
+                for (int j = 0; j < rankSize; j++) {
                     JSONArray child = new JSONArray();
                     for (int i = 0; i < 3; i++) {
                         if(i==0) child.put(i, ranks[j][i]);

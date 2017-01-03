@@ -57,7 +57,7 @@ public class UserRankAdapter extends BaseAdapter {
 
             }
 
-            ranks = new String[userList.size() + 1][3];
+            ranks = new String[userList.size()][3];
         }
 
     }
