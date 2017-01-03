@@ -72,47 +72,14 @@ public class SocketIO {
     /**
      * Setup socket connection
      */
-    public void start(final Context context) {
+    public void start(Context context) {
         if (socket == null) {
             try {
                 gson = new Gson();
-
-                IO.Options opts = new IO.Options();
-                opts.reconnection = false;
-                opts.timeout = 100;
-                opts.forceNew = true;
                 String server = "http://"+context.getResources().getString(R.string.hobee_main_server)+":3001";
                 socket = IO.socket(server);
                 socket.connect();
 
-                socket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
-                    @Override
-                    public void call(Object... objects) {
-                        try {
-                            IO.Options opts = new IO.Options();
-                            opts.reconnection = false;
-                            opts.timeout = 100;
-                            socket = IO.socket("http://"+context.getResources().getString(R.string.hobee_reserver_server)+":3001");
-                            socket.connect();
-                            socket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
-                                @Override
-                                public void call(Object... objects) {
-                               //     Toast toast = Toast.makeText(context, "Hobee cannot be reached right now. Please try again later.", Toast.LENGTH_LONG);
-                               //     toast.show();
-                                }
-                            });
-                        }catch (URISyntaxException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                socket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-                    @Override
-                    public void call(Object... objects) {
-                        Log.d("socket", "disconnect");
-                        start(context);
-                    }
-                });
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
