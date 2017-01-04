@@ -22,6 +22,13 @@ public class User {
                 gender + ", bio: " + bio + ", created:" + created +", rank: "+rank + ", hobbies: " + hobbies;
     }
 
+    public boolean hasHobby(Hobby hobby){
+        for(Hobby h:hobbies)
+            if(h.getName().toLowerCase().equals(hobby.getName().toLowerCase()))
+                return true;
+        return false;
+    }
+
 
 
     public int getAge() {
@@ -182,9 +189,10 @@ public class User {
     }
 
     public Hobby getOneHobby(Hobby hobby){
-        if(hobbies.indexOf(hobby)!=-1){
-            return hobbies.get(hobbies.indexOf(hobby));
-        }
+        String hobbyName = hobby.getName();
+        for(Hobby h:hobbies)
+            if(hobbyName.toLowerCase().equals(h.getName().toLowerCase()))
+                return h;
         return null;
     }
 

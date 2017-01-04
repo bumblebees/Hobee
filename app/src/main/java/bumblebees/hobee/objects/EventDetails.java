@@ -100,7 +100,8 @@ public class EventDetails {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(Long.parseLong(this.timestamp)*1000L);
         String[] possibleDays = new String[]{"None","Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
-        return possibleDays[cal.get(Calendar.DAY_OF_WEEK)];
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+        return possibleDays[dayOfWeek];
     }
 
     /**

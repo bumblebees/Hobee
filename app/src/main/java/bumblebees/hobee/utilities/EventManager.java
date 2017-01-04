@@ -94,7 +94,8 @@ public class EventManager {
             removePendingEvent(event);
             return UserStatus.REJECTED;
         }
-        if(matchesPreferences(event, user) && !event.isFull()){
+        boolean matches = matchesPreferences(event,user);
+        if(matches && !event.isFull()){
             if(addEligibleEvent(event.getType(), event)){
                 return UserStatus.NEW_MATCH;
             }
@@ -157,6 +158,7 @@ public class EventManager {
      * @return true if the event is added for the first time to the list, false if the event is only updated
      */
     private boolean  addEligibleEvent(String hobby, Event event){
+
         boolean res = true;
         //check if there is a list corresponding to the hobby
         if(eligibleEventList.get(hobby) == null){
@@ -209,12 +211,16 @@ public class EventManager {
             }
         }
         // Check if the user has a hobby matching the event,
-        if (user.getHobbies().contains(event.getEvent_details().getHobby())) {
+        if (user.hasHobby(event.getEvent_details().getHobby())) {
             Hobby currentHobby = user.getOneHobby(event.getEvent_details().getHobby());
             // if true, check if day of week and time of day are matching too
-            if(!matchDayOfWeek(event, currentHobby) && !matchTimeOfDay(event, currentHobby)) {
-                return false;
-            }
+            boolean matchDayofWeek = matchDayOfWeek(event,currentHobby);
+            boolean matchTimeOfDay = matchTimeOfDay(event,currentHobby);
+            if(!matchDayofWeek)
+                    return false;
+                if(!matchTimeOfDay)
+                    return false;
+
             // also check difficulty level
             if(!currentHobby.getDifficultyLevel().equals(event.getEvent_details().getHobbySkill())){
                 return false;
@@ -240,7 +246,12 @@ public class EventManager {
      */
     private boolean matchTimeOfDay(Event event, Hobby hobby){
         int eventTime = event.getEvent_details().getMilitaryTime();
-        return hobby.getMilitaryTimeFrom() < eventTime && eventTime < hobby.getMilitaryTimeTo();
+        int hobbyTimeFrom = hobby.getMilitaryTimeFrom();
+        int hobbyTimeTo   = hobby.getMilitaryTimeTo();
+        if(hobbyTimeFrom <= eventTime)
+            if(eventTime <= hobbyTimeTo)
+                return true;
+        return false;
     }
 
     /**

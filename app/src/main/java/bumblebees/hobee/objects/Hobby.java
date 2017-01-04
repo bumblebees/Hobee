@@ -46,8 +46,7 @@ public class Hobby {
         this.difficultyLevel = difficultyLevel;
     }
 
-    public void setDatePreference(String datePreference){
-
+    public void addDatePreference(String datePreference){
         this.datePreference.add(datePreference);
     }
 
