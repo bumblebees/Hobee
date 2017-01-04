@@ -256,7 +256,7 @@ public class HomeActivity extends AppCompatActivity {
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             for(Event event: unRankedEvents)
-                            SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(gson.toJson(event), event.getEvent_details().getUsers_unrankedJson(), getApplicationContext());
+                            SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(gson.toJson(event), event.getEvent_details().getUsersAcceptedJson(), getApplicationContext());
                         }
                     })
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -304,8 +304,7 @@ public class HomeActivity extends AppCompatActivity {
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                             finish();
-                            System.exit(0);
-                        }
+                            android.os.Process.killProcess(android.os.Process.myPid());                        }
                     }).create().show();
         }
     }

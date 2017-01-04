@@ -39,7 +39,7 @@ public class UserRankAdapter extends BaseAdapter {
 
         for (String str : userStringList) {
             User user = gson.fromJson(str, User.class);
-            //If the user to be added to the list is the local user and he is not the host
+            //If the user to be added to the list is not the local user and he is not the host
             if (!user.getUserID().equals(userID) && !((user.getUserID().equals(event.getEvent_details().getHost_id()))))
                 userList.add(user);
 
