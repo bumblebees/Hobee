@@ -231,7 +231,8 @@ public class EventManager {
                     return false;
 
             // also check difficulty level
-            if(!currentHobby.getDifficultyLevel().equals(event.getEvent_details().getHobbySkill())){
+            currentHobby.getDifficultyLevel();
+            if(!currentHobby.getDifficultyLevel().toLowerCase().equals(event.getEvent_details().getHobbySkill().toLowerCase())){
                 return false;
             }
         }
