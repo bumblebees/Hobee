@@ -328,43 +328,41 @@ public class MQTTService extends Service implements MqttCallback {
         }
 
         possibleTopics = getPossibleTopics();
-        if (possibleTopics.equals(subscribedTopics)) { //nothing has changed
-            //do nothing
-        } else { //something has changed in the topics
-            //copy the original topic sets to modify
-            HashSet<String> cSubscribedTopics = (HashSet<String>) subscribedTopics.clone();
-            HashSet<String> cPossibleTopics = (HashSet<String>) possibleTopics.clone();
 
-            //subscribe to the additional topics
-            cPossibleTopics.removeAll(subscribedTopics);
-            for(String topic : cPossibleTopics){
-                try {
-                    if(subscribedTopics.add(topic)) {
-                        client.subscribe(topic, 1);
-                    }
-                } catch (MqttException e) {
-                    e.printStackTrace();
-                }
-            }
+        //copy the original topic sets to modify
+        HashSet<String> cSubscribedTopics = (HashSet<String>) subscribedTopics.clone();
+        HashSet<String> cPossibleTopics = (HashSet<String>) possibleTopics.clone();
 
-            //unsubscribe from the topics
-            cSubscribedTopics.removeAll(possibleTopics);
-            HashSet<String> removedTopics = new HashSet<>();
-            for(String topic : cSubscribedTopics){
-                try {
-                    client.unsubscribe(topic);
-                    removedTopics.add(topic);
-                } catch (MqttException e) {
-                    e.printStackTrace();
+        //subscribe to the additional topics
+        cPossibleTopics.removeAll(subscribedTopics);
+        for(String topic : cPossibleTopics){
+            try {
+                if(subscribedTopics.add(topic)) {
+                    client.subscribe(topic, 1);
                 }
+            } catch (MqttException e) {
+                e.printStackTrace();
             }
-            ArrayList<Event> expiredEvents = eventManager.findAndRemoveEvents(removedTopics, user.getHobbyNames());
-            for(Event event:expiredEvents){
-                removeExpiredEvent(event);
-            }
-            subscribedTopics = possibleTopics;
-            sessionManager.saveAllEvents(eventManager);
         }
+
+        //unsubscribe from the topics
+        cSubscribedTopics.removeAll(possibleTopics);
+        HashSet<String> removedTopics = new HashSet<>();
+        for(String topic : cSubscribedTopics){
+            try {
+                client.unsubscribe(topic);
+                removedTopics.add(topic);
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
+        }
+        ArrayList<Event> expiredEvents = eventManager.findAndRemoveEvents(removedTopics, user.getHobbyNames());
+        for(Event event:expiredEvents){
+            removeExpiredEvent(event);
+        }
+        subscribedTopics = possibleTopics;
+        sessionManager.saveAllEvents(eventManager);
+
 
     }
 

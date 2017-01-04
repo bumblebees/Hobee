@@ -267,9 +267,8 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
 
         UUID uuid = UUID.randomUUID();
 
-        //TODO: find a way to make this easier to parse?
         if(inputEventDate.getText().toString().equals("") || inputEventTime.getText().toString().equals("")){
-            showEventIncompleteToast();
+            Toast.makeText(getApplicationContext(), "Please fill in the date and time.", Toast.LENGTH_SHORT).show();
         }
         else {
             String timestamp = "";
@@ -283,69 +282,63 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
                 e.printStackTrace();
             }
 
+            //check if the event time is in the future
+            if (Long.parseLong(timestamp) > timeCreated) {
+                ArrayList<PublicUser> acceptedUsers = new ArrayList<>();
+                PublicUser currentUser = loggedInUser.getSimpleUser();
+                acceptedUsers.add(currentUser);
+                ArrayList<String> users_unranked = new ArrayList<>();
+                users_unranked.add(loggedInUser.getUserID());
 
-        ArrayList<PublicUser> acceptedUsers = new ArrayList<>();
-        PublicUser currentUser = loggedInUser.getSimpleUser();
-        acceptedUsers.add(currentUser);
-        ArrayList<String> users_unranked = new ArrayList<>();
-        users_unranked.add(loggedInUser.getUserID());
+                try {
+                    Hobby hobby = new Hobby(eventHobbyChoice.getSelectedItem().toString(), spinnerHobbySkillChoice.getSelectedItem().toString());
+                    EventDetails eventDetails = new EventDetails(inputEventName.getText().toString(), hostID, currentUser.getName(),
+                            Integer.parseInt(minAge.getText().toString()), Integer.parseInt(maxAge.getText().toString()), inputEventGender.getSelectedItem().toString(),
+                            timestamp, Integer.parseInt(inputEventNumber.getText().toString()), place.getLatLng().toString(), inputEventDescription.getText().toString(),
+                            new ArrayList<PublicUser>(), acceptedUsers, hobby, users_unranked);
 
-        try {
-            Hobby hobby = new Hobby(eventHobbyChoice.getSelectedItem().toString(), spinnerHobbySkillChoice.getSelectedItem().toString());
-            EventDetails eventDetails = new EventDetails(inputEventName.getText().toString(), hostID, currentUser.getName(),
-                    Integer.parseInt(minAge.getText().toString()), Integer.parseInt(maxAge.getText().toString()), inputEventGender.getSelectedItem().toString(),
-                    timestamp, Integer.parseInt(inputEventNumber.getText().toString()), place.getLatLng().toString(), inputEventDescription.getText().toString(),
-                    new ArrayList<PublicUser>(), acceptedUsers, hobby, users_unranked);
-
-            final Event event = new Event(uuid, eventCategory, String.valueOf(timeCreated), eventDetails, areas.get(spinnerLocation.getSelectedItem().toString()));
+                    final Event event = new Event(uuid, eventCategory, String.valueOf(timeCreated), eventDetails, areas.get(spinnerLocation.getSelectedItem().toString()));
 
 
-            Intent intent = new Intent(this, MQTTService.class);
-            ServiceConnection serviceConnection = new ServiceConnection() {
-                @Override
-                public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                    MQTTService.MQTTBinder binder = (MQTTService.MQTTBinder) iBinder;
-                    MQTTService service = binder.getInstance();
-                    service.addOrUpdateEvent(event);
+                    Intent intent = new Intent(this, MQTTService.class);
+                    ServiceConnection serviceConnection = new ServiceConnection() {
+                        @Override
+                        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                            MQTTService.MQTTBinder binder = (MQTTService.MQTTBinder) iBinder;
+                            MQTTService service = binder.getInstance();
+                            service.addOrUpdateEvent(event);
+                        }
+
+                        @Override
+                        public void onServiceDisconnected(ComponentName componentName) {
+
+                        }
+                    };
+                    bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+                    Context context = getApplicationContext();
+                    CharSequence text = "Event created!";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+
+                    Intent homeIntent = new Intent(NewEventActivity.this, HomeActivity.class);
+                    NewEventActivity.this.startActivity(homeIntent);
+                } catch (NullPointerException e) {
+
+                    Toast.makeText(getApplicationContext(), "Please fill in all the fields.", Toast.LENGTH_SHORT).show();
+
+                } catch (NumberFormatException e) {
+                    Toast.makeText(getApplicationContext(), "Please fill in all the fields.", Toast.LENGTH_SHORT).show();
                 }
 
-                @Override
-                public void onServiceDisconnected(ComponentName componentName) {
-
-                }
-            };
-            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-
-            Context context = getApplicationContext();
-            CharSequence text = "Event created!";
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-
-            Intent homeIntent = new Intent(NewEventActivity.this, HomeActivity.class);
-            NewEventActivity.this.startActivity(homeIntent);
-        } catch (NullPointerException e) {
-
-            showEventIncompleteToast();
-
-        }
-        catch(NumberFormatException e){
-            showEventIncompleteToast();
-        }
-
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "Events cannot be created in the past.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
-
-    /**
-     * Display a toast when all of the event is incomplete and cannot be created.
-     */
-    public void showEventIncompleteToast(){
-        Toast toast = Toast.makeText(getApplicationContext(), "Please fill in all the fields", Toast.LENGTH_SHORT);
-        toast.show();
-    }
-
-
 }
 
 
