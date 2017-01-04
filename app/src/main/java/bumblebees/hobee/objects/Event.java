@@ -1,7 +1,6 @@
 package bumblebees.hobee.objects;
 
 import java.util.Calendar;
-import java.util.List;
 import java.util.UUID;
 
 
@@ -47,7 +46,7 @@ public class Event {
 
     /**
      * Retrieves the topic where the event is posted, including the "geo" prefix and the "event/hobby/" prefix.
-     * @return
+     * @return topic string
      */
     public String getTopic(){
         return "geo/"+location+"/event/hobby/"+type+"/"+eventID;
@@ -55,7 +54,7 @@ public class Event {
 
     /**
      * Retrieves the topic where the event will be found when subscribing with a wildcard (#) instead of the ID.
-     * @return
+     * @return topic string
      */
     public String getSubscribeTopic(){
         return "geo/"+location+"/event/hobby/"+type+"/#";
@@ -95,12 +94,7 @@ public class Event {
      */
     public boolean isEventActive(){
         long currentTime = Calendar.getInstance().getTimeInMillis() / 1000L;
-        if (currentTime < Long.parseLong(event_details.getTimestamp())) {
-            //event has not passed yet
-            return true;
-        }
-        //event is over
-        else return false;
+        return currentTime < Long.parseLong(event_details.getTimestamp());
     }
 
     /**

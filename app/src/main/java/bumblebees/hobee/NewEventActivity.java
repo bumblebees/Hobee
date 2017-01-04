@@ -53,25 +53,28 @@ import io.apptik.widget.MultiSlider;
 
 public class NewEventActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, PlacePickerFragment.OnActivityResultListener {
 
-    Button btnAddEvent, setDateBtn, setTimeBtn, setLocationBtn;
-    TextView maxAge;
-    TextView minAge;
-    TextView inputEventName;
-    TextView inputEventLocation;
-    TextView inputEventDescription;
-    TextView inputEventDate;
-    TextView inputEventTime;
-    Spinner inputEventGender;
-    Spinner eventHobbyChoice;
-    Spinner spinnerLocation;
-    Spinner spinnerHobbySkillChoice;
-    TextView inputEventNumber;
-    MultiSlider ageRangeSlider;
-    Place place;
-    User loggedInUser;
+    private Button btnAddEvent;
+    private Button setDateBtn;
+    private Button setTimeBtn;
+    private Button setLocationBtn;
+    private TextView maxAge;
+    private TextView minAge;
+    private TextView inputEventName;
+    private TextView inputEventLocation;
+    private TextView inputEventDescription;
+    private TextView inputEventDate;
+    private TextView inputEventTime;
+    private Spinner inputEventGender;
+    private Spinner eventHobbyChoice;
+    private Spinner spinnerLocation;
+    private Spinner spinnerHobbySkillChoice;
+    private TextView inputEventNumber;
+    private MultiSlider ageRangeSlider;
+    private Place place;
+    private User loggedInUser;
 
 
-    HashMap<String, String> areas;
+    private HashMap<String, String> areas;
 
     @Override
     public void updateEvent(Place place) {
@@ -112,17 +115,17 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
 
         //set gender spinner options
         String[] genderOptions = getResources().getStringArray(R.array.eventGenderOptions);
-        ArrayAdapter<String> genderChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, genderOptions);
+        ArrayAdapter<String> genderChoice = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, genderOptions);
         inputEventGender.setAdapter(genderChoice);
 
         //set skill spinner options
         String[] hobbySkill = getResources().getStringArray(R.array.hobbySkillOptions);
-        ArrayAdapter<String> hobbySkillChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, hobbySkill);
+        ArrayAdapter<String> hobbySkillChoice = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, hobbySkill);
         spinnerHobbySkillChoice.setAdapter(hobbySkillChoice);
 
         String[] hobbyChoices = loggedInUser.getHobbyNames().toArray(new String[loggedInUser.getHobbyNames().size()]);
 
-        ArrayAdapter<String> hobbyChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, hobbyChoices);
+        ArrayAdapter<String> hobbyChoice = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, hobbyChoices);
 
         eventHobbyChoice.setAdapter(hobbyChoice);
 
@@ -225,7 +228,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
                     areas.put(locations[i], topics[i]);
                     finalLocations.add(locations[i]);
                 }
-                ArrayAdapter<String> locationChoice = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, finalLocations);
+                ArrayAdapter<String> locationChoice = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, finalLocations);
                 spinnerLocation.setAdapter(locationChoice);
             }
         }
@@ -260,7 +263,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
     /**
      * Creates the JSON that will be sent over MQTT using the completed fields in the form.
      */
-    public void addNewEvent() {
+    private void addNewEvent() {
         long timeCreated = Calendar.getInstance().getTimeInMillis() / 1000L;
         String eventCategory = eventHobbyChoice.getSelectedItem().toString();
         String hostID = loggedInUser.getUserID();

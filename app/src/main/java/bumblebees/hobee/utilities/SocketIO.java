@@ -34,7 +34,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
@@ -229,7 +228,7 @@ public class SocketIO {
      * @param loginId google or fb login
      */
 
-    public void getUserAndLogin(final String loginId, final Context context) {
+    private void getUserAndLogin(final String loginId, final Context context) {
 
         socket.emit("get_user", loginId, new Ack() {
             @Override
@@ -314,7 +313,7 @@ public class SocketIO {
             @Override
             public void call(Object... objects) {
                 JSONArray usersArray = (JSONArray) objects[0];
-                ArrayList<String> users = new ArrayList<String>();
+                ArrayList<String> users = new ArrayList<>();
                 if(usersArray != null)
                     for(int i=0;i<usersArray.length();i++)
                         try {users.add(usersArray.getString(i));
@@ -331,15 +330,15 @@ public class SocketIO {
     }
 
 
-    public void getEventHistory(final Context context){
+    private void getEventHistory(final Context context){
         Log.d("get_event_history","is happening");
         socket.emit("get_event_history", new SessionManager(context).getUserID(), new Ack(){
             @Override
             public void call(Object...objects){
                 JSONArray eventArray = (JSONArray) objects[0];
                 SessionManager session = new SessionManager(context);
-                ArrayList<Event> joinedEvents = new ArrayList<Event>();
-                ArrayList<Event> hostedEvents = new ArrayList<Event>();
+                ArrayList<Event> joinedEvents = new ArrayList<>();
+                ArrayList<Event> hostedEvents = new ArrayList<>();
                 if(eventArray == null)
                     Log.d("eventArray","is Null");
                 if(eventArray != null)

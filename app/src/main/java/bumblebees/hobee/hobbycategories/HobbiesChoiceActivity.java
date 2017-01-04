@@ -14,13 +14,13 @@ import bumblebees.hobee.R;
 
 public class HobbiesChoiceActivity extends AppCompatActivity {
 
-    Button showProfile;
-    ImageButton showSports;
-    ImageButton showOutdoors;
-    ImageButton showMusic;
-    ImageButton showCrafts;
-    ImageButton showCulinary;
-    ImageButton showBoardGames;
+    private Button showProfile;
+    private ImageButton showSports;
+    private ImageButton showOutdoors;
+    private ImageButton showMusic;
+    private ImageButton showCrafts;
+    private ImageButton showCulinary;
+    private ImageButton showBoardGames;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +62,7 @@ public class HobbiesChoiceActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent (HobbiesChoiceActivity.this, HobbyCategoryListActivity.class);
                 System.out.println(HobbiesChoiceActivity.this);
-                intent.putStringArrayListExtra("List", (ArrayList<String>) getSportsList());
+                intent.putStringArrayListExtra("List", getSportsList());
                 HobbiesChoiceActivity.this.startActivity(intent);
             }
         });
@@ -73,7 +73,7 @@ public class HobbiesChoiceActivity extends AppCompatActivity {
 
                 Intent intent = new Intent (HobbiesChoiceActivity.this, HobbyCategoryListActivity.class);
                 System.out.println(HobbiesChoiceActivity.this);
-                intent.putStringArrayListExtra("List", (ArrayList<String>) getOutdoorsList());
+                intent.putStringArrayListExtra("List", getOutdoorsList());
                 HobbiesChoiceActivity.this.startActivity(intent);
          //       startIntent(HobbiesChoiceActivity.this, HobbyCategoryListActivity.class, getOutdoorsList());
             }
@@ -84,7 +84,7 @@ public class HobbiesChoiceActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent (HobbiesChoiceActivity.this, HobbyCategoryListActivity.class);
                 System.out.println(HobbiesChoiceActivity.this);
-                intent.putStringArrayListExtra("List", (ArrayList<String>) getMusicList());
+                intent.putStringArrayListExtra("List", getMusicList());
                 HobbiesChoiceActivity.this.startActivity(intent);
             //    startIntent(HobbiesChoiceActivity.this, HobbyCategoryListActivity.class, getMusicList());
             }
@@ -95,7 +95,7 @@ public class HobbiesChoiceActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent (HobbiesChoiceActivity.this, HobbyCategoryListActivity.class);
                 System.out.println(HobbiesChoiceActivity.this);
-                intent.putStringArrayListExtra("List", (ArrayList<String>) getCraftsList());
+                intent.putStringArrayListExtra("List", getCraftsList());
                 HobbiesChoiceActivity.this.startActivity(intent);
          //       startIntent(HobbiesChoiceActivity.this, HobbyCategoryListActivity.class, getCraftsList());
             }
@@ -106,7 +106,7 @@ public class HobbiesChoiceActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent (HobbiesChoiceActivity.this, HobbyCategoryListActivity.class);
                 System.out.println(HobbiesChoiceActivity.this);
-                intent.putStringArrayListExtra("List", (ArrayList<String>) getCulinaryList());
+                intent.putStringArrayListExtra("List", getCulinaryList());
                 HobbiesChoiceActivity.this.startActivity(intent);
           //      startIntent(HobbiesChoiceActivity.this, HobbyCategoryListActivity.class, getCulinaryList());
             }
@@ -117,7 +117,7 @@ public class HobbiesChoiceActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent (HobbiesChoiceActivity.this, HobbyCategoryListActivity.class);
                 System.out.println(HobbiesChoiceActivity.this);
-                intent.putStringArrayListExtra("List", (ArrayList<String>) getBoardGamesList());
+                intent.putStringArrayListExtra("List", getBoardGamesList());
                 HobbiesChoiceActivity.this.startActivity(intent);
         //        startIntent(HobbiesChoiceActivity.this, HobbyCategoryListActivity.class, getBoardGamesList());
             }
@@ -128,49 +128,49 @@ public class HobbiesChoiceActivity extends AppCompatActivity {
  */
 
     private ArrayList <String> sportsList = new ArrayList<>();
-    String football = "Football";
-    String basketball = "Basketball";
+    private String football = "Football";
+    private String basketball = "Basketball";
 
-    public ArrayList<String> getSportsList() {
+    private ArrayList<String> getSportsList() {
         return sportsList;
     }
 
     private ArrayList <String> outdoorsList = new ArrayList<>();
-    String camping = "Camping";
+    private String camping = "Camping";
 
-    public ArrayList<String> getOutdoorsList() {
+    private ArrayList<String> getOutdoorsList() {
         return outdoorsList;
     }
 
     private ArrayList <String> musicList = new ArrayList<>();
-    String karaoke = "Karaoke";
-    String ballroom = "Ballroom";
+    private String karaoke = "Karaoke";
+    private String ballroom = "Ballroom";
 
-    public ArrayList<String> getMusicList() {
+    private ArrayList<String> getMusicList() {
         return musicList;
     }
 
     private ArrayList <String> craftsList = new ArrayList<>();
-    String museumTour = "Museum Tour";
+    private String museumTour = "Museum Tour";
 
-    public ArrayList<String> getCraftsList() {
+    private ArrayList<String> getCraftsList() {
         return craftsList;
     }
 
     private ArrayList <String>  culinaryList = new ArrayList<>();
-    String baking = "Baking";
-    String cooking = "Cooking";
+    private String baking = "Baking";
+    private String cooking = "Cooking";
 
-    public ArrayList<String> getCulinaryList() {
+    private ArrayList<String> getCulinaryList() {
         return culinaryList;
     }
 
     private ArrayList <String>  boardGamesList = new ArrayList<>();
-    String chess = "Chess";
-    String scrabble = "Scrabble";
-    String monopoly = "Monopoly";
+    private String chess = "Chess";
+    private String scrabble = "Scrabble";
+    private String monopoly = "Monopoly";
 
-    public ArrayList<String> getBoardGamesList() {
+    private ArrayList<String> getBoardGamesList() {
         return boardGamesList;
     }
 }

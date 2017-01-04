@@ -1,19 +1,13 @@
 package bumblebees.hobee.hobbycategories;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.media.RatingCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -26,7 +20,7 @@ import static bumblebees.hobee.R.layout.activity_hobby_category_list;
 public class HobbyCategoryListActivity extends AppCompatActivity {
 
 
-    ArrayList<String> hobbyList;
+    private ArrayList<String> hobbyList;
 
 
     @Override
@@ -38,11 +32,11 @@ public class HobbyCategoryListActivity extends AppCompatActivity {
         loopList(hobbyList);
     }
 
-    public void loopList(ArrayList<String> L) {
+    private void loopList(ArrayList<String> L) {
             getView();
 
     }
-    public void getView() {
+    private void getView() {
         TableLayout tableLayout = (TableLayout) findViewById(R.id.tableLayout);
 
         for (String hobby : hobbyList){
@@ -58,7 +52,7 @@ public class HobbyCategoryListActivity extends AppCompatActivity {
             hobbyItemView.setTextSize(18);
             hobbyItemView.setTextColor(Color.DKGRAY);
             tableLayout.addView(hobbyView);
-            final String hobbyName = hobby.toString();
+            final String hobbyName = hobby;
             System.out.println(">>>>>>>>>>>>>>" +hobbyName);
             hobbyItemView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -19,19 +19,18 @@ import java.util.ArrayList;
 
 public class UserRankAdapter extends BaseAdapter {
     private Context context;
-    private ArrayList<String> userStringList;
     private ArrayList<User> userList = new ArrayList<>();
     private Gson gson = new Gson();
     private String[][] ranks;
     private int repMultiplier = 150;
     private Boolean isHost = false;
-    SessionManager session;
-    String userID;
+    private SessionManager session;
+    private String userID;
 
 
     public UserRankAdapter(Context context, ArrayList<String> userStringList, Event event) {
         //If the user that is evaluating is the host
-        this.userStringList = userStringList;
+        ArrayList<String> userStringList1 = userStringList;
         this.context = context;
         session = new SessionManager(context);
         userID = session.getUserID();
@@ -156,11 +155,10 @@ public class UserRankAdapter extends BaseAdapter {
             public void onClick(View v) {
                 //Open user profile_img
                 Intent intent = new Intent(context, UserProfileActivity.class);
-                intent.putExtra("User", gson.toJson(userList.get(i)).toString());
+                intent.putExtra("User", gson.toJson(userList.get(i)));
                 context.startActivity(intent);
             }
         });
-        ;
 
         if (userList.get(i).getUserID().equals(userID)) {
             seekBar.setEnabled(false);

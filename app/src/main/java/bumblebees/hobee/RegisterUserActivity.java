@@ -45,31 +45,31 @@ import java.util.UUID;
 
 public class RegisterUserActivity extends AppCompatActivity {
 
-    String userGender;
-    String userBirthday;
+    private String userGender;
+    private String userBirthday;
 
-    EditText firstName;
-    EditText lastName;
-    TextView birthday;
-    EditText email;
-    RadioGroup gender;
-    RadioButton genderMale;
-    RadioButton genderFemale;
-    RadioButton selectedGender;
-    CheckBox termsOfServiceCheckBox;
-    TextView termsOfServiceBtn;
-    EditText bio;
-    ImageView userImage;
-    Button submitBtn;
-    Button setBirthdayBtn;
-    Button chooseImageBtn;
-    String source;
-    Bundle userData;
-    User user;
-    Gson gson;
-    TextView toolbarText;
+    private EditText firstName;
+    private EditText lastName;
+    private TextView birthday;
+    private EditText email;
+    private RadioGroup gender;
+    private RadioButton genderMale;
+    private RadioButton genderFemale;
+    private RadioButton selectedGender;
+    private CheckBox termsOfServiceCheckBox;
+    private TextView termsOfServiceBtn;
+    private EditText bio;
+    private ImageView userImage;
+    private Button submitBtn;
+    private Button setBirthdayBtn;
+    private Button chooseImageBtn;
+    private String source;
+    private Bundle userData;
+    private User user;
+    private Gson gson;
+    private TextView toolbarText;
 
-    SessionManager session;
+    private SessionManager session;
 
     private static final int SELECT_IMAGE = 1;
 
@@ -265,27 +265,25 @@ public class RegisterUserActivity extends AppCompatActivity {
         return object;
     }
 
-    public User createUser(){
+    private User createUser(){
 
         selectedGender = (RadioButton) findViewById(gender.getCheckedRadioButtonId());
         if (userData == null) { //updating profile
             User currentUser = session.getUser();
-            User updatedUser = new User(session.getUserID(), session.getId(), session.getOrigin(), firstName.getText().toString(), lastName.getText().toString(),
+            return new User(session.getUserID(), session.getId(), session.getOrigin(), firstName.getText().toString(), lastName.getText().toString(),
                     birthday.getText().toString(), email.getText().toString(),
                     selectedGender.getText().toString(),
                     bio.getText().toString(), currentUser.getDateCreated(),
                     currentUser.getRank(), currentUser.getHobbies());
-            return updatedUser;
         } else { //registering user
             UUID uuid = UUID.randomUUID();
             Calendar cal = Calendar.getInstance();
             String createdTimestamp = String.valueOf(cal.getTimeInMillis()/1000L);
-            User newUser = new User(uuid.toString(), userData.getString("loginId"), userData.getString("origin"), firstName.getText().toString(), lastName.getText().toString(),
+            return new User(uuid.toString(), userData.getString("loginId"), userData.getString("origin"), firstName.getText().toString(), lastName.getText().toString(),
                     birthday.getText().toString(), email.getText().toString(),
                     selectedGender.getText().toString(),
                     bio.getText().toString(), createdTimestamp,
                     new Rank(), new ArrayList<Hobby>());
-            return newUser;
         }
     }
 
@@ -312,7 +310,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
             DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
             try {
-                Date date = (Date) formatter.parse(year + "/" + mnth + "/" + day);
+                Date date = formatter.parse(year + "/" + mnth + "/" + day);
                 formatter = new SimpleDateFormat("yyyy/MM/dd");
                 birthday.setText(formatter.format(date));
             } catch (ParseException e) {
@@ -340,7 +338,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         }
     }
 
-    public String getPath(Uri uri){
+    private String getPath(Uri uri){
         String[] filePathColumn = {MediaStore.Images.Media.DATA};
         int columnIndex = 0;
         Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
@@ -357,7 +355,7 @@ public class RegisterUserActivity extends AppCompatActivity {
      * This method takes the provided or selected picture and prepares it to be sent through socket
      * @return String base64
      */
-    public String getImageBase64(){
+    private String getImageBase64(){
         BitmapDrawable bitmapDrawable = ((BitmapDrawable) userImage.getDrawable());
         Bitmap bitmap = bitmapDrawable.getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();

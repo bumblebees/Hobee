@@ -23,23 +23,21 @@ import bumblebees.hobee.utilities.SocketIO;
 import bumblebees.hobee.utilities.UserRankAdapter;
 
 public class RankUserActivity extends AppCompatActivity {
-    ListView usersList;
+    private ListView usersList;
     ArrayList<String> usersID;
-    ArrayList<String> users;
-    private Button buttonDone;
+    private ArrayList<String> users;
     private UserRankAdapter adapter;
-    private TextView toolbarTitle;
     private Event event;
     private Gson gson = new Gson();
     private boolean userIsHost;
-    SessionManager session;
+    private SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rank_user);
-        buttonDone = (Button) findViewById(R.id.bttnDone);
-        toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
+        Button buttonDone = (Button) findViewById(R.id.bttnDone);
+        TextView toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
         usersList = (ListView) findViewById(R.id.usersList);
         users = getIntent().getStringArrayListExtra("userList");
         event = gson.fromJson(getIntent().getStringExtra("event"),Event.class);

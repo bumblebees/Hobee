@@ -1,11 +1,6 @@
 package bumblebees.hobee.fragments;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Pair;
@@ -20,19 +15,18 @@ import java.util.ArrayList;
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.utilities.HobbyExpandableListAdapter;
-import bumblebees.hobee.utilities.MQTTService;
 import bumblebees.hobee.utilities.SessionManager;
 
 
 public class EventsHistoryFragment extends Fragment {
 
-    ArrayList<Pair<String, ArrayList<Event>>> content;
+    private ArrayList<Pair<String, ArrayList<Event>>> content;
 
-    ExpandableListView eventsTabList;
-    SwipeRefreshLayout refreshLayout;
+    private ExpandableListView eventsTabList;
+    private SwipeRefreshLayout refreshLayout;
 
-    HobbyExpandableListAdapter adapter;
-    SessionManager session;
+    private HobbyExpandableListAdapter adapter;
+    private SessionManager session;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -9,8 +9,6 @@ import android.widget.TimePicker;
 
 import java.util.Calendar;
 
-import bumblebees.hobee.NewEventActivity;
-
 public class TimePickerFragment extends DialogFragment
         implements TimePickerDialog.OnTimeSetListener {
 

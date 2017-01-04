@@ -6,9 +6,6 @@ package bumblebees.hobee.objects;
  */
 
 import java.util.Date;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 
 
 public class Deal {

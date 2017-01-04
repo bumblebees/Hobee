@@ -21,7 +21,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
@@ -34,14 +33,12 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
-import bumblebees.hobee.NewEventActivity;
-
 
 public class PlacePickerFragment extends Fragment {
 
 
     public interface OnActivityResultListener{
-        public void updateEvent(Place place);
+        void updateEvent(Place place);
     }
 
     private static final String TAG = "PlacePicker";
@@ -59,7 +56,7 @@ public class PlacePickerFragment extends Fragment {
      */
     private static final int REQUEST_PLACE_PICKER = 1;
 
-    OnActivityResultListener mCallback;
+    private OnActivityResultListener mCallback;
 
     @Override
     public void onAttach(Context context) {
@@ -127,7 +124,7 @@ public class PlacePickerFragment extends Fragment {
 
 
                 String name = place.getName().toString();
-                Log.d(TAG, "Place selected: " + place.getId() + " (" + name.toString() + ")");
+                Log.d(TAG, "Place selected: " + place.getId() + " (" + name + ")");
 
                 try{
                     ((PlacePickerFragment.OnActivityResultListener)getActivity()).updateEvent(place);

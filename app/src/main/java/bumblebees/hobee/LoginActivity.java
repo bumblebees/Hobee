@@ -25,12 +25,12 @@ import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    CallbackManager callbackManager;
-    LoginButton loginButton;
-    SignInButton googleLoginButton;
-    SessionManager session;
-    GoogleSignInOptions googleSignIn;
-    static GoogleApiClient googleApiClient;
+    private CallbackManager callbackManager;
+    private LoginButton loginButton;
+    private SignInButton googleLoginButton;
+    private SessionManager session;
+    private GoogleSignInOptions googleSignIn;
+    private static GoogleApiClient googleApiClient;
 
 
 
