@@ -36,19 +36,5 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-    <style name="multiSliderStyle" >
-        <item name="android:track">@drawable/multislider_track_material</item>
-        <item name="range1">@drawable/multislider_primary_mtrl_alpha</item>
-        <item name="range2">@drawable/multislider_primary_mtrl_alpha</item>
-        <item name="android:thumb">@drawable/multislider_thumb_material</item>
-        <item name="thumbColor">?android:attr/colorControlActivated</item>
-        <item name="trackColor">?android:attr/colorControlNormal</item>
-        <item name="rangeColor">?android:attr/colorControlActivated</item>
-        <item name="range1Color">?android:attr/colorControlActivated</item>
-        <item name="range2Color">?android:attr/colorControlActivated</item>
-        <item name="android:background">#0000</item>
-
-    </style>
-
 
 </resources>

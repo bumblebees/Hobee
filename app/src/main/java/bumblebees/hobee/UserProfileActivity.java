@@ -25,8 +25,6 @@ import java.util.ArrayList;
 
 public class UserProfileActivity extends AppCompatActivity {
     private Gson gson = new Gson();
-    private ImageView userImage, userGender, editProfile, editHobbies;
-    private TextView userName, userAge, userBiography, globalRank, hostRank, noShows;
     private User user;
     private LinearLayout hobbyContainer;
     private String extra;
@@ -39,17 +37,17 @@ public class UserProfileActivity extends AppCompatActivity {
 
         extra = getIntent().getStringExtra("User");
 
-        userName = (TextView) findViewById(R.id.userName);
+        TextView userName = (TextView) findViewById(R.id.userName);
 
-        userAge = (TextView) findViewById(R.id.userAge);
-        userGender = (ImageView) findViewById(R.id.userGender);
-        userBiography = (TextView) findViewById(R.id.userBiography);
-        userImage = (ImageView) findViewById(R.id.userImage);
-        globalRank = (TextView) findViewById(R.id.globalRank);
-        hostRank = (TextView) findViewById(R.id.hostRank);
-        noShows = (TextView) findViewById(R.id.noShows);
-        editProfile = (ImageView) findViewById(R.id.editProfileBtn);
-        editHobbies = (ImageView) findViewById(R.id.editHobbiesBtn);
+        TextView userAge = (TextView) findViewById(R.id.userAge);
+        ImageView userGender = (ImageView) findViewById(R.id.userGender);
+        TextView userBiography = (TextView) findViewById(R.id.userBiography);
+        ImageView userImage = (ImageView) findViewById(R.id.userImage);
+        TextView globalRank = (TextView) findViewById(R.id.globalRank);
+        TextView hostRank = (TextView) findViewById(R.id.hostRank);
+        TextView noShows = (TextView) findViewById(R.id.noShows);
+        ImageView editProfile = (ImageView) findViewById(R.id.editProfileBtn);
+        ImageView editHobbies = (ImageView) findViewById(R.id.editHobbiesBtn);
         hobbyContainer = (LinearLayout) findViewById(R.id.profileHobbyContainer);
 
 
@@ -164,7 +162,7 @@ public class UserProfileActivity extends AppCompatActivity {
      * Fill in the hobbies that the user has on their profile.
      * @param hobbies - array of hobbies
      */
-    public void showHobbies(ArrayList<Hobby> hobbies){
+    private void showHobbies(ArrayList<Hobby> hobbies){
         for(Hobby hobby : hobbies) {
             LayoutInflater inflater = LayoutInflater.from(this);
             final View hobbyView = inflater.inflate(R.layout.profile_hobby_item, hobbyContainer, false);

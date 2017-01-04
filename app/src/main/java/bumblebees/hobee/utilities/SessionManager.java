@@ -7,7 +7,6 @@ import android.content.SharedPreferences.Editor;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -18,7 +17,6 @@ public class SessionManager {
 
     private SharedPreferences preferences;
     private Editor editor;
-    private Context context;
     private Gson gson = new Gson();
 
     private static final String PREFERENCE_NAME = "HobeeSessionPreferences";
@@ -43,7 +41,7 @@ public class SessionManager {
      * @param context context
      */
     public SessionManager(Context context) {
-        this.context = context;
+        Context context1 = context;
         preferences = context.getSharedPreferences(PREFERENCE_NAME, 0);
         editor = preferences.edit();
     }
@@ -81,14 +79,14 @@ public class SessionManager {
         saveEventsHistory(eventManager.getHistoryJoinedEvents(), eventManager.getHistoryHostedEvents());
     }
 
-    public void saveCurrentEvents(ArrayList<Event> hostedEvents, ArrayList<Event> joinedEvents, ArrayList<Event> pendingEvents){
+    private void saveCurrentEvents(ArrayList<Event> hostedEvents, ArrayList<Event> joinedEvents, ArrayList<Event> pendingEvents){
         editor.putString(EVENT_HOSTED, gson.toJson(hostedEvents));
         editor.putString(EVENT_PENDING, gson.toJson(pendingEvents));
         editor.putString(EVENT_JOINED, gson.toJson(joinedEvents));
         editor.commit();
     }
 
-    public void saveBrowseEvents(HashMap<String, ArrayList<Event>> eligibleList){
+    private void saveBrowseEvents(HashMap<String, ArrayList<Event>> eligibleList){
         editor.putString(EVENT_BROWSE, gson.toJson(eligibleList));
         editor.commit();
     }
@@ -100,6 +98,13 @@ public class SessionManager {
     }
 
 
+    public Event findUpdatedPendingEvent(Event event){
+        return getBrowseEvents().get(event.getEvent_details().getHobbyName()).get(getBrowseEvents().get(event.getEvent_details().getHobbyName()).indexOf(event));
+    }
+
+    public Event findUpdatedHostEvent(Event event){
+        return getHostedEvents().get(getHostedEvents().indexOf(event));
+    }
 
 
     /**

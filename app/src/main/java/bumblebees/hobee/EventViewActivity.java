@@ -48,22 +48,34 @@ import static bumblebees.hobee.R.color.Bee_color_1;
 
 
 public class EventViewActivity extends AppCompatActivity {
-   TextView eventName, eventDescription, eventLocation, eventDate, eventTime,eventPeople,eventGender, eventAge, eventHostName, eventHobbySkill, eventHobby;
-    MapFragment map;
-    private GoogleMap gMap;
-    Gson g;
-    String eventString;
-    LinearLayout containerUsers, containerPending, locationContainer, mapContainer;
-    Event event;
-    Button btnJoinEvent;
-    SessionManager session;
+   private TextView eventName;
+    private TextView eventDescription;
+    TextView eventLocation;
+    private TextView eventDate;
+    private TextView eventTime;
+    private TextView eventPeople;
+    private TextView eventGender;
+    private TextView eventAge;
+    private TextView eventHostName;
+    private TextView eventHobbySkill;
+    private TextView eventHobby;
+    private MapFragment map;
+    private Gson g;
+    private String eventString;
+    private LinearLayout containerUsers;
+    private LinearLayout containerPending;
+    private LinearLayout locationContainer;
+    private LinearLayout mapContainer;
+    private Event event;
+    private Button btnJoinEvent;
+    private SessionManager session;
 
 
 
-    OnMapReadyCallback callback = new OnMapReadyCallback() {
+    private OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            gMap = googleMap;
+            GoogleMap gMap = googleMap;
             String unparsedLocation = event.getEvent_details().getLocation();
             try {
                 unparsedLocation = unparsedLocation.substring(unparsedLocation.indexOf("(")+1,unparsedLocation.indexOf(")"));
@@ -168,7 +180,6 @@ public class EventViewActivity extends AppCompatActivity {
                         pendingUser.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                //This needs to be fixed
                                 viewUserProfile(user.getUserID());
                             }
                         });
@@ -177,9 +188,9 @@ public class EventViewActivity extends AppCompatActivity {
                         acceptUser.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                event = session.findUpdatedHostEvent(event);
                                 event.getEvent_details().confirmUser(user);
                                 updateEvent(event);
-                                //TODO: refresh users without having to reload the entire activity
                                 finish();
                                 Intent updatedIntent = getIntent();
                                 updatedIntent.putExtra("event", g.toJson(event));
@@ -190,10 +201,9 @@ public class EventViewActivity extends AppCompatActivity {
                         rejectUser.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                event = session.findUpdatedHostEvent(event);
                                 event.getEvent_details().rejectUser(user);
                                 updateEvent(event);
-
-                                //TODO: refresh users without having to reload the entire activity
                                 finish();
                                 Intent updatedIntent = getIntent();
                                 updatedIntent.putExtra("event", g.toJson(event));
@@ -279,8 +289,9 @@ public class EventViewActivity extends AppCompatActivity {
      * @param event - event to be joined
      */
 
-    public void joinEvent(Event event){
+    private void joinEvent(Event event){
 
+        event = session.findUpdatedPendingEvent(event);
         PublicUser currentUser = session.getUser().getSimpleUser();
         event.getEvent_details().addUser(currentUser);
 
@@ -339,7 +350,7 @@ public class EventViewActivity extends AppCompatActivity {
 
     }
 
-    public void viewUserProfile(String userID){
+    private void viewUserProfile(String userID){
         SocketIO.getInstance().getUserAndOpenProfile(userID,getApplicationContext());
     }
 }

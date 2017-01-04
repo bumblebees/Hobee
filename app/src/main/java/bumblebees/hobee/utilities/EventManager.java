@@ -3,11 +3,9 @@ package bumblebees.hobee.utilities;
 
 import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.Hobby;
@@ -17,8 +15,9 @@ public class EventManager {
 
 
 
-    public enum UserStatus {HOST, NEW_ACCEPTED, OLD_ACCEPTED, PENDING, REJECTED, NEW_MATCH, OLD_MATCH, NONE};
-    public enum EventStatus {HOSTED_EVENT, ACCEPTED_EVENT, PENDING_EVENT, EVENT_NOT_FOUND};
+    public enum UserStatus {HOST, NEW_ACCEPTED, OLD_ACCEPTED, PENDING, REJECTED, NEW_MATCH, OLD_MATCH, NONE}
+
+    public enum EventStatus {HOSTED_EVENT, ACCEPTED_EVENT, PENDING_EVENT, EVENT_NOT_FOUND}
 
 
     private ArrayList<Event> hostedEvents = new ArrayList<>();
@@ -125,7 +124,7 @@ public class EventManager {
         return EventStatus.EVENT_NOT_FOUND;
     }
 
-    public void addHostedEvent(Event event){
+    private void addHostedEvent(Event event){
         if(hostedEvents.contains(event)){
             hostedEvents.remove(event);
         }
@@ -134,14 +133,14 @@ public class EventManager {
 
 
 
-    public void addPendingEvent(Event event){
+    private void addPendingEvent(Event event){
         if(pendingEvents.contains(event)){
             pendingEvents.remove(event);
         }
         pendingEvents.add(event);
     }
 
-    public void removePendingEvent(Event event){
+    private void removePendingEvent(Event event){
         if(pendingEvents.contains(event)){
             pendingEvents.remove(event);
         }
@@ -157,7 +156,7 @@ public class EventManager {
      * @param event - event t be added
      * @return true if the event is added for the first time to the list, false if the event is only updated
      */
-    public boolean  addEligibleEvent(String hobby, Event event){
+    private boolean  addEligibleEvent(String hobby, Event event){
         boolean res = true;
         //check if there is a list corresponding to the hobby
         if(eligibleEventList.get(hobby) == null){
@@ -189,7 +188,7 @@ public class EventManager {
      * @param event event to be checked
      * @return true if they match, false otherwise
      */
-    public boolean matchesPreferences(Event event, User user){
+    private boolean matchesPreferences(Event event, User user){
         //check if the user is already a member of the event or is the host
         if(event.getEvent_details().checkUser(user.getSimpleUser()) ||
                 event.getEvent_details().getHost_id().equals(user.getUserID())){
@@ -210,10 +209,16 @@ public class EventManager {
             }
         }
         // Check if the user has a hobby matching the event,
-        // if true, check if day of week and time of day are matching too
-        if (matchHobby(event, user) == true) {
-            matchDayOfWeek(event, user);
-            matchTimeOfDay(event, user);
+        if (user.getHobbies().contains(event.getEvent_details().getHobby())) {
+            Hobby currentHobby = user.getOneHobby(event.getEvent_details().getHobby());
+            // if true, check if day of week and time of day are matching too
+            if(!matchDayOfWeek(event, currentHobby) && !matchTimeOfDay(event, currentHobby)) {
+                return false;
+            }
+            // also check difficulty level
+            if(!currentHobby.getDifficultyLevel().equals(event.getEvent_details().getHobbySkill())){
+                return false;
+            }
         }
 
         return true;
@@ -222,33 +227,10 @@ public class EventManager {
     /**
      *
      * @param event
-     * @return true if hobby matches event, false otherwise
-     */
-    private boolean matchHobby(Event event, User user){
-        for (Hobby hobby : user.getHobbies()){
-            if (hobby.getName().equals(event.getEvent_details().getHobbyName())){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     *
-     * @param event
      * @return true if a day matches, false otherwise
      */
-    private boolean matchDayOfWeek(Event event, User user) {
-        for (Hobby hobby : user.getHobbies()) {
-            if (hobby.getName().equals(event.getEvent_details().getHobbyName())) {
-                for (String day : hobby.getDatePreference()) {
-                    if (day.equals(event.getEvent_details().getDayOfTheWeek())) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+    private boolean matchDayOfWeek(Event event, Hobby hobby) {
+        return hobby.getDatePreference().contains(event.getEvent_details().getDayOfTheWeek());
     }
 
     /**
@@ -256,16 +238,9 @@ public class EventManager {
      * @param event
      * @return true if time of day matches, false otherwise
      */
-    private boolean matchTimeOfDay(Event event, User user){
-        for (Hobby hobby : user.getHobbies()){
-            if (hobby.getName().equals(event.getEvent_details().getHobbyName())){
-                String eventTime = event.getEvent_details().getTime();
-                if (eventTime.equals(hobby.getTimeFrom()) && eventTime.equals(hobby.getTimeTo())){
-                    return true;
-                }
-            }
-        }
-        return false;
+    private boolean matchTimeOfDay(Event event, Hobby hobby){
+        int eventTime = event.getEvent_details().getMilitaryTime();
+        return hobby.getMilitaryTimeFrom() < eventTime && eventTime < hobby.getMilitaryTimeTo();
     }
 
     /**

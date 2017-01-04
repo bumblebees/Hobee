@@ -1,10 +1,5 @@
 package bumblebees.hobee.objects;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.widget.ImageView;
-
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.Until;
 
 import java.util.ArrayList;
@@ -17,15 +12,13 @@ import bumblebees.hobee.R;
  * All specific hobbies must extend this class,
  * some additional fields migth have to added to the subclasses
  */
-public class Hobby implements Parcelable {
+public class Hobby {
 
     //TODO: do something about this ugly hack -> see custom exclusion strategies for Gson
     //the @Until(0.2) annotation is a hack to exclude the fields from the Gson parser when creating the event json
     //create the gson parser and use any version larger than 0.2
     //Gson g = new GsonBuilder().setVersion(0.3).create();
 
-    @Until(0.2)
-    private double id;
     private String name;
     private String difficultyLevel;
     @Until(0.2)
@@ -39,23 +32,10 @@ public class Hobby implements Parcelable {
     public Hobby(String name){
         this.name = name;
     }
-    public Hobby(double id, String name){
-        this.id = id;
-        this.name = name;
-    }
 
     public Hobby(String name, String difficultyLevel){
         this.name = name;
         this.difficultyLevel = difficultyLevel;
-    }
-
-    public Hobby(Parcel in) {
-        String[] data = new String[1];
-        this.difficultyLevel = data[0];
-    }
-
-    public void setId(int id){
-         this.id = id;
     }
 
     public void setName(String name){
@@ -79,10 +59,6 @@ public class Hobby implements Parcelable {
         this.timeTo = timeTo;
     }
 
-    public double getId(){
-        return id;
-    }
-
     public String getName(){
         return name;
     }
@@ -103,28 +79,13 @@ public class Hobby implements Parcelable {
         return timeTo;
     }
 
-    @Override
-    public int describeContents(){
-        return 0;
+    public int getMilitaryTimeFrom(){
+        return Integer.parseInt(timeFrom.replace(".",""));
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeStringArray(new String[]{this.difficultyLevel});
+    public int getMilitaryTimeTo(){
+        return Integer.parseInt(timeTo.replace(".",""));
     }
-
-    public static final Parcelable.Creator<Hobby> CREATOR= new Parcelable.Creator<Hobby>(){
-        @Override
-        public Hobby createFromParcel(Parcel source){
-            return new Hobby(source);
-        }
-
-        @Override
-        public Hobby[] newArray(int size){
-            return new Hobby[size];
-        }
-    };
-
 
     @Override
     public boolean equals(Object o) {
@@ -133,19 +94,13 @@ public class Hobby implements Parcelable {
 
         Hobby hobby = (Hobby) o;
 
-        if (Double.compare(hobby.id, id) != 0) return false;
         return name != null ? name.equals(hobby.name) : hobby.name == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        temp = Double.doubleToLongBits(id);
-        result = (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
+        return name != null ? name.hashCode() : 0;
     }
 
     /**

@@ -8,8 +8,6 @@ import android.widget.DatePicker;
 
 import java.util.Calendar;
 
-import bumblebees.hobee.NewEventActivity;
-
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
 

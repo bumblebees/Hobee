@@ -1,11 +1,6 @@
 package bumblebees.hobee.fragments;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Pair;
@@ -21,20 +16,19 @@ import java.util.ArrayList;
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.utilities.HobbyExpandableListAdapter;
-import bumblebees.hobee.utilities.MQTTService;
 import bumblebees.hobee.utilities.SessionManager;
 
 
 public class EventsMainFragment extends Fragment {
 
     Gson gson = new Gson();
-    ArrayList<Pair<String, ArrayList<Event>>> content;
+    private ArrayList<Pair<String, ArrayList<Event>>> content;
 
-    ExpandableListView eventsTabList;
+    private ExpandableListView eventsTabList;
 
-    HobbyExpandableListAdapter adapter;
-    SwipeRefreshLayout refreshLayout;
-    SessionManager session;
+    private HobbyExpandableListAdapter adapter;
+    private SwipeRefreshLayout refreshLayout;
+    private SessionManager session;
 
 
 

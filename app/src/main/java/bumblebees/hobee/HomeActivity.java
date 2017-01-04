@@ -18,12 +18,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -35,7 +31,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import bumblebees.hobee.fragments.FragmentAdapter;
 import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
-import bumblebees.hobee.hobbycategories.HobbyCategoryListActivity;
 import bumblebees.hobee.objects.Deal;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.PublicUser;
@@ -58,22 +53,23 @@ import org.json.JSONObject;
 
 public class HomeActivity extends AppCompatActivity {
 
-    SessionManager session;
-    RelativeLayout drawerPane;
-    DrawerLayout drawerLayout;
-    DrawerListAdapter adapter;
-    TextView user;
-    ImageView avatar, hamburger;
-    ArrayList<NavItem> navItems = new ArrayList<>();
-    ListView drawerList;
-    TabLayout tabLayout;
-    ViewPager viewPager;
-    Gson gson;
-    SharedPreferences preferences;
-    MQTTService service;
-    User loggedInUser;
+    private SessionManager session;
+    private RelativeLayout drawerPane;
+    private DrawerLayout drawerLayout;
+    private DrawerListAdapter adapter;
+    private TextView user;
+    private ImageView avatar;
+    private ImageView hamburger;
+    private ArrayList<NavItem> navItems = new ArrayList<>();
+    private ListView drawerList;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private Gson gson;
+    private SharedPreferences preferences;
+    private MQTTService service;
+    private User loggedInUser;
 
-    View dealContainer;
+    private View dealContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,7 +172,6 @@ public class HomeActivity extends AppCompatActivity {
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
 
-        rankUsers();
 
         //show a snackbar if the user has no location set or no hobbies
         //the user cannot see any events unless both location and hobby are set
@@ -215,7 +210,7 @@ public class HomeActivity extends AppCompatActivity {
      * Checks if the user can rank an event and prompts him to do so.
      */
 
-    public void rankUsers(){
+    private void rankUsers(){
         final ArrayList<Event> unRankedEvents = new ArrayList<>();
         final ArrayList<Event> hostedUnrankedEvents = new ArrayList<>();
         SessionManager sessionManager = new SessionManager(this);
@@ -242,7 +237,7 @@ public class HomeActivity extends AppCompatActivity {
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             for(Event event:hostedUnrankedEvents)
-                            SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(gson.toJson(event), event.getEvent_details().getUsers_unrankedJson(), getApplicationContext());
+                            SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(gson.toJson(event), event.getEvent_details().getUsersAcceptedJson(), getApplicationContext());
                         }
                     })
                     .setNeutralButton("Later", new DialogInterface.OnClickListener(){
@@ -260,7 +255,7 @@ public class HomeActivity extends AppCompatActivity {
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             for(Event event: unRankedEvents)
-                            SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(gson.toJson(event), event.getEvent_details().getUsers_unrankedJson(), getApplicationContext());
+                            SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(gson.toJson(event), event.getEvent_details().getUsersAcceptedJson(), getApplicationContext());
                         }
                     })
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -308,8 +303,7 @@ public class HomeActivity extends AppCompatActivity {
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                             finish();
-                            System.exit(0);
-                        }
+                            android.os.Process.killProcess(android.os.Process.myPid());                        }
                     }).create().show();
         }
     }
@@ -428,6 +422,8 @@ public class HomeActivity extends AppCompatActivity {
         SocketIO.getInstance().updateUserData(loggedInUser.getUserID(), this);
         loggedInUser = session.getUser();
         //also update MQTT topics
+        rankUsers();
+
         if(service!=null){
             service.subscribeTopics();
         }
@@ -450,7 +446,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public void setDeal(Deal deal){
+    private void setDeal(Deal deal){
         TextView dealDescription = (TextView) dealContainer.findViewById(R.id.dealDetails);
         TextView dealName = (TextView) dealContainer.findViewById(R.id.dealName);
         Button btnDeal = (Button) dealContainer.findViewById(R.id.dealGo);
@@ -471,7 +467,7 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    public void sendEmptyRank(Event event){
+    private void sendEmptyRank(Event event){
         Boolean hasranked = false;
         JSONObject rankingMessage = new JSONObject();
         JSONArray parent = new JSONArray();

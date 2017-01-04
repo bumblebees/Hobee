@@ -3,7 +3,6 @@ package bumblebees.hobee.utilities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.provider.CalendarContract;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,15 +17,14 @@ import java.util.ArrayList;
 import bumblebees.hobee.EventViewActivity;
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
-import bumblebees.hobee.objects.Hobby;
 
 public class HobbyExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private ArrayList<Pair<String, ArrayList<Event>>> pairArrayList;
-    Gson gson = new Gson();
-    SessionManager session;
-    String userID;
+    private Gson gson = new Gson();
+    private SessionManager session;
+    private String userID;
 
     public HobbyExpandableListAdapter(Context context, ArrayList<Pair<String, ArrayList<Event>>> pairArrayList) {
         this.context = context;
@@ -80,7 +78,7 @@ public class HobbyExpandableListAdapter extends BaseExpandableListAdapter {
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
 
         Pair<String, ArrayList<Event>> pair = pairArrayList.get(i);
-;        if(view == null) {
+        if(view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.hobby_header_item, viewGroup, false);
         }
         TextView textView = (TextView)view.findViewById(R.id.eventTabHeader);

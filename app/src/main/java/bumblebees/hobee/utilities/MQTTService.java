@@ -44,14 +44,10 @@ public class MQTTService extends Service implements MqttCallback {
 
     private final String TAG = "mqttService";
 
-    SessionManager sessionManager;
-    MQTTBinder binder = new MQTTBinder();
+    private SessionManager sessionManager;
+    private MQTTBinder binder = new MQTTBinder();
 
     private MqttAndroidClient client;
-    private String clientID;
-
-    //HOBEE BROKER
-   private String mqttAddress = "tcp://129.16.155.22:1883";
 
     //PRATA BROKER
      //private String mqttAddress = "tcp://prata.technocreatives.com:1883";
@@ -59,10 +55,9 @@ public class MQTTService extends Service implements MqttCallback {
     private User user;
     private EventManager eventManager;
     private HashSet<String> subscribedTopics = new HashSet<>();
-    private HashSet<String> possibleTopics = new HashSet<>();
-    SharedPreferences preferences;
+    private SharedPreferences preferences;
 
-    private ArrayList<Deal> deals = new ArrayList<Deal>();
+    private ArrayList<Deal> deals = new ArrayList<>();
 
 
     public MQTTService() {
@@ -117,7 +112,7 @@ public class MQTTService extends Service implements MqttCallback {
     /**
      * Remove an event when it has expired (the event has already taken place).
      */
-    public void removeExpiredEvent(Event event){
+    private void removeExpiredEvent(Event event){
         try {
             MqttMessage message = new MqttMessage();
             message.setPayload("".getBytes());
@@ -132,13 +127,14 @@ public class MQTTService extends Service implements MqttCallback {
     /**
      * Connect to the MQTT broker.
      */
-    public void connectMQTT(){
+    private void connectMQTT(){
 
         MemoryPersistence persistence = new MemoryPersistence();
         try {
             String clientUUID = sessionManager.getUserID();
             if (!(clientUUID == null)) {
-                clientID = "hobee-"+clientUUID;
+                String clientID = "hobee-" + clientUUID;
+                String mqttAddress = "tcp://129.16.155.22:1883";
                 client = new MqttAndroidClient(this, mqttAddress, clientID, persistence);
                 client.setCallback(this);
 
@@ -312,8 +308,7 @@ public class MQTTService extends Service implements MqttCallback {
             return null;
         }
         int number = new Random().nextInt(deals.size());
-        Deal deal = deals.remove(number);
-        return deal;
+        return deals.remove(number);
     }
 
     /**
@@ -327,7 +322,7 @@ public class MQTTService extends Service implements MqttCallback {
             getNewDeals();
         }
 
-        possibleTopics = getPossibleTopics();
+        HashSet<String> possibleTopics = getPossibleTopics();
 
         //copy the original topic sets to modify
         HashSet<String> cSubscribedTopics = (HashSet<String>) subscribedTopics.clone();

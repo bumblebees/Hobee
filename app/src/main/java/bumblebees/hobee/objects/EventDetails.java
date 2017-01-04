@@ -1,8 +1,5 @@
 package bumblebees.hobee.objects;
 
-import android.content.Context;
-
-import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,10 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import bumblebees.hobee.utilities.SocketIO;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class EventDetails {
@@ -87,14 +80,8 @@ public class EventDetails {
      * @param user - user to be checked
      * @return true if the user exists, false otherwise
      */
-    public boolean checkUser(PublicUser user){
-         if(users_pending.contains(user)){
-            return true;
-        }
-        if(users_accepted.contains(user)){
-            return true;
-        }
-        return false;
+    public boolean checkUser(PublicUser user) {
+        return users_pending.contains(user) || users_accepted.contains(user);
     }
 
     /**
@@ -109,10 +96,11 @@ public class EventDetails {
      * Get the day of the week when the event takes place.
      * @return int representing the day of the week starting from 1 (Sunday)
      */
-    public int getDayOfTheWeek(){
+    public String getDayOfTheWeek(){
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(Long.parseLong(this.timestamp)*1000L);
-        return cal.get(Calendar.DAY_OF_WEEK);
+        String[] possibleDays = new String[]{"None","Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
+        return possibleDays[cal.get(Calendar.DAY_OF_WEEK)];
     }
 
     /**
@@ -131,6 +119,17 @@ public class EventDetails {
         cal.setTimeInMillis(Long.parseLong(this.timestamp)*1000L);
         SimpleDateFormat sdfDateTime = new SimpleDateFormat("HH:mm");
         return String.valueOf(sdfDateTime.format(cal.getTime()));
+    }
+
+    /**
+     * Get the time in military (HHmm) format.
+     * @return int representing the time
+     */
+    public int getMilitaryTime(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(Long.parseLong(this.timestamp)*1000L);
+        SimpleDateFormat sdfDateTime = new SimpleDateFormat("HHmm");
+        return Integer.valueOf(sdfDateTime.format(cal.getTime()));
     }
 
     public List<PublicUser> getUsers_pending(){
@@ -191,7 +190,27 @@ public class EventDetails {
         return hobby.getIcon();
     }
 
-    public List<String> getUsers_unranked () { return users_unranked;}
+    private List<String> getUsers_unranked() { return users_unranked;}
+
+    public JSONObject getUsersAcceptedJson(){
+        JSONArray jsonArray = new JSONArray();
+        ArrayList<String> usersAccepted = new ArrayList<>();
+        for (PublicUser user: users_accepted){
+            usersAccepted.add(user.getUserID());
+        }
+        for (int i=0; i < usersAccepted.size(); i++){
+            jsonArray.put(usersAccepted.get(i));
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.putOpt("array", jsonArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
 
     public JSONObject getUsers_unrankedJson() {
         JSONArray jsonArray = new JSONArray();
@@ -236,7 +255,7 @@ public class EventDetails {
         return (!this.getUsers_unranked().contains(user.getUserID()));
     }
 
-    public void setUsers_unranked(List<String> users_unranked){
+    private void setUsers_unranked(List<String> users_unranked){
         this.users_unranked = users_unranked;
     }
 
@@ -245,6 +264,10 @@ public class EventDetails {
         unranked.remove(user.getUserID());
         setUsers_unranked(unranked);
      }
+
+    public Hobby getHobby(){
+        return this.hobby;
+    }
 
 
 

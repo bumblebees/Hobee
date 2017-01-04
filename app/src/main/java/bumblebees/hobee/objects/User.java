@@ -8,8 +8,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import static java.lang.Long.parseLong;
-
 public class User {
 
     private String userID, loginId;
@@ -181,6 +179,13 @@ public class User {
             list.add(hobby.getName().toLowerCase());
         }
         return list;
+    }
+
+    public Hobby getOneHobby(Hobby hobby){
+        if(hobbies.indexOf(hobby)!=-1){
+            return hobbies.get(hobbies.indexOf(hobby));
+        }
+        return null;
     }
 
 }

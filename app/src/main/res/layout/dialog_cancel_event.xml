@@ -19,7 +19,6 @@
         android:text="Reason for cancelling:"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView18"
         android:layout_weight="1"
         android:textSize="14sp"
         android:textColor="@color/Bee_color_1" />

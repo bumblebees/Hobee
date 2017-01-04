@@ -22,25 +22,25 @@ import bumblebees.hobee.utilities.SocketIO;
 public class HobbiesActivity extends AppCompatActivity implements OnItemSelectedListener {
 
     // Checkbox list
-    List<String> checkList = new ArrayList<String>();
-    Spinner spinnerDifficultyLevel;
-    Spinner spinnerTimeFrom;
-    Spinner spinnerTimeTo;
+    List<String> checkList = new ArrayList<>();
+    private Spinner spinnerDifficultyLevel;
+    private Spinner spinnerTimeFrom;
+    private Spinner spinnerTimeTo;
 
-    Hobby hobby;
-    User user;
+    private Hobby hobby;
+    private User user;
 
-    TextView textView;
-    ToggleButton checkBoxMonday;
-    ToggleButton checkBoxTuesday;
-    ToggleButton checkBoxWednesday;
-    ToggleButton checkBoxThursday;
-    ToggleButton checkBoxFriday;
-    ToggleButton checkBoxSaturday;
-    ToggleButton checkBoxSunday;
-    SessionManager session;
+    private TextView textView;
+    private ToggleButton checkBoxMonday;
+    private ToggleButton checkBoxTuesday;
+    private ToggleButton checkBoxWednesday;
+    private ToggleButton checkBoxThursday;
+    private ToggleButton checkBoxFriday;
+    private ToggleButton checkBoxSaturday;
+    private ToggleButton checkBoxSunday;
+    private SessionManager session;
 
-    Button submitBtn;
+    private Button submitBtn;
     private Gson gson = new Gson();
 
     //TODO: change the fields if the hobby already has values in the profile_img
@@ -97,7 +97,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         // Spinner Drop down elements
         String[] difficultyList = getResources().getStringArray(R.array.hobbySkillOptions);
 
-        List<String> timeListTo = new ArrayList<String>();
+        List<String> timeListTo = new ArrayList<>();
         timeListTo.add("08.00");
         timeListTo.add("10.00");
         timeListTo.add("12.00");
@@ -108,7 +108,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         timeListTo.add("22.00");
         timeListTo.add("24.00");
 
-        List<String> timeListFrom = new ArrayList<String>();
+        List<String> timeListFrom = new ArrayList<>();
         timeListFrom.add("08.00");
         timeListFrom.add("10.00");
         timeListFrom.add("12.00");
@@ -120,9 +120,9 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         timeListFrom.add("24.00");
 
         // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, difficultyList);
-        ArrayAdapter<String> dataAdapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, timeListFrom);
-        ArrayAdapter<String> dataAdapter3 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, timeListTo);
+        ArrayAdapter<String> dataAdapter1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, difficultyList);
+        ArrayAdapter<String> dataAdapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, timeListFrom);
+        ArrayAdapter<String> dataAdapter3 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, timeListTo);
 
         // Drop down layout style - list view with radio button
         dataAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

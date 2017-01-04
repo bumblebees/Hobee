@@ -19,19 +19,18 @@ import java.util.ArrayList;
 
 public class UserRankAdapter extends BaseAdapter {
     private Context context;
-    private ArrayList<String> userStringList;
     private ArrayList<User> userList = new ArrayList<>();
     private Gson gson = new Gson();
     private String[][] ranks;
     private int repMultiplier = 150;
     private Boolean isHost = false;
-    SessionManager session;
-    String userID;
+    private SessionManager session;
+    private String userID;
 
 
     public UserRankAdapter(Context context, ArrayList<String> userStringList, Event event) {
         //If the user that is evaluating is the host
-        this.userStringList = userStringList;
+        ArrayList<String> userStringList1 = userStringList;
         this.context = context;
         session = new SessionManager(context);
         userID = session.getUserID();
@@ -40,7 +39,7 @@ public class UserRankAdapter extends BaseAdapter {
 
         for (String str : userStringList) {
             User user = gson.fromJson(str, User.class);
-            //If the user to be added to the list is the local user and he is not the host
+            //If the user to be added to the list is not the local user and he is not the host
             if (!user.getUserID().equals(userID) && !((user.getUserID().equals(event.getEvent_details().getHost_id()))))
                 userList.add(user);
 
@@ -103,8 +102,10 @@ public class UserRankAdapter extends BaseAdapter {
         final SeekBar seekBar = (SeekBar) row.findViewById(R.id.seekBar);
 
         if (i == 0) {
-            //row.setBackgroundColor(0xff0000ff);
+
+            row.setBackgroundColor(context.getResources().getColor(R.color.Bee_color_1));
             textHost.setVisibility(View.VISIBLE);
+
         }
 
         userName.setText(userList.get(i).getFirstName() + " " + userList.get(i).getLastName());
@@ -149,18 +150,15 @@ public class UserRankAdapter extends BaseAdapter {
             }
         });
 
-        ////TODO Implement onClickListeners so that you can see the user's profile_img
-
         userImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Open user profile_img
                 Intent intent = new Intent(context, UserProfileActivity.class);
-                intent.putExtra("User", gson.toJson(userList.get(i)).toString());
+                intent.putExtra("User", gson.toJson(userList.get(i)));
                 context.startActivity(intent);
             }
         });
-        ;
 
         if (userList.get(i).getUserID().equals(userID)) {
             seekBar.setEnabled(false);
