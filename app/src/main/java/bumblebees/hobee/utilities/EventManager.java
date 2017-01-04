@@ -258,9 +258,11 @@ public class EventManager {
         int eventTime = event.getEvent_details().getMilitaryTime();
         int hobbyTimeFrom = hobby.getMilitaryTimeFrom();
         int hobbyTimeTo   = hobby.getMilitaryTimeTo();
-        if(hobbyTimeFrom <= eventTime)
-            if(eventTime <= hobbyTimeTo)
+        if(hobbyTimeFrom <= eventTime) {
+            if (eventTime <= hobbyTimeTo){
                 return true;
+            }
+        }
         return false;
     }
 
