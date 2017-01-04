@@ -31,6 +31,7 @@ public class RankUserActivity extends AppCompatActivity {
     private TextView toolbarTitle;
     private Event event;
     private Gson gson = new Gson();
+    private boolean userIsHost;
     SessionManager session;
 
     @Override
@@ -46,6 +47,7 @@ public class RankUserActivity extends AppCompatActivity {
         usersList.setAdapter(new UserRankAdapter(this,users, event));
         adapter = (UserRankAdapter) usersList.getAdapter();
         session = new SessionManager(getApplicationContext());
+        userIsHost = event.getEvent_details().isUserHost(session.getUserID());
 
         buttonDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +66,7 @@ public class RankUserActivity extends AppCompatActivity {
         JSONObject rankingMessage = new JSONObject();
         JSONArray parent = new JSONArray();
         int rankSize;
-        if(event.isUserHost(session.getUserID()))
+        if(userIsHost)
             rankSize = users.size();
         else
             rankSize = users.size()-1;
@@ -98,6 +100,11 @@ public class RankUserActivity extends AppCompatActivity {
             catch (JSONException e){
                 Log.d("Json" , e.toString());}
         SocketIO.getInstance().sendRanking(rankingMessage);
+        SessionManager session = new SessionManager(this);
+        if(userIsHost)
+            session.userHostRanked(event);
+        else
+            session.userJoinedRanked(event);
         showHomeActivity();
     }
 

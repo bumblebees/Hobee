@@ -53,7 +53,7 @@ import io.apptik.widget.MultiSlider;
 
 public class NewEventActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, PlacePickerFragment.OnActivityResultListener {
 
-    Button btnAddEvent, setDateBtn, setTimeBtn;
+    Button btnAddEvent, setDateBtn, setTimeBtn, setLocationBtn;
     TextView maxAge;
     TextView minAge;
     TextView inputEventName;
@@ -91,6 +91,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         inputEventName = (TextView) findViewById(R.id.inputEventName);
         inputEventDescription = (TextView) findViewById(R.id.inputEventDescription);
         inputEventLocation = (TextView) findViewById(R.id.inputEventLocation);
+
         inputEventDate = (TextView) findViewById(R.id.inputEventDate);
         inputEventTime = (TextView) findViewById(R.id.inputEventTime);
         inputEventGender = (Spinner) findViewById(R.id.inputEventGender);
@@ -107,6 +108,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         spinnerHobbySkillChoice = (Spinner) findViewById(R.id.spinnerSkillChoice);
         setDateBtn = (Button) findViewById(R.id.setDateBtn);
         setTimeBtn = (Button) findViewById(R.id.setTimeBtn);
+        setLocationBtn = (Button) findViewById(R.id.setLctBtn);
 
         //set gender spinner options
         String[] genderOptions = getResources().getStringArray(R.array.eventGenderOptions);
@@ -160,7 +162,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
             }
         });
 
-        inputEventLocation.setOnClickListener(new View.OnClickListener() {
+        setLocationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentManager fm = getSupportFragmentManager();

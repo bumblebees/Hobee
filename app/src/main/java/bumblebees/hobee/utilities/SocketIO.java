@@ -346,7 +346,7 @@ public class SocketIO {
                     for(int i=0;i<eventArray.length();i++){
                         try {
                             Event event = gson.fromJson(eventArray.getString(i),Event.class);
-                            if(event.isUserHost(session.getUserID())){
+                            if(event.getEvent_details().isUserHost(session.getUserID())){
                                 hostedEvents.add(event);
                             }
                             else{

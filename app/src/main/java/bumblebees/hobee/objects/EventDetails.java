@@ -208,6 +208,45 @@ public class EventDetails {
         return jsonObject;
     }
 
+    /**
+     * checkHostranked() returns true if the host of the event has ranked an event and false otherwise.
+     * It works by checking if the host is in the userUnrankedList
+     * @return
+     */
+    public boolean checkHostranked(){
+        List<String> userUnrankedList = this.getUsers_unranked();
+        String hostID = this.getHost_id();
+        for(String userID: userUnrankedList){
+            if(userID.equals(hostID)) return false;
+        }
+        return true;
+    }
+
+    public boolean isUserHost(String userID){
+        return (getHost_id().equals(userID)) ;
+    }
+
+
+    /**
+     * Returns true if user has ranked an event
+     * @param user
+     * @return
+     */
+    public boolean checkRanked(User user){
+        return (!this.getUsers_unranked().contains(user.getUserID()));
+    }
+
+    public void setUsers_unranked(List<String> users_unranked){
+        this.users_unranked = users_unranked;
+    }
+
+    public void markUserRanked(User user){
+        List<String> unranked = getUsers_unranked();
+        unranked.remove(user.getUserID());
+        setUsers_unranked(unranked);
+     }
+
+
 
 
 }

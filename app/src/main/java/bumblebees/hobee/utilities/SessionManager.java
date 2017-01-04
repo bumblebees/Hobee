@@ -99,6 +99,9 @@ public class SessionManager {
         editor.commit();
     }
 
+
+
+
     /**
      * Save the user data to the preferences
      * @param user
@@ -173,6 +176,24 @@ public class SessionManager {
 
     public ArrayList<Event> getHistoryHosted(){
         return getEventListArray(EVENT_HISTORY_HOSTED);
+    }
+
+    public void userHostRanked(Event event){
+        ArrayList<Event> historyHosted = getHistoryHosted();
+        int index = historyHosted.indexOf(event);
+        event.getEvent_details().markUserRanked(getUser());
+        historyHosted.set(index,event);
+        editor.putString(EVENT_HISTORY_HOSTED, gson.toJson(historyHosted));
+        editor.commit();
+    }
+
+    public void userJoinedRanked(Event event){
+        ArrayList<Event> historyJoined = getHistoryJoined();
+        int index = historyJoined.indexOf(event);
+        event.getEvent_details().markUserRanked(getUser());
+        historyJoined.set(index,event);
+        editor.putString(EVENT_HISTORY_JOINED, gson.toJson(historyJoined));
+        editor.commit();
     }
 
     public HashMap<String, ArrayList<Event>> getBrowseEvents(){

@@ -172,9 +172,10 @@ public class EventManager {
     }
 
     public void removeEligibleEvent(String hobby, Event event){
-        if(eligibleEventList.get(hobby).contains(event)){
-            eligibleEventList.get(hobby).remove(event);
-        }
+        if(eligibleEventList.get(hobby) != null)
+            if(eligibleEventList.get(hobby).contains(event)){
+               eligibleEventList.get(hobby).remove(event);
+            }
     }
 
     public void removeHostedEvent(Event event){

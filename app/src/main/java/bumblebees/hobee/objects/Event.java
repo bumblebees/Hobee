@@ -84,34 +84,9 @@ public class Event {
         return result;
     }
 
-    public boolean isUserHost(String userID){
-        return (event_details.getHost_id().equals(userID)) ;
-     }
 
 
-    /**
-     * Returns true if user has ranked an event
-     * @param user
-     * @return
-     */
-    public boolean checkRanked(User user){
-       return (!this.getEvent_details().getUsers_unranked().contains(user.getUserID()));
-    }
 
-    /**
-     * checkHostranked() returns true if the host of the event has ranked an event and false otherwise.
-     * It works by checking if the host is in the userUnrankedList
-     * @return
-     */
-
-    public boolean checkHostranked(){
-        List<String> userUnrankedList = this.getEvent_details().getUsers_unranked();
-        String hostID = this.getEvent_details().getHost_id();
-        for(String userID: userUnrankedList){
-            if(userID.equals(hostID)) return false;
-        }
-        return true;
-    }
 
     /**
      * Checks if the event is still active: the time when the event takes place has not passed yet.

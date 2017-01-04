@@ -35,7 +35,7 @@ public class UserRankAdapter extends BaseAdapter {
         this.context = context;
         session = new SessionManager(context);
         userID = session.getUserID();
-        this.isHost = event.isUserHost(userID);
+        this.isHost = event.getEvent_details().isUserHost(userID);
 
 
         for (String str : userStringList) {

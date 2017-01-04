@@ -222,14 +222,14 @@ public class HomeActivity extends AppCompatActivity {
 
         for(Event event:sessionManager.getHistoryHosted()){
             if(event.getEvent_details().getUsers_accepted().size()>1){
-                if (!event.checkRanked(loggedInUser)) {
+                if (!event.getEvent_details().checkRanked(loggedInUser)) {
                 hostedUnrankedEvents.add(event);
                 }
             }
         }
         for(Event event:sessionManager.getHistoryJoined()){
-            if (event.checkHostranked()) {
-                if (!event.checkRanked(loggedInUser)) {
+            if (event.getEvent_details().checkHostranked()) {
+                if (!event.getEvent_details().checkRanked(loggedInUser)) {
                     unRankedEvents.add(event);
                 }
             }
