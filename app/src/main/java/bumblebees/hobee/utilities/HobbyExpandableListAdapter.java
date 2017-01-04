@@ -109,7 +109,7 @@ public class HobbyExpandableListAdapter extends BaseExpandableListAdapter {
         eventTime.setText(event.getEvent_details().getTime());
 
         //check if the logged in user is the host of the event
-        if(userID.equals(event.getEvent_details().getHost_id())) {
+        if(userID.equals(event.getEvent_details().getHost_id()) && event.isEventActive()) {
             //show the pending count for the event
             if (event.getEvent_details().getUsers_pending().size() > 0) {
                 eventPendingCount.setVisibility(View.VISIBLE);
