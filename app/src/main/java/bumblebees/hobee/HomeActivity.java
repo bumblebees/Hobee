@@ -203,6 +203,8 @@ public class HomeActivity extends AppCompatActivity {
             snackbar.show();
         }
 
+        rankUsers();
+
     }
 
 
@@ -421,9 +423,8 @@ public class HomeActivity extends AppCompatActivity {
         //refresh the user data in case something has changed
         SocketIO.getInstance().updateUserData(loggedInUser.getUserID(), this);
         loggedInUser = session.getUser();
-        //also update MQTT topics
-        rankUsers();
 
+        //also update MQTT topics
         if(service!=null){
             service.subscribeTopics();
         }

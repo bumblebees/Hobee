@@ -4,6 +4,7 @@ package bumblebees.hobee.utilities;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -15,7 +16,7 @@ public class EventManager {
 
 
 
-    public enum UserStatus {HOST, NEW_ACCEPTED, OLD_ACCEPTED, PENDING, REJECTED, NEW_MATCH, OLD_MATCH, NONE}
+    public enum UserStatus {HOST, NEW_ACCEPTED, OLD_ACCEPTED, PENDING, REJECTED, NEW_MATCH, NEW_MATCH_NOTIFICATION, OLD_MATCH, NONE}
 
     public enum EventStatus {HOSTED_EVENT, ACCEPTED_EVENT, PENDING_EVENT, EVENT_NOT_FOUND}
 
@@ -67,7 +68,8 @@ public class EventManager {
      * @param user
      * @param event
      * @return enum corresponding to the user's position in the event
-     * NEW_MATCH - the event is new for the user
+     * NEW_MATCH - the event is new for the user, no notification should be sent
+     * NEW_MATCH_NOTIFICATION - the event is new for the user, and has been recently added, send a notification
      * OLD_MATCH - the user has been notified about the event already
      * NONE - the user does not match the event
      */
@@ -97,7 +99,14 @@ public class EventManager {
         boolean matches = matchesPreferences(event,user);
         if(matches && !event.isFull()){
             if(addEligibleEvent(event.getType(), event)){
-                return UserStatus.NEW_MATCH;
+                Long currentTime = Calendar.getInstance().getTimeInMillis() / 1000L;
+                // check if the event has been recently added
+                if(Long.parseLong(event.getTimestamp())+100 > currentTime){
+                    return UserStatus.NEW_MATCH_NOTIFICATION;
+                }
+                else {
+                    return UserStatus.NEW_MATCH;
+                }
             }
             else return UserStatus.OLD_MATCH;
         }
