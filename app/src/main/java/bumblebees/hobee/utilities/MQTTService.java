@@ -267,6 +267,7 @@ public class MQTTService extends Service implements MqttCallback {
 
     /**
      * Retrieve deals from GoGoDeals.
+     * Implements RFC 16 - Get Deals
      */
     private void getNewDeals(){
         JSONObject data = new JSONObject();
@@ -277,11 +278,7 @@ public class MQTTService extends Service implements MqttCallback {
             //location is set to Lindholmen by default
             data.put("longitude", 11.938287);
             data.put("latitude", 57.707760);
-            filters.put(new JSONObject().put("filter", "random"));
-            filters.put(new JSONObject().put("filter", "clothes"));
-            filters.put(new JSONObject().put("filter", "stuff"));
-            filters.put(new JSONObject().put("filter", "food"));
-            data.put("filters", filters);
+            data.put("filters", "random");
             msg.put("id", user.getUserID());
             msg.put("data", data);
         } catch (JSONException e) {
