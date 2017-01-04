@@ -220,6 +220,9 @@ public class MQTTService extends Service implements MqttCallback {
                             new Notification(this).sendUserEventRejected(event);
                             break;
                         case NEW_MATCH:
+                            //do nothing
+                            break;
+                        case NEW_MATCH_NOTIFICATION:
                             new Notification(this).sendNewEvent(event);
                             break;
                         case OLD_MATCH:
