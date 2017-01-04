@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -190,6 +191,26 @@ public class EventDetails {
     }
 
     private List<String> getUsers_unranked() { return users_unranked;}
+
+    public JSONObject getUsersAcceptedJson(){
+        JSONArray jsonArray = new JSONArray();
+        ArrayList<String> usersAccepted = new ArrayList<>();
+        for (PublicUser user: users_accepted){
+            usersAccepted.add(user.getUserID());
+        }
+        for (int i=0; i < usersAccepted.size(); i++){
+            jsonArray.put(usersAccepted.get(i));
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.putOpt("array", jsonArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
 
     public JSONObject getUsers_unrankedJson() {
         JSONArray jsonArray = new JSONArray();

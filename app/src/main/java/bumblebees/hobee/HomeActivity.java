@@ -238,7 +238,7 @@ public class HomeActivity extends AppCompatActivity {
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             for(Event event:hostedUnrankedEvents)
-                            SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(gson.toJson(event), event.getEvent_details().getUsers_unrankedJson(), getApplicationContext());
+                            SocketIO.getInstance().sendUserIDArrayAndOpenRankActivity(gson.toJson(event), event.getEvent_details().getUsersAcceptedJson(), getApplicationContext());
                         }
                     })
                     .setNeutralButton("Later", new DialogInterface.OnClickListener(){
