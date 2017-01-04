@@ -172,7 +172,6 @@ public class HomeActivity extends AppCompatActivity {
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
 
-        rankUsers();
 
         //show a snackbar if the user has no location set or no hobbies
         //the user cannot see any events unless both location and hobby are set
@@ -423,6 +422,8 @@ public class HomeActivity extends AppCompatActivity {
         SocketIO.getInstance().updateUserData(loggedInUser.getUserID(), this);
         loggedInUser = session.getUser();
         //also update MQTT topics
+        rankUsers();
+
         if(service!=null){
             service.subscribeTopics();
         }
