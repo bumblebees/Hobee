@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
@@ -166,6 +167,10 @@ public class EventViewActivity extends AppCompatActivity {
                 if (event.getEvent_details().getUsers_pending().size() == 0) {
                     TextView pendingUsers = new TextView(this.getApplicationContext());
                     pendingUsers.setText("No users found.");
+                    pendingUsers.setPadding(0, 10, 0, 10);
+                    pendingUsers.setTextSize(16);
+                    pendingUsers.setTypeface(null, Typeface.ITALIC);
+                    pendingUsers.setTextColor(getResources().getColor(R.color.Bee_color_1));
                     containerPending.addView(pendingUsers);
                 } else {
                     for (final PublicUser user : event.getEvent_details().getUsers_pending()) {
@@ -174,9 +179,10 @@ public class EventViewActivity extends AppCompatActivity {
 
 
                         TextView pendingUser = (TextView) row.findViewById(R.id.userAcceptName);
+                        pendingUser.setPadding(0, 10, 0, 0);
                         pendingUser.setText(user.getName());
-                        pendingUser.setTextSize(16);
-                        pendingUser.setTextColor(Color.DKGRAY);
+                        pendingUser.setTextSize(30);
+                        pendingUser.setTextColor(getResources().getColor(R.color.Bee_color_1));
                         pendingUser.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -261,9 +267,10 @@ public class EventViewActivity extends AppCompatActivity {
 
         for(final PublicUser publicUser : event.getEvent_details().getUsers_accepted()){
             TextView acceptedUser = new TextView(this.getApplicationContext());
+            acceptedUser.setPadding(0, 10, 0, 0);
             acceptedUser.setText(publicUser.getName());
-            acceptedUser.setTextSize(16);
-            acceptedUser.setTextColor(Color.DKGRAY);
+            acceptedUser.setTextSize(30);
+            acceptedUser.setTextColor(getResources().getColor(R.color.Bee_color_1));
             acceptedUser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

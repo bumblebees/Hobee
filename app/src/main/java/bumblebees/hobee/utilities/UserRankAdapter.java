@@ -103,7 +103,7 @@ public class UserRankAdapter extends BaseAdapter {
 
         if (i == 0) {
 
-            row.setBackgroundColor(context.getResources().getColor(R.color.Bee_color_1));
+            row.setBackground(context.getResources().getDrawable(R.drawable.host_pattern));
             textHost.setVisibility(View.VISIBLE);
 
         }
