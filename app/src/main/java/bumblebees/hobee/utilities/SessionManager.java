@@ -98,6 +98,13 @@ public class SessionManager {
     }
 
 
+    public Event findUpdatedPendingEvent(Event event){
+        return getBrowseEvents().get(event.getEvent_details().getHobbyName()).get(getBrowseEvents().get(event.getEvent_details().getHobbyName()).indexOf(event));
+    }
+
+    public Event findUpdatedHostEvent(Event event){
+        return getHostedEvents().get(getHostedEvents().indexOf(event));
+    }
 
 
     /**

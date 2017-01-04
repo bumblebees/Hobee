@@ -180,7 +180,6 @@ public class EventViewActivity extends AppCompatActivity {
                         pendingUser.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                //This needs to be fixed
                                 viewUserProfile(user.getUserID());
                             }
                         });
@@ -189,9 +188,9 @@ public class EventViewActivity extends AppCompatActivity {
                         acceptUser.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                event = session.findUpdatedHostEvent(event);
                                 event.getEvent_details().confirmUser(user);
                                 updateEvent(event);
-                                //TODO: refresh users without having to reload the entire activity
                                 finish();
                                 Intent updatedIntent = getIntent();
                                 updatedIntent.putExtra("event", g.toJson(event));
@@ -202,10 +201,9 @@ public class EventViewActivity extends AppCompatActivity {
                         rejectUser.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                event = session.findUpdatedHostEvent(event);
                                 event.getEvent_details().rejectUser(user);
                                 updateEvent(event);
-
-                                //TODO: refresh users without having to reload the entire activity
                                 finish();
                                 Intent updatedIntent = getIntent();
                                 updatedIntent.putExtra("event", g.toJson(event));
@@ -293,6 +291,7 @@ public class EventViewActivity extends AppCompatActivity {
 
     private void joinEvent(Event event){
 
+        event = session.findUpdatedPendingEvent(event);
         PublicUser currentUser = session.getUser().getSimpleUser();
         event.getEvent_details().addUser(currentUser);
 
