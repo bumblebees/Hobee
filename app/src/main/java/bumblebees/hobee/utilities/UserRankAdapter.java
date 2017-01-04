@@ -102,8 +102,10 @@ public class UserRankAdapter extends BaseAdapter {
         final SeekBar seekBar = (SeekBar) row.findViewById(R.id.seekBar);
 
         if (i == 0) {
-            //row.setBackgroundColor(0xff0000ff);
+
+            row.setBackgroundColor(context.getResources().getColor(R.color.Bee_color_1));
             textHost.setVisibility(View.VISIBLE);
+
         }
 
         userName.setText(userList.get(i).getFirstName() + " " + userList.get(i).getLastName());
@@ -147,8 +149,6 @@ public class UserRankAdapter extends BaseAdapter {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-
-        ////TODO Implement onClickListeners so that you can see the user's profile_img
 
         userImage.setOnClickListener(new View.OnClickListener() {
             @Override
