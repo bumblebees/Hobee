@@ -1,8 +1,6 @@
 package bumblebees.hobee.utilities;
 
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;

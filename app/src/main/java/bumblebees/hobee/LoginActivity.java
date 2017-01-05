@@ -86,7 +86,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         /*
             GOOGLE SIGN IN
         */
-        //TODO: also request gender and birthday
 
 
         googleSignIn = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

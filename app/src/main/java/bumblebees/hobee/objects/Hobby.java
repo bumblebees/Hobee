@@ -14,11 +14,6 @@ import bumblebees.hobee.R;
  */
 public class Hobby {
 
-    //TODO: do something about this ugly hack -> see custom exclusion strategies for Gson
-    //the @Until(0.2) annotation is a hack to exclude the fields from the Gson parser when creating the event json
-    //create the gson parser and use any version larger than 0.2
-    //Gson g = new GsonBuilder().setVersion(0.3).create();
-
     private String name;
     private String difficultyLevel;
     @Until(0.2)

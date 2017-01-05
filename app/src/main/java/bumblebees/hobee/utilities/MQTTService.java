@@ -49,8 +49,11 @@ public class MQTTService extends Service implements MqttCallback {
 
     private MqttAndroidClient client;
 
+    //HOBEE BROKER
+    //String mqttAddress = "tcp://129.16.155.22:1883";
+
     //PRATA BROKER
-    //private String mqttAddress = "tcp://prata.technocreatives.com:1883";
+    private String mqttAddress = "tcp://prata.technocreatives.com:1883";
 
     private User user;
     private EventManager eventManager;
@@ -134,7 +137,6 @@ public class MQTTService extends Service implements MqttCallback {
             String clientUUID = sessionManager.getUserID();
             if (!(clientUUID == null)) {
                 String clientID = "hobee-" + clientUUID;
-                String mqttAddress = "tcp://129.16.155.22:1883";
                 client = new MqttAndroidClient(this, mqttAddress, clientID, persistence);
                 client.setCallback(this);
 

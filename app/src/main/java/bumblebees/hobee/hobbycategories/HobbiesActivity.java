@@ -221,17 +221,8 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
             spinnerTimeTo.setSelection(setSpinnerTime(hobby.getTimeTo()));
     }
 
-    /**
-     * TODO: Write description
-     * @param hobbyName
-     */
     private void createHobby(String hobbyName){
-        //if (hobbyExists(hobbyName)) {
-        //    System.out.println(">>>>>>>>>>>>>>>>>>>>>>HOBBY EXISTS!!");
-       //     getHobbyFields(hobby);
-      //  } else {
             createHobbyInstanceFromNull(hobbyName);
-       // }
     }
 
     private boolean hobbyExists(String hobbyName){
