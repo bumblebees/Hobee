@@ -15,6 +15,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -192,25 +193,36 @@ public class RegisterUserActivity extends AppCompatActivity {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                     //Updating
 
                 if (userData == null) {
-                    user = createUser();
-                    SocketIO.getInstance().updateProfile(user, getImageBase64(), RegisterUserActivity.this);
-                    session.saveUser(user);
-                } else {
 
+                    user = createUser();
+                    if (user.getAge() > 15 && user.getAge() < 97) {
+                        SocketIO.getInstance().updateProfile(user, getImageBase64(), RegisterUserActivity.this);
+                        session.saveUser(user);
+                    }
+                    else{
+
+                    }
+                } else {
                     //Registering
 
                     // Set shared preferences
-                    session.setPreferences(userData.getString("loginId"), userData.getString("origin"));
 
                     // Set user instance
                     user = createUser();
-                    session.saveDataAndEvents(user, new EventManager());
-                    // Save user in database
-                    SocketIO.getInstance().register(user, getImageBase64(), RegisterUserActivity.this);
+                    if (user.getAge() > 15 && user.getAge() < 96) {
+                        session.setPreferences(userData.getString("loginId"), userData.getString("origin"));
+                        session.saveDataAndEvents(user, new EventManager());
+                        // Save user in database
+                        SocketIO.getInstance().register(user, getImageBase64(), RegisterUserActivity.this);
+                    }
+                    if(user.getAge() < 15)
+                        Toast.makeText(getApplicationContext(), "You are too young to use the application", Toast.LENGTH_SHORT).show();
+                    if(user.getAge() > 96)
+                        Toast.makeText(getApplicationContext(), "Please enter a valid age", Toast.LENGTH_SHORT).show();
+
                 }
 
             }

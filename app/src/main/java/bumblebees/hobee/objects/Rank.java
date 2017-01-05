@@ -32,8 +32,6 @@ public class Rank {
         if (review < -3) review = -3;
         if (review > 3) review = 3;
         reputation = reputation + (150*review);
-
-        ////TODO: Implement this on the activity rankUserActivity and update the database
     }
 
     public int getGlobalRep(){

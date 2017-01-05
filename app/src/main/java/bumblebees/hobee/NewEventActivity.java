@@ -171,12 +171,9 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
                 FragmentManager fm = getSupportFragmentManager();
                 PlacePickerFragment fragment = (PlacePickerFragment) fm.findFragmentByTag("PlacePickerFragment");
                 FragmentTransaction transaction = fm.beginTransaction();
-                if(fragment == null){
                 fragment = new PlacePickerFragment();
                 transaction.add(fragment,"PlacePickerFragment");
                 transaction.commit();
-                }
-
             }
         });
 
@@ -197,7 +194,6 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         super.onResume();
 
         //set location spinner options by matching them with the selected locations in the preferences
-        //TODO: this is very complicated
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         areas = new HashMap<>();
         String[] locations = getResources().getStringArray(R.array.locationTopicSpinner);
@@ -273,6 +269,9 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
         if(inputEventDate.getText().toString().equals("") || inputEventTime.getText().toString().equals("")){
             Toast.makeText(getApplicationContext(), "Please fill in the date and time.", Toast.LENGTH_SHORT).show();
         }
+        if(inputEventLocation.getText().toString().equals("")){
+            Toast.makeText(getApplicationContext(), "Please select a location", Toast.LENGTH_SHORT).show();
+        }
         else {
             String timestamp = "";
             Calendar cal = Calendar.getInstance();
@@ -286,7 +285,7 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
             }
 
             //check if the event time is in the future
-            if (Long.parseLong(timestamp) > timeCreated) {
+            if (Long.parseLong(timestamp) > timeCreated && Integer.parseInt(inputEventNumber.getText().toString())>1) {
                 ArrayList<PublicUser> acceptedUsers = new ArrayList<>();
                 PublicUser currentUser = loggedInUser.getSimpleUser();
                 acceptedUsers.add(currentUser);
@@ -338,7 +337,12 @@ public class NewEventActivity extends AppCompatActivity implements DatePickerDia
 
             }
             else {
-                Toast.makeText(getApplicationContext(), "Events cannot be created in the past.", Toast.LENGTH_SHORT).show();
+                if(Long.parseLong(timestamp)<timeCreated){
+                    Toast.makeText(getApplicationContext(), "Events cannot be created in the past.", Toast.LENGTH_SHORT).show();
+                }
+                if(!(Integer.parseInt(inputEventNumber.getText().toString())>1)) {
+                    Toast.makeText(getApplicationContext(), "Invalid ammount of people", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

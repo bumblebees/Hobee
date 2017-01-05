@@ -328,8 +328,6 @@ public class EventViewActivity extends AppCompatActivity {
                 MQTTService.MQTTBinder binder = (MQTTService.MQTTBinder) iBinder;
                 MQTTService service = binder.getInstance();
                 service.addOrUpdateEvent(event);
-
-                //TODO: why is this here?
                 service.getEvents().removeEligibleEvent(event.getType(), event);
             }
 

@@ -39,11 +39,9 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
     private ToggleButton checkBoxSaturday;
     private ToggleButton checkBoxSunday;
     private SessionManager session;
-
+    private boolean daySelected;
     private Button submitBtn;
     private Gson gson = new Gson();
-
-    //TODO: change the fields if the hobby already has values in the profile_img
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +62,17 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         submitBtn = (Button) findViewById(R.id.button_submit);
         submitBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                if(daySelected){
                 setHobby();
                 user.addOrUpdateHobby(hobby);
 
                 SocketIO.getInstance().addHobbyToUser(hobby, session.getUserID());
                 Intent saveAndGoBackIntent = new Intent(HobbiesActivity.this, HobbiesChoiceActivity.class);
-                HobbiesActivity.this.startActivity(saveAndGoBackIntent);
+                HobbiesActivity.this.startActivity(saveAndGoBackIntent);}
+                else{
+                    Toast.makeText(getApplicationContext(), "No day selected", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -179,29 +182,31 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
     private void readDayOfWeek(){
         if (checkBoxMonday.isChecked()){
             hobby.addDatePreference(checkBoxMonday.getText().toString());
+            daySelected = true;
         }
         if (checkBoxTuesday.isChecked()){
             hobby.addDatePreference(checkBoxTuesday.getText().toString());
+            daySelected = true;
         }
         if (checkBoxWednesday.isChecked()){
             hobby.addDatePreference(checkBoxWednesday.getText().toString());
+            daySelected = true;
         }
         if (checkBoxThursday.isChecked()){
             hobby.addDatePreference(checkBoxThursday.getText().toString());
+            daySelected = true;
         }
         if (checkBoxFriday.isChecked()){
             hobby.addDatePreference(checkBoxFriday.getText().toString());
+            daySelected = true;
         }
         if (checkBoxSaturday.isChecked()){
             hobby.addDatePreference(checkBoxSaturday.getText().toString());
+            daySelected = true;
         }
         if (checkBoxSunday.isChecked()){
             hobby.addDatePreference(checkBoxSunday.getText().toString());
-        }
-        else {
-            // TODO: ERROR HANDLING SHOULD BE DONE HERE! - Day must be selected
-            // Pop up to promt user to choose a date?
-            // Not prio, can be done after 16
+            daySelected = true;
         }
     }
 
