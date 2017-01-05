@@ -164,8 +164,8 @@ public class Notification {
      */
     public void sendCancelledEvent(CancelledEvent event, String type){
         if(notificationsActive) {
-            notificationBuilder.setContentTitle("Event Cancelled " + event.getBasicEvent().getEvent_details().getEvent_name());
-            notificationBuilder.setContentText("Reason :" + event.getReason());
+            notificationBuilder.setContentTitle(type.toUpperCase() + " Event Cancelled");
+            notificationBuilder.setContentText("Reason: " + event.getReason());
 
             sendGeneralNotification(notificationBuilder);
         }

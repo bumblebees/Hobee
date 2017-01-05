@@ -181,7 +181,7 @@ public class EventViewActivity extends AppCompatActivity {
                         TextView pendingUser = (TextView) row.findViewById(R.id.userAcceptName);
                         pendingUser.setPadding(0, 10, 0, 0);
                         pendingUser.setText(user.getName());
-                        pendingUser.setTextSize(30);
+                        pendingUser.setTextSize(16);
                         pendingUser.setTextColor(getResources().getColor(R.color.Bee_color_1));
                         pendingUser.setOnClickListener(new View.OnClickListener() {
                             @Override
