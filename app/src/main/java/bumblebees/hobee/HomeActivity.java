@@ -469,7 +469,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void sendEmptyRank(Event event){
-        Boolean hasranked = false;
+        Boolean hasranked = true;
         JSONObject rankingMessage = new JSONObject();
         JSONArray parent = new JSONArray();
         List<PublicUser> users = event.getEvent_details().getUsers_accepted();
@@ -489,7 +489,7 @@ public class HomeActivity extends AppCompatActivity {
             }
 
 
-            rankingMessage.put("hasRanked", true);
+            rankingMessage.put("hasRanked", hasranked);
             rankingMessage.put("userID", loggedInUser.getUserID());
             rankingMessage.put("eventID", event.getEventID());
             rankingMessage.put("hostRep", 0);
@@ -497,6 +497,7 @@ public class HomeActivity extends AppCompatActivity {
         }
         catch (JSONException e){
             Log.d("Json" , e.toString());}
+        session.userJoinedRanked(event);
         SocketIO.getInstance().sendRanking(rankingMessage);
     }
 
