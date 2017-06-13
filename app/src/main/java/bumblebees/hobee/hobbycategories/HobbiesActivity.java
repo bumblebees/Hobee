@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
@@ -39,7 +40,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
     private ToggleButton checkBoxSaturday;
     private ToggleButton checkBoxSunday;
     private SessionManager session;
-    private boolean daySelected;
+    private boolean daySelected = false;
     private Button submitBtn;
     private Gson gson = new Gson();
 
@@ -62,8 +63,8 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
         submitBtn = (Button) findViewById(R.id.button_submit);
         submitBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+              setHobby();
                 if(daySelected){
-                setHobby();
                 user.addOrUpdateHobby(hobby);
 
                 SocketIO.getInstance().addHobbyToUser(hobby, session.getUserID());
@@ -182,7 +183,7 @@ public class HobbiesActivity extends AppCompatActivity implements OnItemSelected
     private void readDayOfWeek(){
         if (checkBoxMonday.isChecked()){
             hobby.addDatePreference(checkBoxMonday.getText().toString());
-            daySelected = true;
+            this.daySelected = true;
         }
         if (checkBoxTuesday.isChecked()){
             hobby.addDatePreference(checkBoxTuesday.getText().toString());
