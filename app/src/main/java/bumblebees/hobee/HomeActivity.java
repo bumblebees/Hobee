@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
@@ -24,14 +23,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import bumblebees.hobee.fragments.FragmentAdapter;
 import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
-import bumblebees.hobee.objects.Deal;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.PublicUser;
 import bumblebees.hobee.objects.User;
@@ -428,44 +425,6 @@ public class HomeActivity extends AppCompatActivity {
         if(service!=null){
             service.subscribeTopics();
         }
-        boolean seeDeals = preferences.getBoolean("deals_preference", false);
-        if(seeDeals){
-            if(service!=null){
-                try {
-                    Deal deal = service.getRandomDeal();
-                    setDeal(deal);
-                    dealContainer.setVisibility(View.VISIBLE);
-                }
-                catch(NullPointerException e){
-                    //hide the deals container, something is not working properly
-                    dealContainer.setVisibility(View.GONE);
-                }
-            }
-        }
-        else{
-            dealContainer.setVisibility(View.GONE);
-        }
-    }
-
-    private void setDeal(Deal deal){
-        TextView dealDescription = (TextView) dealContainer.findViewById(R.id.dealDetails);
-        TextView dealName = (TextView) dealContainer.findViewById(R.id.dealName);
-        Button btnDeal = (Button) dealContainer.findViewById(R.id.dealGo);
-        TextView dealCount = (TextView) dealContainer.findViewById(R.id.dealCount);
-
-        dealName.setText(deal.getName());
-        dealDescription.setText(deal.getPrice()+" SEK");
-        dealCount.setText(deal.getCount()+"\nleft!");
-
-        btnDeal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String url = getResources().getString(R.string.gogodeals_url);
-                Intent dealIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(dealIntent);
-            }
-        });
-
     }
 
     private void sendEmptyRank(Event event){

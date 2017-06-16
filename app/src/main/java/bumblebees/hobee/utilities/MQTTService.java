@@ -31,12 +31,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 import bumblebees.hobee.broadcastreceiver.PendingNotificationReceiver;
 import bumblebees.hobee.objects.CancelledEvent;
-import bumblebees.hobee.objects.Deal;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.User;
 
@@ -59,9 +57,6 @@ public class MQTTService extends Service implements MqttCallback {
     private EventManager eventManager;
     private HashSet<String> subscribedTopics = new HashSet<>();
     private SharedPreferences preferences;
-
-    private ArrayList<Deal> deals = new ArrayList<>();
-
 
     public MQTTService() {
 
@@ -183,25 +178,6 @@ public class MQTTService extends Service implements MqttCallback {
         Gson gson = new Gson();
 
         if(message.getPayload().length>0) {
-            if (topic.equals("deal/gogodeals/database/deals")) {
-                JSONObject msg = new JSONObject(message.toString());
-                //only look for messages that were sent to the requester
-                if(msg.getString("id").equals(user.getUserID())) {
-                    JSONArray dealArray = msg.getJSONArray("data");
-                    for (int i = 0; i < dealArray.length(); i++) {
-                        Deal deal = gson.fromJson(dealArray.get(i).toString(), Deal.class);
-                        deals.add(deal);
-                    }
-                }
-
-                //deals are received, unsubscribe
-                try {
-                    client.unsubscribe("deal/gogodeals/database/deals");
-                } catch (MqttException e) {
-                    e.printStackTrace();
-                }
-
-            } else { //topic is an event topic
                 try {
                     Event event = gson.fromJson(message.toString(), Event.class);
                     //send notifications based on what the event was
@@ -263,7 +239,6 @@ public class MQTTService extends Service implements MqttCallback {
                 }
                 //save the received data
                 sessionManager.saveAllEvents(eventManager);
-            }
         }
     }
 
@@ -300,19 +275,6 @@ public class MQTTService extends Service implements MqttCallback {
         } catch (MqttException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Retrieves a random deal from the list of available deal.
-     * After a deal has been shown, it is removed from the pool.
-     * @return random Deal
-     */
-    public Deal getRandomDeal(){
-        if(deals.size() == 0){
-            return null;
-        }
-        int number = new Random().nextInt(deals.size());
-        return deals.remove(number);
     }
 
     /**
