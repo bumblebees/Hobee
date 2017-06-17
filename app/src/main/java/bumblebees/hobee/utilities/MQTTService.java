@@ -284,9 +284,6 @@ public class MQTTService extends Service implements MqttCallback {
 
         //also update the available deals, if the preferences allow it and if there are no more old deals to show
         boolean seeDeals = preferences.getBoolean("deals_preference", false);
-        if(seeDeals && deals.size()==0) {
-            getNewDeals();
-        }
 
         HashSet<String> removedTopics = new HashSet<>();
         HashSet<String> possibleTopics = getPossibleTopics();

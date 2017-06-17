@@ -365,4 +365,22 @@ public class SocketIO {
 
     }
 
+    /**
+     * Cancels the current event.
+     * @param event - event to be cancelled
+     * @param reason - readon why the event was cancelled
+     */
+    public void cancelEvent(Event event, String reason){
+        try {
+            JSONObject cancelJson = new JSONObject();
+            cancelJson.put("topic", event.getTopic());
+            cancelJson.put("reason", reason);
+            socket.emit("cancel_event", cancelJson);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 }

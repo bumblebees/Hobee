@@ -5,7 +5,6 @@
     <string name="female">female</string>
     <string name="set">Set</string>
     <string name="name_lastname">Name Lastname</string>
-    <string name="gogodeals_url">http://gogodeals.se/</string>
-    <string name="hobee_main_server">129.16.155.22</string>
+    <string name="hobee_main_server"></string>
     <string name="terms_of_service"><u>I HAVE READ AND ACCEPTED THE TERMS OF SERVICE</u></string>
 </resources>

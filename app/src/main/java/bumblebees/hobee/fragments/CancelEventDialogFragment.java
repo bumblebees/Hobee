@@ -25,6 +25,7 @@ import java.net.UnknownHostException;
 
 import bumblebees.hobee.R;
 import bumblebees.hobee.objects.Event;
+import bumblebees.hobee.utilities.SocketIO;
 
 public class CancelEventDialogFragment extends DialogFragment{
 
@@ -50,7 +51,7 @@ public class CancelEventDialogFragment extends DialogFragment{
                 .setPositiveButton("Cancel event", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        cancelEvent(event, dialogCancelReason.getText().toString());
+                        SocketIO.getInstance().cancelEvent(event, dialogCancelReason.getText().toString());
                         getActivity().finish();
                     }
                 })
@@ -63,47 +64,5 @@ public class CancelEventDialogFragment extends DialogFragment{
 
         builder.setTitle("Cancel event?");
         return builder.create();
-    }
-
-
-    /**
-     * Cancels the current event.
-     * @param event - current event
-     */
-    private void cancelEvent(final Event event, final String reason){
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String serverIP = getResources().getString(R.string.hobee_main_server);
-                int port = 3002;
-                try {
-                    InetAddress serverAdress = InetAddress.getByName(serverIP);
-                    Socket socket = new Socket(serverAdress, port);
-                    JSONObject cancelJson = new JSONObject();
-                    cancelJson.put("topic", event.getTopic());
-                    cancelJson.put("reason", reason);
-
-                    String message = cancelJson.toString();
-                    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
-                    if(!printWriter.checkError()){
-                        printWriter.println(message);
-                        printWriter.flush();
-                    }
-                    socket.close();
-                 } catch (UnknownHostException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-        thread.start();
-
-
-
     }
 }
