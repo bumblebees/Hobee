@@ -124,7 +124,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // Display avatar
         avatar = (ImageView) findViewById(R.id.avatar);
-        Picasso.with(this).load(loggedInUser.getPicUrl()).into(avatar);
+        Picasso.with(this).load(loggedInUser.getPicUrl(getApplicationContext())).into(avatar);
 
         // Populate the Navigation Drawer with options
         drawerPane = (RelativeLayout) findViewById(R.id.drawerPane);

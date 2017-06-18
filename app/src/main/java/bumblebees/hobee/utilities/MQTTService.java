@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import bumblebees.hobee.R;
 import bumblebees.hobee.broadcastreceiver.PendingNotificationReceiver;
 import bumblebees.hobee.objects.CancelledEvent;
 import bumblebees.hobee.objects.Event;
@@ -48,10 +49,8 @@ public class MQTTService extends Service implements MqttCallback {
     private MqttAndroidClient client;
 
     //HOBEE BROKER
-    //String mqttAddress = "tcp://129.16.155.22:1883";
-
-    //PRATA BROKER
-    private String mqttAddress = "tcp://prata.technocreatives.com:1883";
+    String address = "";
+    String mqttAddress = "tcp://"+address+":1883";
 
     private User user;
     private EventManager eventManager;
@@ -92,6 +91,11 @@ public class MQTTService extends Service implements MqttCallback {
         return START_STICKY;
     }
 
+    /**
+     * Add or update an event to the MQTT broker that other users can see.
+     * The event is added as a retained message.
+     * @param event - event to be added or deleted
+     */
     public void addOrUpdateEvent(Event event) {
         try {
             Gson gson = new GsonBuilder().setVersion(0.3).create();
@@ -103,6 +107,34 @@ public class MQTTService extends Service implements MqttCallback {
 
             client.publish(event.getTopic(), message);
         } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Cancel an existing event. The retained message is removed from the broker and the cancelled event is published.
+     * @param event
+     */
+    public void cancelEvent(CancelledEvent event){
+        try{
+            Gson gson = new Gson();
+
+            //publish an empty message first
+            MqttMessage emptyMessage = new MqttMessage();
+            emptyMessage.setPayload("".getBytes());
+            emptyMessage.setQos(1);
+            emptyMessage.setRetained(true);
+            client.publish(event.getTopic(), emptyMessage);
+
+            //publish the cancelled message to the topic
+            MqttMessage message = new MqttMessage();
+            message.setPayload(gson.toJson(event).getBytes());
+            message.setQos(1);
+            message.setRetained(false);
+
+            client.publish(event.getTopic(), message);
+        }
+        catch(MqttException e){
             e.printStackTrace();
         }
     }
@@ -245,36 +277,6 @@ public class MQTTService extends Service implements MqttCallback {
     @Override
     public void deliveryComplete(IMqttDeliveryToken token) {
 
-    }
-
-    /**
-     * Retrieve deals from GoGoDeals.
-     * Implements RFC 16 - Get Deals
-     */
-    private void getNewDeals(){
-        JSONObject data = new JSONObject();
-        JSONObject msg = new JSONObject();
-        JSONArray filters = new JSONArray();
-
-        try {
-            //location is set to Lindholmen by default
-            data.put("longitude", 11.938287);
-            data.put("latitude", 57.707760);
-            data.put("filters", "random");
-            msg.put("id", user.getUserID());
-            msg.put("data", data);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        MqttMessage message = new MqttMessage(msg.toString().getBytes());
-        message.setQos(1);
-        try {
-            client.publish("deal/gogodeals/deal/fetch", message);
-            client.subscribe("deal/gogodeals/database/deals", 1);
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
     }
 
     /**

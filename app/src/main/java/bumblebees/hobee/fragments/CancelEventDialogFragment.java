@@ -3,8 +3,13 @@ package bumblebees.hobee.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +27,12 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Calendar;
 
 import bumblebees.hobee.R;
+import bumblebees.hobee.objects.CancelledEvent;
 import bumblebees.hobee.objects.Event;
+import bumblebees.hobee.utilities.MQTTService;
 import bumblebees.hobee.utilities.SocketIO;
 
 public class CancelEventDialogFragment extends DialogFragment{
@@ -51,7 +59,25 @@ public class CancelEventDialogFragment extends DialogFragment{
                 .setPositiveButton("Cancel event", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        SocketIO.getInstance().cancelEvent(event, dialogCancelReason.getText().toString());
+                        final CancelledEvent cancelledEvent = new CancelledEvent(event.getEventID(), event.getType(), event.getTimestamp(), "cancelled", dialogCancelReason.getText().toString(), event.getEvent_details().getLocation(), event.getTopic());
+
+                        Intent intent = new Intent(getContext(), MQTTService.class);
+                        ServiceConnection serviceConnection = new ServiceConnection() {
+                            @Override
+                            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                                MQTTService.MQTTBinder binder = (MQTTService.MQTTBinder) iBinder;
+                                MQTTService service = binder.getInstance();
+                                service.cancelEvent(cancelledEvent);
+                            }
+
+                            @Override
+                            public void onServiceDisconnected(ComponentName componentName) {
+
+                            }
+                        };
+                        getContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+
                         getActivity().finish();
                     }
                 })

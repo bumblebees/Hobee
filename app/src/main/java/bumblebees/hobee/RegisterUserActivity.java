@@ -149,7 +149,7 @@ public class RegisterUserActivity extends AppCompatActivity {
             }
             email.setText(loggedInUser.getEmail());
             bio.setText(loggedInUser.getBio());
-            Picasso.with(this).load(loggedInUser.getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
+            Picasso.with(this).load(loggedInUser.getPicUrl(getApplicationContext())).transform(new CropSquareTransformation()).into(userImage);
 
         } else {
             // Set fields with extracted user data

@@ -90,7 +90,7 @@ public class UserProfileActivity extends AppCompatActivity {
             hostRank.setText(reputationToRank(user.getRank().getHostRep()));
             noShows.setText(Integer.toString(user.getRank().getNoShows()));
             userBiography.setText(user.getBio());
-            Picasso.with(this).load(user.getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
+            Picasso.with(this).load(user.getPicUrl(getApplicationContext())).transform(new CropSquareTransformation()).into(userImage);
             showHobbies((ArrayList<Hobby>) user.getHobbies());
         }
         catch (NullPointerException e) {

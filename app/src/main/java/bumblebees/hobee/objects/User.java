@@ -1,5 +1,7 @@
 package bumblebees.hobee.objects;
 
+import android.content.Context;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -7,6 +9,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import bumblebees.hobee.R;
 
 public class User {
 
@@ -106,8 +110,8 @@ public class User {
         return hobbies;
     }
 
-    public String getPicUrl(){
-        return "http://gunray.skip.chalmers.se:3003/api/containers/userImages/download/" + getUserID() + ".png";
+    public String getPicUrl(Context context){
+        return "http://"+context.getResources().getString(R.string.hobee_main_server)+":3003/api/containers/userImages/download/" + getUserID() + ".png";
     }
 
     public String userSince(){

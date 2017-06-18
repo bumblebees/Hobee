@@ -11,14 +11,16 @@ public class CancelledEvent {
     private String status = "cancelled";
     private String reason;
     private String location;
+    private String topic;
 
-    public CancelledEvent(UUID eventID, String location, String reason, String status, String timestamp, String type) {
+    public CancelledEvent(UUID eventID, String type, String timestamp, String status, String reason, String location, String topic) {
         this.eventID = eventID;
-        this.location = location;
-        this.reason = reason;
-        this.status = status;
-        this.timestamp = timestamp;
         this.type = type;
+        this.timestamp = timestamp;
+        this.status = status;
+        this.reason = reason;
+        this.location = location;
+        this.topic = topic;
     }
 
     public UUID getEventID() {
@@ -43,6 +45,10 @@ public class CancelledEvent {
 
     public String getType() {
         return type;
+    }
+
+    public String getTopic(){
+        return topic;
     }
 
 

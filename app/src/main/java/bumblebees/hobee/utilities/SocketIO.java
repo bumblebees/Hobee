@@ -23,6 +23,7 @@ import bumblebees.hobee.UserProfileActivity;
 import bumblebees.hobee.hobbycategories.HobbiesChoiceActivity;
 
 
+import bumblebees.hobee.objects.CancelledEvent;
 import bumblebees.hobee.objects.Event;
 import bumblebees.hobee.objects.Hobby;
 import bumblebees.hobee.objects.User;
@@ -364,23 +365,4 @@ public class SocketIO {
         socket.emit("save_ranks", ranks);
 
     }
-
-    /**
-     * Cancels the current event.
-     * @param event - event to be cancelled
-     * @param reason - readon why the event was cancelled
-     */
-    public void cancelEvent(Event event, String reason){
-        try {
-            JSONObject cancelJson = new JSONObject();
-            cancelJson.put("topic", event.getTopic());
-            cancelJson.put("reason", reason);
-            socket.emit("cancel_event", cancelJson);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
 }

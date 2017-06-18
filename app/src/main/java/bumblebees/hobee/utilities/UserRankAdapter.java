@@ -85,7 +85,7 @@ public class UserRankAdapter extends BaseAdapter {
 
         ImageView userImage = (ImageView) row.findViewById(R.id.userImage);
         if (userList.get(i) != null)
-            Picasso.with(context).load(userList.get(i).getPicUrl()).transform(new CropSquareTransformation()).into(userImage);
+            Picasso.with(context).load(userList.get(i).getPicUrl(view.getContext())).transform(new CropSquareTransformation()).into(userImage);
 
         final TextView numberView = (TextView) row.findViewById(R.id.numberView);
 
